@@ -6,10 +6,17 @@ import { Experience } from "@/components/sections/Experience";
 import { Projects } from "@/components/sections/Projects";
 import { Skills } from "@/components/sections/Skills";
 import { Contact } from "@/components/sections/Contact";
+import { CommandPalette } from "@/components/system/CommandPalette";
+import { BootSequence } from "@/components/system/BootSequence";
+import { Minimap } from "@/components/system/Minimap";
+import { TechProvider } from "@/components/system/TechContext";
 
 export default function Home() {
   return (
-    <>
+    <TechProvider>
+      <BootSequence />
+      <CommandPalette />
+      <Minimap />
       <Nav />
       <main>
         <Hero />
@@ -24,6 +31,6 @@ export default function Home() {
         </div>
       </main>
       <Footer />
-    </>
+    </TechProvider>
   );
 }

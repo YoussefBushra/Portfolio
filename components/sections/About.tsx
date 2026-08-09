@@ -18,6 +18,7 @@ export function About() {
         index="01"
         service="svc/about"
         title="The engineer behind the services"
+        description="A quick primer on how I approach building software — and the record behind it."
       />
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.3fr_1fr]">

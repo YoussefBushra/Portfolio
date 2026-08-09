@@ -41,6 +41,8 @@ export interface Experience {
   current?: boolean;
   /** "Dependencies" chips. */
   stack: string[];
+  /** Highlight callouts pulled out of the prose. */
+  metrics?: { label: string; value: string }[];
   highlights: string[];
 }
 

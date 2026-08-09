@@ -7,6 +7,8 @@ import type { Project } from "@/lib/types";
 import { SectionShell } from "@/components/layout/SectionShell";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { TechChip } from "@/components/ui/TechChip";
+import { useTech } from "@/components/system/TechContext";
 import { fadeUp } from "@/lib/motion";
 
 function ProjectCard({ project }: { project: Project }) {
@@ -41,30 +43,9 @@ function ProjectCard({ project }: { project: Project }) {
 
       <div className="mt-4 flex flex-wrap gap-1.5">
         {project.tech.map((t) => (
-          <span
-            key={t}
-            className="rounded-md border border-border bg-surface-2/50 px-2 py-0.5 font-mono text-[11px] text-muted"
-          >
-            {t}
-          </span>
+          <TechChip key={t} label={t} filterable size="sm" />
         ))}
       </div>
-
-      {project.links && project.links.length > 0 ? (
-        <div className="mt-5 flex gap-4 border-t border-border/60 pt-4">
-          {project.links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="focus-ring inline-flex items-center gap-1 rounded font-mono text-xs text-muted transition-colors hover:text-accent"
-            >
-              {l.label} <span aria-hidden="true">↗</span>
-            </a>
-          ))}
-        </div>
-      ) : null}
     </article>
   );
 }
@@ -73,6 +54,13 @@ export function Projects() {
   const featured = projects.filter((p) => p.featured);
   const rest = projects.filter((p) => !p.featured);
   const [showAll, setShowAll] = useState(false);
+  const { filter, clearFilter } = useTech();
+
+  const matches = filter
+    ? projects.filter((p) =>
+        p.tech.some((t) => t.toLowerCase() === filter.toLowerCase())
+      )
+    : [];
 
   return (
     <SectionShell id="projects">
@@ -80,61 +68,91 @@ export function Projects() {
         index="03"
         service="svc/projects"
         title="Repositories & systems"
-        description="A curated set of things I've designed and built — from graduation research to production integrations."
+        description="A curated set of things I've designed and built — from graduation research to production integrations. Click any tech to filter."
       />
 
-      <motion.div
-        variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {featured.map((p) => (
-          <motion.div key={p.name} variants={fadeUp}>
-            <ProjectCard project={p} />
-          </motion.div>
-        ))}
-      </motion.div>
-
-      <AnimatePresence initial={false}>
-        {showAll ? (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4 }}
-            className="overflow-hidden"
-          >
-            <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {rest.map((p) => (
-                <ProjectCard key={p.name} project={p} />
-              ))}
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
-
-      {rest.length > 0 ? (
-        <RevealOnScroll className="mt-10 flex justify-center">
-          <button
-            type="button"
-            onClick={() => setShowAll((v) => !v)}
-            className="focus-ring group inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-accent-2" />
-            {showAll
-              ? "collapse archive"
-              : `load ${rest.length} more from the archive`}
-            <span
-              className={`transition-transform ${showAll ? "rotate-180" : ""}`}
-              aria-hidden="true"
-            >
-              ↓
+      {filter ? (
+        // ---- filtered view ----
+        <div>
+          <div className="mb-6 flex flex-wrap items-center gap-3">
+            <span className="font-mono text-xs text-muted">
+              filtering by
             </span>
-          </button>
-        </RevealOnScroll>
-      ) : null}
+            <span className="chip chip-accent">◆ {filter}</span>
+            <span className="font-mono text-xs text-faint">
+              {matches.length} result{matches.length === 1 ? "" : "s"}
+            </span>
+            <button
+              type="button"
+              onClick={clearFilter}
+              className="focus-ring rounded font-mono text-xs text-muted underline-offset-4 transition-colors hover:text-accent hover:underline"
+            >
+              clear ✕
+            </button>
+          </div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {matches.map((p) => (
+              <ProjectCard key={p.name} project={p} />
+            ))}
+          </div>
+        </div>
+      ) : (
+        // ---- default curated view ----
+        <>
+          <motion.div
+            variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.1 }}
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {featured.map((p) => (
+              <motion.div key={p.name} variants={fadeUp}>
+                <ProjectCard project={p} />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <AnimatePresence initial={false}>
+            {showAll ? (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.4 }}
+                className="overflow-hidden"
+              >
+                <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {rest.map((p) => (
+                    <ProjectCard key={p.name} project={p} />
+                  ))}
+                </div>
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+
+          {rest.length > 0 ? (
+            <RevealOnScroll className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setShowAll((v) => !v)}
+                className="focus-ring group inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-accent-2" />
+                {showAll
+                  ? "collapse archive"
+                  : `load ${rest.length} more from the archive`}
+                <span
+                  className={`transition-transform ${showAll ? "rotate-180" : ""}`}
+                  aria-hidden="true"
+                >
+                  ↓
+                </span>
+              </button>
+            </RevealOnScroll>
+          ) : null}
+        </>
+      )}
     </SectionShell>
   );
 }

@@ -1,8 +1,14 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
+import { VisitTracker } from "@/components/system/VisitTracker";
 import { profile } from "@/content/profile";
 import "./globals.css";
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 const sans = Space_Grotesk({
   subsets: ["latin"],
@@ -86,6 +92,29 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+
+        {/* Privacy-first product analytics */}
+        <VisitTracker />
+        <Analytics />
+        <SpeedInsights />
+
+        {/* Optional Google Analytics 4 — enabled only when NEXT_PUBLIC_GA_ID is set */}
+        {GA_ID ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}', { anonymize_ip: true });
+              `}
+            </Script>
+          </>
+        ) : null}
       </body>
     </html>
   );

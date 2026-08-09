@@ -5,6 +5,7 @@ import { profile } from "@/content/profile";
 import { SectionShell } from "@/components/layout/SectionShell";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { track } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -33,6 +34,7 @@ export function Contact() {
       const subject = encodeURIComponent(`Portfolio contact — ${name}`);
       const body = encodeURIComponent(`${message}\n\n— ${name}\n${email}`);
       window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+      track("contact_submit", { method: "mailto" });
       setStatus("success");
       return;
     }
@@ -46,6 +48,7 @@ export function Contact() {
         body: data,
       });
       if (res.ok) {
+        track("contact_submit", { method: "formspree" });
         setStatus("success");
         form.reset();
       } else {
@@ -86,6 +89,7 @@ export function Contact() {
                     href={s.href}
                     target={s.href.startsWith("http") ? "_blank" : undefined}
                     rel="noreferrer noopener"
+                    onClick={() => track("social_click", { label: s.label, from: "contact" })}
                     className="focus-ring group flex items-center justify-between gap-3 rounded-lg"
                   >
                     <span className="flex items-center gap-3">
@@ -110,7 +114,13 @@ export function Contact() {
             </ul>
 
             <div className="mt-6 border-t border-border/60 pt-4">
-              <div className="flex items-center gap-2 font-mono text-xs text-muted">
+              <div className="mono-label mb-2">currently accepting</div>
+              <p className="text-sm leading-relaxed text-muted">
+                Backend &amp; full-stack roles building scalable services and
+                integrations — plus interesting freelance systems work. Remote or
+                Cairo-based.
+              </p>
+              <div className="mt-3 flex items-center gap-2 font-mono text-xs text-muted">
                 <span className="h-1.5 w-1.5 rounded-full bg-ok animate-blink" />
                 {profile.location} · open to opportunities
               </div>

@@ -1,4 +1,7 @@
+"use client";
+
 import { profile } from "@/content/profile";
+import { track } from "@/lib/analytics";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -21,6 +24,7 @@ export function Footer() {
               href={s.href}
               target={s.href.startsWith("http") ? "_blank" : undefined}
               rel="noreferrer noopener"
+              onClick={() => track("social_click", { label: s.label, from: "footer" })}
               className="focus-ring rounded text-muted transition-colors hover:text-accent"
             >
               {s.label}

@@ -14,11 +14,55 @@ deployable to Vercel in one click.
 - **Animated node-graph backdrop** (`<canvas>`) with proximity edges and flowing
   "packets" — pauses off-screen and when the tab is hidden, and renders a single
   static frame under `prefers-reduced-motion`.
+- **Command palette (⌘K / Ctrl+K)** — jump to any section, toggle theme, download
+  CV, copy email, open links. Fully keyboard-navigable.
+- **Boot sequence intro** — a one-time "initializing services…" animation
+  (shown once per browser, skippable, disabled under reduced-motion).
+- **Minimap rail** — a persistent node map (desktop) that tracks and jumps to the
+  active section.
+- **Live status ticker** in the hero — a rotating focus line + animated throughput
+  sparkline.
+- **Interactive tech tags** — hover any tech to trace it across experience &
+  projects; click a project tech to filter the grid.
 - **Dark + light** themes via `next-themes` (no flash on load), toggle in the nav.
+- **Rich, free visitor analytics** (see below) — Vercel Web Analytics + Speed
+  Insights, with optional GA4.
 - **Data-driven content** — everything lives in typed files under `content/`, so
   you edit data, not JSX.
 - **Working contact form** (Formspree) with a graceful `mailto:` fallback.
+- **Download CV** button (nav, hero, and command palette) + generated
+  node-graph **Open Graph** social image.
 - Scroll-spy navigation, section reveals, keyboard-navigable, WCAG-AA contrast.
+
+## 📊 Knowing your visitors (analytics)
+
+All of this is **free** and works on Vercel's Hobby plan — no paid services.
+
+**1. Vercel Web Analytics + Speed Insights** (already wired via `<Analytics />`
+and `<SpeedInsights />` in `app/layout.tsx`). After deploying, open your project
+on Vercel → **Analytics** tab → **Enable**. You'll then see, with zero extra
+config: page views, top pages, **countries & cities**, **devices / OS /
+browsers**, **referrers**, and Core Web Vitals — all privacy-first (no cookies).
+
+**2. Rich custom events.** The site sends privacy-respecting events you can view
+in the Vercel Analytics **Events** panel:
+
+| Event | When |
+| --- | --- |
+| `visit` | once per load — carries referrer, UTM tags, language, timezone, screen/viewport, device pixel ratio, orientation, touch, connection type, returning-visitor flag, local hour |
+| `section_view` | a section scrolls into view |
+| `cv_download` | the CV is downloaded (with source) |
+| `contact_submit` | the contact form is submitted |
+| `command_palette_open` / `command_run` | palette usage |
+| `theme_toggle`, `tech_filter`, `project_archive_toggle`, `social_click`, `cta_click`, `boot_skipped` | corresponding interactions |
+
+No PII, no fingerprinting libraries — just the signals a browser already exposes
+plus the actions people take.
+
+**3. Optional — Google Analytics 4** for deeper demographic reports. Set
+`NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX` in your env (Vercel → Settings → Environment
+Variables). Leaving it blank keeps GA fully disabled — no script is loaded. GA4
+is also free.
 
 ## 🚀 Getting started
 
@@ -84,14 +128,17 @@ Colors are defined as RGB CSS variables in `app/globals.css` (`:root` for light,
 ## 🧩 Project structure
 
 ```
-app/            layout, page, global styles
+app/            layout, page, global styles, opengraph-image
 components/
-  system/       NodeGraphBackground (the animated backdrop)
+  system/       NodeGraphBackground, CommandPalette, BootSequence, Minimap,
+                StatusTicker, TechContext, VisitTracker
   layout/       Nav, ThemeToggle, Footer, ThemeProvider, SectionShell
   sections/     Hero, About, Experience, Projects, Skills, Contact
-  ui/           MonogramAvatar, TechTag, SectionHeading, RevealOnScroll
+  ui/           MonogramAvatar, TechChip, TechTag, CVButton, SectionHeading,
+                RevealOnScroll
 content/        typed CV data (edit here)
-lib/            types + Framer Motion variants
+lib/            types, Framer Motion variants, analytics helpers
+public/         CV PDF, robots.txt
 ```
 
 ## 📝 Notes
@@ -99,8 +146,8 @@ lib/            types + Framer Motion variants
 - The photo slot uses a generated node-graph monogram (`MonogramAvatar`). To use
   a real photo instead, drop an image into `public/` and swap it into
   `components/sections/Hero.tsx`.
-- Want a **Download CV** button? Add your PDF to `public/` and link it from the
-  hero or nav.
+- The **CV** lives at `public/Youssef_Bushra_Fouad_CV.pdf`; replace that file to
+  update the download everywhere (nav, hero, command palette).
 
 ---
 

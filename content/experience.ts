@@ -21,6 +21,10 @@ export const experience: Experience[] = [
       "Grafana",
       "Jest",
     ],
+    metrics: [
+      { label: "enterprise systems integrated", value: "D365 + Odoo" },
+      { label: "service messaging", value: "Event-driven" },
+    ],
     highlights: [
       "Designed and developed full-stack features across backend and frontend, delivering end-to-end functionality for production systems.",
       "Contributed to the design and implementation of scalable microservices-based backend systems using TypeScript, NestJS, Node.js, MongoDB and PostgreSQL, improving maintainability and performance.",
@@ -50,6 +54,10 @@ export const experience: Experience[] = [
       "Swagger",
       "Next.js 14",
       "Tailwind CSS",
+    ],
+    metrics: [
+      { label: "records searched", value: "10M+" },
+      { label: "geo-query p95 (target < 1s)", value: "600ms" },
     ],
     highlights: [
       "Led the optimization of geo-location search queries over large datasets using Elasticsearch, achieving an average query response of 600ms (target < 1s) while processing 10 million records.",

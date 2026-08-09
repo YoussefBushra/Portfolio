@@ -4,6 +4,9 @@ import { motion } from "framer-motion";
 import { profile } from "@/content/profile";
 import { NodeGraphBackground } from "@/components/system/NodeGraphBackground";
 import { MonogramAvatar } from "@/components/ui/MonogramAvatar";
+import { StatusTicker } from "@/components/system/StatusTicker";
+import { CVButton } from "@/components/ui/CVButton";
+import { track } from "@/lib/analytics";
 import { fadeUp, stagger } from "@/lib/motion";
 
 export function Hero() {
@@ -55,9 +58,14 @@ export function Hero() {
             {profile.tagline}
           </motion.p>
 
+          <motion.div variants={fadeUp} className="mt-6">
+            <StatusTicker />
+          </motion.div>
+
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
             <a
               href="#projects"
+              onClick={() => track("cta_click", { cta: "explore", from: "hero" })}
               className="focus-ring group inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-medium text-white shadow-glow transition-transform hover:-translate-y-0.5"
             >
               Explore the system
@@ -67,10 +75,12 @@ export function Hero() {
             </a>
             <a
               href="#contact"
+              onClick={() => track("cta_click", { cta: "contact", from: "hero" })}
               className="focus-ring inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 text-sm font-medium text-text backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
             >
               Open a connection
             </a>
+            <CVButton from="hero" variant="ghost" />
           </motion.div>
 
           {/* status metrics */}

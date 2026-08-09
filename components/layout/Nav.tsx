@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { navNodes } from "@/content/profile";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { CVButton } from "@/components/ui/CVButton";
+import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
@@ -94,6 +96,15 @@ export function Nav() {
         </ul>
 
         <div className="flex items-center gap-2">
+          <CVButton from="nav" variant="compact" className="hidden lg:inline-flex" />
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
+            aria-label="Open command palette"
+            className="focus-ring hidden items-center gap-2 rounded-lg border border-border bg-surface/70 px-2.5 py-1.5 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent sm:inline-flex"
+          >
+            <span className="text-accent-2">⌘</span>K
+          </button>
           <ThemeToggle />
           <button
             type="button"
@@ -152,6 +163,19 @@ export function Nav() {
                 </a>
               </li>
             ))}
+            <li className="flex items-center gap-3 px-6 py-4">
+              <CVButton from="mobile-menu" variant="compact" />
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  window.dispatchEvent(new Event(OPEN_PALETTE_EVENT));
+                }}
+                className="focus-ring inline-flex items-center gap-2 rounded-lg border border-border bg-surface/70 px-3 py-1.5 font-mono text-xs text-muted"
+              >
+                <span className="text-accent-2">⌘</span>K · commands
+              </button>
+            </li>
           </motion.ul>
         ) : null}
       </AnimatePresence>

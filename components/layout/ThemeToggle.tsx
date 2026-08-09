@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
+import { track } from "@/lib/analytics";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -15,7 +16,11 @@ export function ThemeToggle() {
     <button
       type="button"
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={() => {
+        const next = isDark ? "light" : "dark";
+        track("theme_toggle", { to: next });
+        setTheme(next);
+      }}
       className="focus-ring group relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface/70 text-muted transition-colors hover:border-accent/50 hover:text-accent"
     >
       {mounted ? (
