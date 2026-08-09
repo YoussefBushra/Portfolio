@@ -45,7 +45,7 @@ export function About() {
         </RevealOnScroll>
 
         <RevealOnScroll className="space-y-3">
-          <div className="mono-label mb-1">awards · roles</div>
+          <div className="mono-label mb-1">community · leadership</div>
           {credentials.map((c) => (
             <div
               key={c.title}

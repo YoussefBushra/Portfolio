@@ -11,12 +11,6 @@ export const education: EducationEntry[] = [
 
 export const credentials: Credential[] = [
   {
-    title: "Huawei ICT Competition — Gold Medal, Cloud Computing National Finals",
-    issuer: "Huawei",
-    period: "Feb 2021",
-    kind: "award",
-  },
-  {
     title: "Head of Technical Committee — competitive programming & DS/algorithms",
     issuer: "ACM BUE Chapter",
     period: "Oct 2019 — Oct 2020",

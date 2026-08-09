@@ -17,16 +17,33 @@ interface Packet {
   speed: number;
 }
 
+interface Ripple {
+  x: number;
+  y: number;
+  r: number;
+  max: number;
+}
+
 /**
  * A living, breathing distributed-system backdrop:
  * drifting service-nodes connected by proximity edges, with data
  * "packets" flowing along the links — the visual heart of the site.
  *
+ * When `interactive` is set, it also responds to the pointer: nearby nodes
+ * light up and wire themselves to the cursor, the whole field parallaxes
+ * gently toward it, and clicking emits a ripple plus a burst of packets.
+ *
  * - Pauses when off-screen (IntersectionObserver) and when the tab is hidden.
  * - Fully disabled under prefers-reduced-motion (renders one static frame).
  * - Colors read from CSS theme variables so it adapts to dark/light.
  */
-export function NodeGraphBackground({ className }: { className?: string }) {
+export function NodeGraphBackground({
+  className,
+  interactive = false,
+}: {
+  className?: string;
+  interactive?: boolean;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -38,14 +55,19 @@ export function NodeGraphBackground({ className }: { className?: string }) {
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    const canInteract = interactive && !reduceMotion;
 
     let width = 0;
     let height = 0;
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
     let nodes: Node[] = [];
     let packets: Packet[] = [];
+    const ripples: Ripple[] = [];
     let raf = 0;
     let running = true;
+
+    // pointer state (canvas-local coords)
+    const pointer = { x: 0, y: 0, active: false };
 
     const readColors = () => {
       const styles = getComputedStyle(document.documentElement);
@@ -82,6 +104,7 @@ export function NodeGraphBackground({ className }: { className?: string }) {
     };
 
     const LINK_DIST = 150;
+    const POINTER_DIST = 200;
 
     const spawnPacket = () => {
       if (nodes.length < 2) return;
@@ -91,9 +114,37 @@ export function NodeGraphBackground({ className }: { className?: string }) {
       packets.push({ a, b, t: 0, speed: 0.006 + Math.random() * 0.01 });
     };
 
+    // nodes nearest to a point, for click bursts
+    const nearestNodes = (x: number, y: number, count: number) =>
+      nodes
+        .map((n, i) => ({ i, d: Math.hypot(n.x - x, n.y - y) }))
+        .sort((p, q) => p.d - q.d)
+        .slice(0, count)
+        .map((p) => p.i);
+
+    const burst = (x: number, y: number) => {
+      ripples.push({ x, y, r: 0, max: 220 });
+      const near = nearestNodes(x, y, 6);
+      for (let k = 0; k < near.length; k++) {
+        const a = near[k];
+        const b = near[(k + 1) % near.length];
+        if (a !== b) packets.push({ a, b, t: 0, speed: 0.02 + Math.random() * 0.02 });
+      }
+    };
+
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
       const { accent, accent2 } = colors;
+
+      // gentle field parallax toward the pointer
+      let ox = 0;
+      let oy = 0;
+      if (canInteract && pointer.active) {
+        ox = (pointer.x - width / 2) * 0.02;
+        oy = (pointer.y - height / 2) * 0.02;
+      }
+      ctx.save();
+      ctx.translate(ox, oy);
 
       // update + draw edges
       for (let i = 0; i < nodes.length; i++) {
@@ -121,12 +172,68 @@ export function NodeGraphBackground({ className }: { className?: string }) {
         }
       }
 
-      // nodes
+      // pointer wiring: connect + highlight nearby nodes
+      if (canInteract && pointer.active) {
+        for (const n of nodes) {
+          const d = Math.hypot(n.x - pointer.x, n.y - pointer.y);
+          if (d < POINTER_DIST) {
+            const a = 1 - d / POINTER_DIST;
+            ctx.strokeStyle = `rgb(${accent} / ${a * 0.7})`;
+            ctx.lineWidth = 1 + a;
+            ctx.beginPath();
+            ctx.moveTo(pointer.x, pointer.y);
+            ctx.lineTo(n.x, n.y);
+            ctx.stroke();
+            // highlighted node
+            ctx.fillStyle = `rgb(${accent2} / ${0.5 + a * 0.5})`;
+            ctx.beginPath();
+            ctx.arc(n.x, n.y, n.r + a * 2.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+        // cursor glow + core
+        const glow = ctx.createRadialGradient(
+          pointer.x,
+          pointer.y,
+          0,
+          pointer.x,
+          pointer.y,
+          26
+        );
+        glow.addColorStop(0, `rgb(${accent} / 0.5)`);
+        glow.addColorStop(1, `rgb(${accent} / 0)`);
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(pointer.x, pointer.y, 26, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgb(${accent})`;
+        ctx.beginPath();
+        ctx.arc(pointer.x, pointer.y, 2.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // base nodes
       for (const n of nodes) {
         ctx.fillStyle = `rgb(${accent} / 0.75)`;
         ctx.beginPath();
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
         ctx.fill();
+      }
+
+      // click ripples
+      for (let i = ripples.length - 1; i >= 0; i--) {
+        const rp = ripples[i];
+        rp.r += 4;
+        if (rp.r >= rp.max) {
+          ripples.splice(i, 1);
+          continue;
+        }
+        const a = 1 - rp.r / rp.max;
+        ctx.strokeStyle = `rgb(${accent} / ${a * 0.6})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+        ctx.stroke();
       }
 
       // packets
@@ -146,10 +253,10 @@ export function NodeGraphBackground({ className }: { className?: string }) {
           }
           const x = a.x + (b.x - a.x) * p.t;
           const y = a.y + (b.y - a.y) * p.t;
-          const glow = ctx.createRadialGradient(x, y, 0, x, y, 6);
-          glow.addColorStop(0, `rgb(${accent2} / 0.95)`);
-          glow.addColorStop(1, `rgb(${accent2} / 0)`);
-          ctx.fillStyle = glow;
+          const pg = ctx.createRadialGradient(x, y, 0, x, y, 6);
+          pg.addColorStop(0, `rgb(${accent2} / 0.95)`);
+          pg.addColorStop(1, `rgb(${accent2} / 0)`);
+          ctx.fillStyle = pg;
           ctx.beginPath();
           ctx.arc(x, y, 6, 0, Math.PI * 2);
           ctx.fill();
@@ -162,6 +269,8 @@ export function NodeGraphBackground({ className }: { className?: string }) {
           spawnPacket();
         }
       }
+
+      ctx.restore();
     };
 
     const loop = () => {
@@ -195,6 +304,34 @@ export function NodeGraphBackground({ className }: { className?: string }) {
     };
     window.addEventListener("resize", onResize);
 
+    // pointer interactivity — bound to window (the canvas sits behind the
+    // hero content), gated by whether the cursor is over the canvas region.
+    const inBounds = () =>
+      pointer.x >= 0 &&
+      pointer.x <= width &&
+      pointer.y >= 0 &&
+      pointer.y <= height;
+    const toLocal = (clientX: number, clientY: number) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = clientX - rect.left;
+      pointer.y = clientY - rect.top;
+    };
+    const onPointerMove = (e: PointerEvent) => {
+      toLocal(e.clientX, e.clientY);
+      pointer.active = inBounds();
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      toLocal(e.clientX, e.clientY);
+      if (inBounds()) {
+        pointer.active = true;
+        burst(pointer.x, pointer.y);
+      }
+    };
+    if (canInteract) {
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+      window.addEventListener("pointerdown", onPointerDown, { passive: true });
+    }
+
     const onVisibility = () => {
       if (document.hidden) stop();
       else if (!reduceMotion) start();
@@ -227,16 +364,14 @@ export function NodeGraphBackground({ className }: { className?: string }) {
       stop();
       window.removeEventListener("resize", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
+      if (canInteract) {
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerdown", onPointerDown);
+      }
       themeObserver.disconnect();
       io.disconnect();
     };
-  }, []);
+  }, [interactive]);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      className={className}
-    />
-  );
+  return <canvas ref={canvasRef} aria-hidden="true" className={className} />;
 }
