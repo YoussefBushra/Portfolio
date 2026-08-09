@@ -1,15 +1,8 @@
 import { profile } from "@/content/profile";
-import { education, credentials } from "@/content/education";
+import { education } from "@/content/education";
 import { SectionShell } from "@/components/layout/SectionShell";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-
-const kindStyles: Record<string, string> = {
-  award: "border-accent/40 bg-accent/10 text-accent",
-  certification: "border-accent-2/40 bg-accent-2/10 text-accent-2",
-  internship: "border-border bg-surface-2/60 text-muted",
-  volunteer: "border-border bg-surface-2/60 text-muted",
-};
 
 export function About() {
   return (
@@ -28,8 +21,10 @@ export function About() {
               {p}
             </p>
           ))}
+        </RevealOnScroll>
 
-          <div className="card mt-8 p-5">
+        <RevealOnScroll>
+          <div className="card p-5">
             <div className="mono-label mb-3">education</div>
             {education.map((e) => (
               <div key={e.institution}>
@@ -42,29 +37,6 @@ export function About() {
               </div>
             ))}
           </div>
-        </RevealOnScroll>
-
-        <RevealOnScroll className="space-y-3">
-          <div className="mono-label mb-1">community · leadership</div>
-          {credentials.map((c) => (
-            <div
-              key={c.title}
-              className="card group p-4 transition-colors hover:border-accent/40"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <span
-                  className={`chip shrink-0 ${kindStyles[c.kind] ?? ""}`}
-                >
-                  {c.kind}
-                </span>
-                <span className="font-mono text-[11px] text-faint">{c.period}</span>
-              </div>
-              <h3 className="mt-3 text-sm font-medium leading-snug text-text">
-                {c.title}
-              </h3>
-              <p className="mt-1 text-xs text-muted">{c.issuer}</p>
-            </div>
-          ))}
         </RevealOnScroll>
       </div>
     </SectionShell>

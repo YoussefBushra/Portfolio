@@ -147,16 +147,26 @@ export function Hero() {
             {profile.stats.map((s) => (
               <div
                 key={s.label}
-                className="group border-l-2 border-accent/30 pl-3 transition-colors hover:border-accent"
+                className="group flex flex-col border-l-2 border-accent/30 pl-3 transition-colors hover:border-accent"
               >
-                <dt className="mono-label">{s.label}</dt>
+                <dt className="mono-label flex min-h-[2.5em] items-start leading-tight">
+                  {s.label}
+                </dt>
                 <dd className="mt-1 text-2xl font-bold tracking-tight text-text transition-colors group-hover:text-accent">
                   {s.value}
                 </dd>
-                <dd className="font-mono text-[11px] text-faint">{s.hint}</dd>
+                <dd className="mt-0.5 font-mono text-[11px] text-faint">{s.hint}</dd>
               </div>
             ))}
           </motion.dl>
+
+          <motion.p
+            variants={fadeUp}
+            className="mt-8 hidden font-mono text-[11px] text-faint lg:block"
+          >
+            <span className="text-accent-2">tip</span> · move &amp; click the
+            background to ping the graph
+          </motion.p>
         </motion.div>
 
         {/* interactive avatar node */}
@@ -180,12 +190,6 @@ export function Hero() {
             <MonogramAvatar size={300} />
           </motion.div>
         </motion.div>
-      </div>
-
-      {/* interactivity hint + scroll cue */}
-      <div className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 font-mono text-[10px] text-faint sm:flex">
-        <span className="text-muted/80">move &amp; click to ping the graph</span>
-        <span className="h-8 w-px bg-gradient-to-b from-accent/60 to-transparent" />
       </div>
     </section>
   );
