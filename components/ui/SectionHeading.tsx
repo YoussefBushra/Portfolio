@@ -1,4 +1,5 @@
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { ScrambleText } from "@/components/ui/ScrambleText";
 
 interface SectionHeadingProps {
   index: string;
@@ -31,7 +32,7 @@ export function SectionHeading({
         </span>
       </div>
       <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-        {title}
+        <ScrambleText text={title} duration={700} />
       </h2>
       {description ? (
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted md:text-lg">

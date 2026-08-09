@@ -10,9 +10,12 @@ import {
 } from "framer-motion";
 import { profile } from "@/content/profile";
 import { NodeGraphBackground } from "@/components/system/NodeGraphBackground";
+import { Aurora } from "@/components/system/Aurora";
 import { MonogramAvatar } from "@/components/ui/MonogramAvatar";
 import { StatusTicker } from "@/components/system/StatusTicker";
 import { CVButton } from "@/components/ui/CVButton";
+import { ScrambleText } from "@/components/ui/ScrambleText";
+import { Magnetic } from "@/components/ui/Magnetic";
 import { track } from "@/lib/analytics";
 import { fadeUp, stagger } from "@/lib/motion";
 
@@ -58,6 +61,7 @@ export function Hero() {
     >
       {/* animated system backdrop */}
       <div className="absolute inset-0 -z-10">
+        <Aurora className="absolute inset-0" />
         <div className="absolute inset-0 bp-grid opacity-70" />
         <NodeGraphBackground
           className="absolute inset-0 h-full w-full"
@@ -93,18 +97,26 @@ export function Hero() {
             variants={fadeUp}
             className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
           >
-            {profile.name.split(" ").slice(0, 2).join(" ")}
-            <br />
-            <span className="text-gradient">
-              {profile.name.split(" ").slice(2).join(" ")}
-            </span>
+            <ScrambleText
+              as="span"
+              trigger="mount"
+              text={profile.name.split(" ").slice(0, 2).join(" ")}
+              className="block"
+            />
+            <ScrambleText
+              as="span"
+              trigger="mount"
+              delay={220}
+              text={profile.name.split(" ").slice(2).join(" ")}
+              className="block text-gradient"
+            />
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
             className="mt-4 font-mono text-sm text-accent-2 sm:text-base"
           >
-            {profile.role}
+            <ScrambleText trigger="mount" delay={480} text={profile.role} />
           </motion.p>
 
           <motion.p
@@ -119,24 +131,30 @@ export function Hero() {
           </motion.div>
 
           <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#projects"
-              onClick={() => track("cta_click", { cta: "explore", from: "hero" })}
-              className="focus-ring group inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-medium text-white shadow-glow transition-transform hover:-translate-y-0.5"
-            >
-              Explore the system
-              <span className="transition-transform group-hover:translate-x-0.5">
-                →
-              </span>
-            </a>
-            <a
-              href="#contact"
-              onClick={() => track("cta_click", { cta: "contact", from: "hero" })}
-              className="focus-ring inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 text-sm font-medium text-text backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
-            >
-              Open a connection
-            </a>
-            <CVButton from="hero" variant="ghost" />
+            <Magnetic>
+              <a
+                href="#projects"
+                onClick={() => track("cta_click", { cta: "explore", from: "hero" })}
+                className="focus-ring group inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-medium text-white shadow-glow transition-transform hover:-translate-y-0.5"
+              >
+                Explore the system
+                <span className="transition-transform group-hover:translate-x-0.5">
+                  →
+                </span>
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href="#contact"
+                onClick={() => track("cta_click", { cta: "contact", from: "hero" })}
+                className="focus-ring inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 text-sm font-medium text-text backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
+              >
+                Open a connection
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <CVButton from="hero" variant="ghost" />
+            </Magnetic>
           </motion.div>
 
           {/* status metrics */}

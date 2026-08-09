@@ -8,12 +8,14 @@ import { SectionShell } from "@/components/layout/SectionShell";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { TechChip } from "@/components/ui/TechChip";
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { useTech } from "@/components/system/TechContext";
 import { fadeUp } from "@/lib/motion";
 
 function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="card group flex h-full flex-col p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-node">
+    <SpotlightCard>
+      <article className="card relative flex h-full flex-col p-6 transition-colors duration-300 hover:border-accent/50 hover:shadow-node">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2 font-mono text-[11px] text-accent-2">
           <span className="h-1.5 w-1.5 rounded-full bg-accent-2" />
@@ -46,7 +48,8 @@ function ProjectCard({ project }: { project: Project }) {
           <TechChip key={t} label={t} filterable size="sm" />
         ))}
       </div>
-    </article>
+      </article>
+    </SpotlightCard>
   );
 }
 

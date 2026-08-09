@@ -9,12 +9,14 @@ import { Contact } from "@/components/sections/Contact";
 import { CommandPalette } from "@/components/system/CommandPalette";
 import { BootSequence } from "@/components/system/BootSequence";
 import { Minimap } from "@/components/system/Minimap";
+import { ScrollProgress } from "@/components/system/ScrollProgress";
 import { TechProvider } from "@/components/system/TechContext";
 
 export default function Home() {
   return (
     <TechProvider>
       <BootSequence />
+      <ScrollProgress />
       <CommandPalette />
       <Minimap />
       <Nav />

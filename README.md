@@ -9,6 +9,19 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 **Framer Motion**. Dark/light themed, fully responsive, accessible, and static —
 deployable to Vercel in one click.
 
+> ### 🎨 Creative variant (this branch)
+> This branch layers a heavier animation pass on top of the base design, to
+> compare side-by-side:
+> - **Decrypt / scramble text** on the hero name, role, and every section
+>   heading (`ScrambleText`)
+> - **Aurora** — slow drifting gradient blobs behind the hero node graph
+> - **Spotlight cards** — project cards get a pointer-following glow, a gradient
+>   border that lights up under the cursor, and a subtle 3D tilt (`SpotlightCard`)
+> - **Magnetic buttons** — the hero CTAs drift toward the cursor (`Magnetic`)
+> - **Scroll-progress bar** pinned to the top (`ScrollProgress`)
+>
+> All of it respects `prefers-reduced-motion` and stays overflow-free on mobile.
+
 ## ✨ Highlights
 
 - **Animated node-graph backdrop** (`<canvas>`) with proximity edges and flowing
