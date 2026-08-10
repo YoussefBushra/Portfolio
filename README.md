@@ -9,6 +9,17 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 **Framer Motion**. Dark/light themed, fully responsive, accessible, and static —
 deployable to Vercel in one click.
 
+> ### 🛰️ "Mission Control" theme (this branch)
+> A live telemetry/ops-dashboard hero — on-brand for the observability &
+> distributed-systems work:
+> - **Status bar** (SYS://…, STATUS: OPERATIONAL, uptime, **live clock**)
+> - **Latency gauge** — an animated radial dial reading 600ms p95 (PASS)
+> - **Throughput sparkline** (live animated line), **10M+ / 4.00** stat readouts
+> - **Capability meters** that fill on scroll, a **comms** panel, and a
+>   **mission log** console with a blinking cursor
+> - Telemetry framing (corner ticks, monospace). No WebGL — light and fast.
+>   Other sections unchanged.
+
 ## ✨ Highlights
 
 - **Animated node-graph backdrop** (`<canvas>`) with proximity edges and flowing
