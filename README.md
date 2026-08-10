@@ -9,6 +9,25 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 **Framer Motion**. Dark/light themed, fully responsive, accessible, and static —
 deployable to Vercel in one click.
 
+> ### 🧊 3D layered variant (this branch)
+> This branch swaps the hero backdrop for a **real 3D scene** built with
+> **React Three Fiber**, **drei** and **postprocessing (Bloom)** — the same
+> "Living System Map" concept rendered in depth:
+> - Instanced glowing **nodes** in 3D space, proximity **edges**, and data
+>   **packets** travelling along them (`components/three/Scene3D.tsx`)
+> - **Camera parallax** that follows the cursor + slow auto-rotation, bloom glow,
+>   depth fog and a `Sparkles` dust layer
+> - **Performance-aware**: instanced meshes, clamped DPR, the render loop pauses
+>   when the hero scrolls off-screen or the tab is hidden, and **quality drops on
+>   mobile** (fewer nodes, lower DPR, softer bloom)
+> - **Graceful fallback** (`Hero3DBackground.tsx`): visitors without WebGL, or who
+>   prefer reduced motion, get the original 2D canvas (static under reduced motion)
+> - The three.js bundle is **lazily loaded** (`dynamic(..., { ssr: false })`), so
+>   first-load JS for the page stays small
+>
+> Adds `three`, `@react-three/fiber`, `@react-three/drei`,
+> `@react-three/postprocessing`.
+
 ## ✨ Highlights
 
 - **Animated node-graph backdrop** (`<canvas>`) with proximity edges and flowing

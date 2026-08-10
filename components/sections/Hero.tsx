@@ -9,7 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { profile } from "@/content/profile";
-import { NodeGraphBackground } from "@/components/system/NodeGraphBackground";
+import { Hero3DBackground } from "@/components/three/Hero3DBackground";
 import { MonogramAvatar } from "@/components/ui/MonogramAvatar";
 import { StatusTicker } from "@/components/system/StatusTicker";
 import { CVButton } from "@/components/ui/CVButton";
@@ -56,14 +56,11 @@ export function Hero() {
       onMouseMove={onMove}
       className="relative flex min-h-[100svh] items-center overflow-hidden pt-24"
     >
-      {/* animated system backdrop */}
+      {/* layered 3D system backdrop */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bp-grid opacity-70" />
-        <NodeGraphBackground
-          className="absolute inset-0 h-full w-full"
-          interactive
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg/10 via-bg/40 to-bg" />
+        <div className="absolute inset-0 bp-grid opacity-60" />
+        <Hero3DBackground className="absolute inset-0 h-full w-full" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg/20 to-bg" />
       </div>
 
       {/* cursor-following glow (purely decorative) */}
@@ -164,8 +161,8 @@ export function Hero() {
             variants={fadeUp}
             className="mt-8 hidden font-mono text-[11px] text-faint lg:block"
           >
-            <span className="text-accent-2">tip</span> · move &amp; click the
-            background to ping the graph
+            <span className="text-accent-2">tip</span> · move your cursor — the
+            3D graph responds
           </motion.p>
         </motion.div>
 
