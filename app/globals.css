@@ -25,15 +25,15 @@
 }
 
 .dark {
-  --bg: 7 9 16;
-  --surface: 14 18 30;
-  --surface-2: 20 26 42;
-  --border: 38 46 66;
-  --text: 231 237 248;
-  --muted: 148 160 184;
-  --faint: 92 104 128;
-  --accent: 124 122 255; /* electric violet */
-  --accent-2: 45 212 191; /* teal/cyan */
+  --bg: 6 7 14;
+  --surface: 16 19 33;
+  --surface-2: 22 27 46;
+  --border: 42 50 74;
+  --text: 236 240 250;
+  --muted: 156 166 190;
+  --faint: 98 110 138;
+  --accent: 139 124 255; /* electric violet */
+  --accent-2: 56 224 208; /* aqua */
   --grid: 130 150 200;
   --ok: 52 211 153;
 }
@@ -83,12 +83,41 @@ body {
     @apply border-accent/40 bg-accent/10 text-accent;
   }
 
-  .card {
-    @apply rounded-2xl border border-border bg-surface/70 backdrop-blur-sm;
+  /* Glassmorphism surface — frosted, with a subtle top highlight */
+  .card,
+  .glass {
+    @apply relative rounded-2xl border border-white/10 backdrop-blur-xl;
+    background:
+      linear-gradient(
+        180deg,
+        rgb(var(--surface) / 0.65),
+        rgb(var(--surface) / 0.4)
+      );
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.06),
+      0 20px 40px -24px rgb(0 0 0 / 0.7);
   }
 
   .focus-ring {
     @apply outline-none ring-offset-2 ring-offset-bg focus-visible:ring-2 focus-visible:ring-accent;
+  }
+
+  /* Animated aurora blobs behind the hero */
+  .aurora {
+    position: absolute;
+    inset: -20%;
+    background:
+      radial-gradient(40% 45% at 20% 25%, rgb(var(--accent) / 0.25), transparent 60%),
+      radial-gradient(38% 42% at 78% 30%, rgb(var(--accent-2) / 0.2), transparent 62%),
+      radial-gradient(45% 50% at 55% 80%, rgb(var(--accent) / 0.16), transparent 60%);
+    filter: blur(30px);
+    animation: aurora-drift 24s ease-in-out infinite alternate;
+  }
+
+  @keyframes aurora-drift {
+    0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+    50% { transform: translate3d(3%, 2%, 0) scale(1.08); }
+    100% { transform: translate3d(-1%, 1%, 0) scale(1.03); }
   }
 
   /* Faint blueprint grid used behind sections */

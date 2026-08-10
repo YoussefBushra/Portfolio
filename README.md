@@ -9,23 +9,21 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 **Framer Motion**. Dark/light themed, fully responsive, accessible, and static —
 deployable to Vercel in one click.
 
-> ### 🧊 3D layered variant (this branch)
-> This branch swaps the hero backdrop for a **real 3D scene** built with
-> **React Three Fiber**, **drei** and **postprocessing (Bloom)** — the same
-> "Living System Map" concept rendered in depth:
-> - Instanced glowing **nodes** in 3D space, proximity **edges**, and data
->   **packets** travelling along them (`components/three/Scene3D.tsx`)
-> - **Camera parallax** that follows the cursor + slow auto-rotation, bloom glow,
->   depth fog and a `Sparkles` dust layer
-> - **Performance-aware**: instanced meshes, clamped DPR, the render loop pauses
->   when the hero scrolls off-screen or the tab is hidden, and **quality drops on
->   mobile** (fewer nodes, lower DPR, softer bloom)
-> - **Graceful fallback** (`Hero3DBackground.tsx`): visitors without WebGL, or who
->   prefer reduced motion, get the original 2D canvas (static under reduced motion)
-> - The three.js bundle is **lazily loaded** (`dynamic(..., { ssr: false })`), so
->   first-load JS for the page stays small
+> ### 🔮 "Aurora Core" reimagined theme (this branch)
+> A premium, recruiter-facing reskin: eye-catching but clean and scannable.
+> - **Signature 3D "data core" centerpiece** (`components/three/DataCore.tsx`) —
+>   a morphing crystalline icosahedron with a glowing core, wireframe shell and
+>   orbiting service-nodes on tilted rings, bloom glow, pointer-reactive tilt
+> - **Aurora** gradient background + **glassmorphism** cards site-wide (frosted,
+>   subtle top highlight)
+> - **Editorial hero**: availability badge, bold headline, credibility chips
+>   (4.0 GPA · 10M@600ms · event-driven), clear CTAs (View work / Download CV /
+>   Get in touch)
+> - Built on the same R3F stack with **mobile quality tiers**, off-screen/hidden
+>   pausing, lazy-loaded three.js, and a **fallback** to the generated monogram
+>   for no-WebGL / reduced-motion visitors
 >
-> Adds `three`, `@react-three/fiber`, `@react-three/drei`,
+> Uses `three`, `@react-three/fiber`, `@react-three/drei`,
 > `@react-three/postprocessing`.
 
 ## ✨ Highlights
