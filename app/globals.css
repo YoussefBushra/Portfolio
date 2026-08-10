@@ -105,6 +105,24 @@ body {
   .text-gradient {
     @apply bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent;
   }
+
+  /* Animated aurora blobs used behind the hero */
+  .aurora {
+    position: absolute;
+    inset: -20%;
+    background:
+      radial-gradient(40% 45% at 20% 25%, rgb(var(--accent) / 0.22), transparent 60%),
+      radial-gradient(38% 42% at 78% 30%, rgb(var(--accent-2) / 0.18), transparent 62%),
+      radial-gradient(45% 50% at 55% 82%, rgb(var(--accent) / 0.15), transparent 60%);
+    filter: blur(32px);
+    animation: aurora-drift 24s ease-in-out infinite alternate;
+  }
+
+  @keyframes aurora-drift {
+    0% { transform: translate3d(-2%, -1%, 0) scale(1); }
+    50% { transform: translate3d(3%, 2%, 0) scale(1.08); }
+    100% { transform: translate3d(-1%, 1%, 0) scale(1.03); }
+  }
 }
 
 /* Custom selection */

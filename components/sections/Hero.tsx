@@ -1,196 +1,239 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import {
-  motion,
-  useMotionValue,
-  useMotionTemplate,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { useRef, type ReactNode } from "react";
+import { motion } from "framer-motion";
 import { profile } from "@/content/profile";
-import { NodeGraphBackground } from "@/components/system/NodeGraphBackground";
 import { MonogramAvatar } from "@/components/ui/MonogramAvatar";
-import { StatusTicker } from "@/components/system/StatusTicker";
 import { CVButton } from "@/components/ui/CVButton";
+import { CountUp } from "@/components/ui/CountUp";
 import { track } from "@/lib/analytics";
 import { fadeUp, stagger } from "@/lib/motion";
 
-export function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [motionOk, setMotionOk] = useState(true);
+const CORE_STACK = [
+  "NestJS",
+  "Node.js",
+  "TypeScript",
+  "PostgreSQL",
+  "MongoDB",
+  "RabbitMQ",
+  "Redis",
+  "Elasticsearch",
+  "React",
+  "Next.js",
+  "GraphQL",
+  "Grafana",
+];
 
-  // normalized pointer position within the hero (0..1)
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const sx = useSpring(mx, { stiffness: 120, damping: 20, mass: 0.4 });
-  const sy = useSpring(my, { stiffness: 120, damping: 20, mass: 0.4 });
-
-  // cursor-following glow position
-  const glowX = useTransform(sx, (v) => `${v * 100}%`);
-  const glowY = useTransform(sy, (v) => `${v * 100}%`);
-  const glowTransform = useMotionTemplate`translate(-50%, -50%)`;
-
-  // avatar parallax tilt
-  const rotateY = useTransform(sx, [0, 1], [14, -14]);
-  const rotateX = useTransform(sy, [0, 1], [-14, 14]);
-  const shiftX = useTransform(sx, [0, 1], [12, -12]);
-  const shiftY = useTransform(sy, [0, 1], [10, -10]);
-
-  useEffect(() => {
-    setMotionOk(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
-
+function Tile({
+  children,
+  className = "",
+  spotlight = true,
+}: {
+  children: ReactNode;
+  className?: string;
+  spotlight?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
   const onMove = (e: React.MouseEvent) => {
-    if (!motionOk) return;
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mx.set((e.clientX - rect.left) / rect.width);
-    my.set((e.clientY - rect.top) / rect.height);
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", `${((e.clientX - r.left) / r.width) * 100}%`);
+    el.style.setProperty("--my", `${((e.clientY - r.top) / r.height) * 100}%`);
   };
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={onMove}
+      variants={fadeUp}
+      className={`group relative overflow-hidden rounded-3xl border border-border bg-surface/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-accent/40 hover:shadow-node sm:p-6 ${className}`}
+    >
+      {spotlight ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background:
+              "radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgb(var(--accent) / 0.1), transparent 60%)",
+          }}
+        />
+      ) : null}
+      <div className="relative h-full">{children}</div>
+    </motion.div>
+  );
+}
 
+function Stat({
+  label,
+  children,
+  sub,
+}: {
+  label: string;
+  children: ReactNode;
+  sub: string;
+}) {
+  return (
+    <div className="flex h-full flex-col justify-between">
+      <div className="mono-label">{label}</div>
+      <div className="mt-3 text-4xl font-bold tracking-tight text-text sm:text-5xl">
+        {children}
+      </div>
+      <div className="mt-2 font-mono text-[11px] text-faint">{sub}</div>
+    </div>
+  );
+}
+
+export function Hero() {
   return (
     <section
       id="hero"
-      ref={sectionRef}
-      onMouseMove={onMove}
-      className="relative flex min-h-[100svh] items-center overflow-hidden pt-24"
+      className="relative flex min-h-[100svh] items-center overflow-hidden py-28"
     >
-      {/* animated system backdrop */}
+      {/* soft backdrop */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bp-grid opacity-70" />
-        <NodeGraphBackground
-          className="absolute inset-0 h-full w-full"
-          interactive
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg/10 via-bg/40 to-bg" />
+        <div className="aurora opacity-70" />
+        <div className="absolute inset-0 bp-grid opacity-30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-bg/30 to-bg" />
       </div>
 
-      {/* cursor-following glow (purely decorative) */}
       <motion.div
-        aria-hidden="true"
-        style={{
-          left: glowX,
-          top: glowY,
-          transform: glowTransform,
-        }}
-        className="pointer-events-none absolute -z-10 h-[32rem] w-[32rem] rounded-full bg-accent/10 blur-[120px]"
-      />
+        variants={stagger}
+        initial="hidden"
+        animate="show"
+        className="mx-auto grid w-full max-w-6xl auto-rows-[minmax(9rem,auto)] grid-cols-2 gap-3.5 px-4 sm:px-6 md:grid-cols-4 lg:grid-cols-6"
+      >
+        {/* Identity */}
+        <Tile
+          spotlight={false}
+          className="col-span-2 flex flex-col justify-between md:col-span-2 md:row-span-2 lg:col-span-3"
+        >
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="grid h-11 w-11 place-items-center rounded-xl border border-accent/40 bg-accent/10 font-mono text-sm font-bold text-accent">
+                  YB
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface-2/60 px-2.5 py-1 font-mono text-[11px] text-muted">
+                  <span className="h-1.5 w-1.5 rounded-full bg-ok animate-blink" />
+                  Available
+                </span>
+              </div>
+              <span className="hidden font-mono text-[11px] text-faint sm:block">
+                {profile.location}
+              </span>
+            </div>
 
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.4fr_1fr]">
-        <motion.div variants={stagger} initial="hidden" animate="show">
-          <motion.div
-            variants={fadeUp}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 font-mono text-xs text-muted backdrop-blur-sm"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-ok animate-blink" />
-            <span className="text-ok">ONLINE</span>
-            <span className="text-faint">·</span>
-            <span>{profile.location}</span>
-          </motion.div>
+            <h1 className="mt-6 text-4xl font-bold leading-[1.03] tracking-tight sm:text-5xl">
+              Youssef Bushra
+              <br />
+              <span className="text-gradient">Fouad</span>
+            </h1>
+            <p className="mt-3 text-base font-medium text-text sm:text-lg">
+              {profile.role}
+            </p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-muted">
+              {profile.tagline}
+            </p>
+          </div>
 
-          <motion.h1
-            variants={fadeUp}
-            className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
-          >
-            {profile.name.split(" ").slice(0, 2).join(" ")}
-            <br />
-            <span className="text-gradient">
-              {profile.name.split(" ").slice(2).join(" ")}
-            </span>
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUp}
-            className="mt-4 font-mono text-sm text-accent-2 sm:text-base"
-          >
-            {profile.role}
-          </motion.p>
-
-          <motion.p
-            variants={fadeUp}
-            className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
-          >
-            {profile.tagline}
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="mt-6">
-            <StatusTicker />
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-2.5">
             <a
               href="#projects"
-              onClick={() => track("cta_click", { cta: "explore", from: "hero" })}
-              className="focus-ring group inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-medium text-white shadow-glow transition-transform hover:-translate-y-0.5"
+              onClick={() => track("cta_click", { cta: "work", from: "hero" })}
+              className="focus-ring group/btn inline-flex items-center gap-2 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition-transform hover:-translate-y-0.5"
             >
-              Explore the system
-              <span className="transition-transform group-hover:translate-x-0.5">
-                →
-              </span>
-            </a>
-            <a
-              href="#contact"
-              onClick={() => track("cta_click", { cta: "contact", from: "hero" })}
-              className="focus-ring inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 text-sm font-medium text-text backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
-            >
-              Open a connection
+              View my work
+              <span className="transition-transform group-hover/btn:translate-x-0.5">→</span>
             </a>
             <CVButton from="hero" variant="ghost" />
-          </motion.div>
+          </div>
+        </Tile>
 
-          {/* status metrics */}
-          <motion.dl
-            variants={fadeUp}
-            className="mt-12 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4"
-          >
-            {profile.stats.map((s) => (
-              <div
-                key={s.label}
-                className="group flex flex-col border-l-2 border-accent/30 pl-3 transition-colors hover:border-accent"
-              >
-                <dt className="mono-label flex min-h-[2.5em] items-start leading-tight">
-                  {s.label}
-                </dt>
-                <dd className="mt-1 text-2xl font-bold tracking-tight text-text transition-colors group-hover:text-accent">
-                  {s.value}
-                </dd>
-                <dd className="mt-0.5 font-mono text-[11px] text-faint">{s.hint}</dd>
+        {/* Records metric */}
+        <Tile className="col-span-2 lg:col-span-3">
+          <Stat label="records searched" sub="Elasticsearch geo-search @ Block Gemini">
+            <CountUp value={10} suffix="M+" />
+          </Stat>
+        </Tile>
+
+        {/* GPA */}
+        <Tile className="col-span-1 lg:col-span-2">
+          <Stat label="cumulative GPA" sub="Distinction · Honors">
+            <CountUp value={4} decimals={2} />
+          </Stat>
+        </Tile>
+
+        {/* p95 */}
+        <Tile className="col-span-1 lg:col-span-1">
+          <Stat label="query p95" sub="target < 1s">
+            <CountUp value={600} suffix="ms" />
+          </Stat>
+        </Tile>
+
+        {/* Now */}
+        <Tile className="col-span-2 lg:col-span-3">
+          <div className="flex h-full flex-col justify-between">
+            <div className="flex items-center gap-2 mono-label">
+              <span className="h-1.5 w-1.5 rounded-full bg-ok animate-blink" />
+              currently
+            </div>
+            <div className="mt-3">
+              <div className="text-xl font-bold tracking-tight text-text">
+                Web Full-Stack Developer
               </div>
+              <div className="mt-1 font-mono text-sm text-accent">
+                Skil-Dev <span className="text-faint">· Cairo, Egypt</span>
+              </div>
+            </div>
+            <div className="mt-3 font-mono text-[11px] text-faint">
+              Aug 2024 — Present · microservices, integrations &amp; UIs
+            </div>
+          </div>
+        </Tile>
+
+        {/* Links */}
+        <Tile className="col-span-2 lg:col-span-3">
+          <div className="mono-label mb-3">connect</div>
+          <ul className="space-y-2">
+            {profile.socials.map((s) => (
+              <li key={s.label}>
+                <a
+                  href={s.href}
+                  target={s.href.startsWith("http") ? "_blank" : undefined}
+                  rel="noreferrer noopener"
+                  onClick={() => track("social_click", { label: s.label, from: "hero-bento" })}
+                  className="focus-ring group/link flex items-center justify-between rounded-lg py-1 text-sm"
+                >
+                  <span className="flex items-center gap-2.5">
+                    <span className="grid h-7 w-7 place-items-center rounded-lg border border-border bg-surface-2/60 font-mono text-[10px] text-accent">
+                      {s.label.slice(0, 2).toUpperCase()}
+                    </span>
+                    <span className="font-medium text-text">{s.label}</span>
+                  </span>
+                  <span className="font-mono text-[11px] text-faint transition-colors group-hover/link:text-accent">
+                    {s.handle}
+                  </span>
+                </a>
+              </li>
             ))}
-          </motion.dl>
+          </ul>
+        </Tile>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-8 hidden font-mono text-[11px] text-faint lg:block"
-          >
-            <span className="text-accent-2">tip</span> · move &amp; click the
-            background to ping the graph
-          </motion.p>
-        </motion.div>
-
-        {/* interactive avatar node */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto hidden lg:block"
-          style={{ perspective: 900 }}
-        >
-          <motion.div
-            style={{
-              rotateX,
-              rotateY,
-              x: shiftX,
-              y: shiftY,
-              transformStyle: "preserve-3d",
-            }}
-            className="relative"
-          >
-            <MonogramAvatar size={300} />
-          </motion.div>
-        </motion.div>
-      </div>
+        {/* Core stack */}
+        <Tile className="col-span-2 md:col-span-4 lg:col-span-6">
+          <div className="mono-label mb-3">core stack</div>
+          <div className="flex flex-wrap gap-2">
+            {CORE_STACK.map((t) => (
+              <span
+                key={t}
+                className="rounded-lg border border-border bg-surface-2/50 px-2.5 py-1 font-mono text-xs text-muted transition-colors hover:border-accent/40 hover:text-accent"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        </Tile>
+      </motion.div>
     </section>
   );
 }

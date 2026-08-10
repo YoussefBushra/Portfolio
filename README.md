@@ -9,6 +9,14 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 **Framer Motion**. Dark/light themed, fully responsive, accessible, and static —
 deployable to Vercel in one click.
 
+> ### 🧩 "Bento Dashboard" theme (this branch)
+> A recruiter-first reimagining: the hero is a **bento tile grid** so an HR skim
+> takes in everything at once — identity + CTAs, headline metrics
+> (**count-up** 10M+ / 4.00 / 600ms), current role, connect links, and the core
+> stack. Tiles have a **cursor spotlight**, hover lift, and staggered reveal over
+> a soft **aurora** backdrop. No WebGL — light and fast. The rest of the sections
+> (About → Contact) are unchanged.
+
 ## ✨ Highlights
 
 - **Animated node-graph backdrop** (`<canvas>`) with proximity edges and flowing
