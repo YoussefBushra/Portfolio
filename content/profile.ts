@@ -2,18 +2,18 @@ import type { NavNode, Profile } from "@/lib/types";
 
 export const profile: Profile = {
   name: "Youssef Bushra Fouad",
-  role: "Full-Stack Systems Engineer",
+  role: "Backend-Focused Full Stack Engineer",
   thesis: "I build the services other systems depend on.",
   tagline:
-    "Backend and distributed systems: event-driven services, search at scale, and the integrations that keep enterprise platforms in sync.",
+    "Backend and distributed systems: message-driven microservices on a multi-tenant SaaS platform, search at scale, and enterprise integrations.",
   location: "Cairo, Egypt",
   email: "Youssefbushra16.4@gmail.com",
   phone: "+20 120 149 3395",
   metaDescription:
-    "Youssef Bushra Fouad, full-stack software engineer specializing in backend systems, microservices and distributed architecture with NestJS, Node.js, TypeScript and PostgreSQL. Experienced integrating enterprise platforms and optimizing high-volume data operations.",
+    "Youssef Bushra Fouad, backend-focused full stack engineer building microservices for a multi-tenant SaaS platform with NestJS, Node.js, TypeScript, RabbitMQ, PostgreSQL and MongoDB. Experienced in event-driven architecture, enterprise integrations and high-volume search.",
   summary: [
-    "I design and ship scalable microservices with NestJS, Node.js, TypeScript, PostgreSQL and MongoDB, wiring them together with event-driven patterns, caching and observability so they stay reliable under load.",
-    "I have integrated enterprise platforms like Microsoft Dynamics 365 Finance and Odoo, optimized geo-search across 10M+ records with Elasticsearch, and built the Next.js interfaces that sit on top. I care about clean service boundaries, measurable performance, and interfaces that feel effortless.",
+    "I build backend services for a production multi-tenant SaaS platform, where roughly 40 services and frontend applications talk over RabbitMQ message patterns behind a single API gateway rather than calling each other directly. My work sits in service decomposition, message contracts, tenant-isolated data models, and the asynchronous flows that keep them consistent.",
+    "I have integrated Microsoft Dynamics 365 Finance and Odoo with custom financial systems, optimized geo-search across 10M+ records with Elasticsearch, and built the Next.js frontends that consume the services I ship. I care about clean service boundaries, measurable performance, and interfaces that feel effortless.",
   ],
   socials: [
     {
@@ -35,6 +35,11 @@ export const profile: Profile = {
   /* Three facts, all taken from work described elsewhere on this page. */
   facts: [
     {
+      value: "~40",
+      label: "services and frontends",
+      hint: "multi-tenant SaaS platform, message-driven",
+    },
+    {
       value: "10M+",
       label: "records under geo-search",
       hint: "Elasticsearch, at Block Gemini",
@@ -43,11 +48,6 @@ export const profile: Profile = {
       value: "600ms",
       label: "average geo-query response",
       hint: "against a target under 1s",
-    },
-    {
-      value: "4.00",
-      label: "cumulative GPA",
-      hint: "BSc Computer Science, Distinction with Honors",
     },
   ],
 };

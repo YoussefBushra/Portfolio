@@ -3,45 +3,59 @@ import type { SkillGroup } from "@/lib/types";
 export const skillGroups: SkillGroup[] = [
   {
     name: "Backend",
-    items: ["Node.js", "NestJS", "Express.js", "TypeORM", "Mongoose", "Django"],
+    items: ["Node.js", "NestJS", "Express.js", "TypeScript", "TypeORM", "Mongoose"],
   },
   {
-    name: "Distributed systems",
+    name: "Architecture",
     items: [
       "Microservices",
+      "Multi-tenant SaaS",
       "Event-driven architecture",
+      "Service decomposition",
+      "API gateway pattern",
+      "Micro-frontends",
+    ],
+  },
+  {
+    name: "Messaging and caching",
+    items: [
       "RabbitMQ",
-      "RMI",
-      "Service design",
+      "Redis",
+      "Idempotent consumers",
+      "Async processing",
+      "Query optimization",
     ],
   },
   {
     name: "Data and storage",
-    items: ["PostgreSQL", "MongoDB", "MS SQL Server", "PL/SQL", "SQLite", "Redis"],
+    items: ["PostgreSQL", "MongoDB", "MS SQL Server", "PL/SQL", "SQLite"],
   },
   {
     name: "APIs",
-    items: ["REST", "GraphQL", "Swagger", "JWT and auth"],
+    items: ["REST", "GraphQL", "Swagger", "JWT and role-based access"],
   },
   {
     name: "Search and observability",
-    items: ["Elasticsearch", "Kibana", "Filebeat", "Logstash", "Grafana"],
+    items: [
+      "Elasticsearch",
+      "Kibana",
+      "Filebeat",
+      "Logstash",
+      "Grafana",
+      "OpenTelemetry",
+    ],
   },
   {
     name: "Frontend",
     items: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Redux"],
   },
   {
+    name: "Testing and delivery",
+    items: ["Jest", "Docker", "GitHub Actions", "Git", "Postman"],
+  },
+  {
     name: "Languages",
     items: ["TypeScript", "JavaScript", "Python", "Java", "C#", "C++", "X++"],
-  },
-  {
-    name: "ML and data",
-    items: ["PyTorch", "Google Cloud AI", "Pandas", "NumPy", "Matplotlib", "Seaborn"],
-  },
-  {
-    name: "Testing and tooling",
-    items: ["Jest", "Selenium", "Git", "GitHub", "Bitbucket", "Postman"],
   },
 ];
 
