@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -10,14 +10,27 @@ import "./globals.css";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-const sans = Space_Grotesk({
+/* Type roles:
+   display - Bricolage Grotesque, headings only, optical sizing on
+   body    - IBM Plex Sans
+   data    - IBM Plex Mono, for dates, durations and tags */
+const display = Bricolage_Grotesque({
   subsets: ["latin"],
+  axes: ["opsz"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sans = IBM_Plex_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const mono = JetBrains_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["400", "500"],
   variable: "--font-mono",
   display: "swap",
 });
@@ -27,8 +40,8 @@ const siteUrl = "https://youssefbushra.dev";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${profile.name} — ${profile.role}`,
-    template: `%s — ${profile.name}`,
+    default: `${profile.name} - ${profile.role}`,
+    template: `%s - ${profile.name}`,
   },
   description: profile.metaDescription,
   keywords: [
@@ -46,13 +59,13 @@ export const metadata: Metadata = {
   creator: profile.name,
   openGraph: {
     type: "website",
-    title: `${profile.name} — ${profile.role}`,
+    title: `${profile.name} - ${profile.role}`,
     description: profile.metaDescription,
     siteName: profile.name,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${profile.name} — ${profile.role}`,
+    title: `${profile.name} - ${profile.role}`,
     description: profile.metaDescription,
   },
   icons: {
@@ -61,7 +74,7 @@ export const metadata: Metadata = {
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='#0b0e18'/><circle cx='16' cy='16' r='4' fill='#7c7aff'/><circle cx='7' cy='8' r='2.2' fill='#2dd4bf'/><circle cx='25' cy='9' r='2.2' fill='#2dd4bf'/><circle cx='8' cy='24' r='2.2' fill='#2dd4bf'/><circle cx='24' cy='24' r='2.2' fill='#2dd4bf'/><g stroke='#7c7aff' stroke-width='1.2' opacity='0.6'><line x1='16' y1='16' x2='7' y2='8'/><line x1='16' y1='16' x2='25' y2='9'/><line x1='16' y1='16' x2='8' y2='24'/><line x1='16' y1='16' x2='24' y2='24'/></g></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='#0e1116'/><rect x='5' y='9' width='22' height='4' rx='1' fill='#f5a524'/><rect x='9' y='19' width='14' height='4' rx='1' fill='#f5a524' opacity='0.55'/></svg>`
           ),
         type: "image/svg+xml",
       },
@@ -71,8 +84,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f7fb" },
-    { media: "(prefers-color-scheme: dark)", color: "#070910" },
+    { media: "(prefers-color-scheme: light)", color: "#eceef1" },
+    { media: "(prefers-color-scheme: dark)", color: "#0e1116" },
   ],
 };
 
@@ -83,10 +96,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${sans.variable} ${mono.variable} font-sans`}>
+      <body
+        className={`${display.variable} ${sans.variable} ${mono.variable} font-sans`}
+      >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
@@ -98,7 +113,7 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
 
-        {/* Optional Google Analytics 4 — enabled only when NEXT_PUBLIC_GA_ID is set */}
+        {/* Optional Google Analytics 4, enabled only when NEXT_PUBLIC_GA_ID is set */}
         {GA_ID ? (
           <>
             <Script

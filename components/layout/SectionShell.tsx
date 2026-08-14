@@ -7,9 +7,16 @@ interface SectionShellProps {
   id: string;
   children: ReactNode;
   className?: string;
+  /** Full-bleed sections handle their own horizontal padding. */
+  bleed?: boolean;
 }
 
-export function SectionShell({ id, children, className }: SectionShellProps) {
+export function SectionShell({
+  id,
+  children,
+  className = "",
+  bleed = false,
+}: SectionShellProps) {
   const ref = useRef<HTMLElement>(null);
   const seen = useRef(false);
 
@@ -34,9 +41,9 @@ export function SectionShell({ id, children, className }: SectionShellProps) {
     <section
       ref={ref}
       id={id}
-      className={`relative mx-auto w-full max-w-6xl scroll-mt-24 px-5 py-20 sm:px-8 md:py-28 ${
-        className ?? ""
-      }`}
+      className={`relative scroll-mt-24 py-20 md:py-28 ${
+        bleed ? "" : "mx-auto w-full max-w-page px-6 md:px-10"
+      } ${className}`}
     >
       {children}
     </section>

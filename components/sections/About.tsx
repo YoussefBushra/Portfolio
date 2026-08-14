@@ -1,44 +1,54 @@
 import { profile } from "@/content/profile";
 import { education } from "@/content/education";
 import { SectionShell } from "@/components/layout/SectionShell";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { SectionHead } from "@/components/ui/SectionHead";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 export function About() {
   return (
     <SectionShell id="about">
-      <SectionHeading
-        index="01"
-        service="svc/about"
-        title="The engineer behind the services"
-        description="A quick primer on how I approach building software — and the record behind it."
-      />
+      <SectionHead title="Clean service boundaries, measurable performance." />
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.3fr_1fr]">
-        <RevealOnScroll className="space-y-5">
-          {profile.summary.map((p, i) => (
-            <p key={i} className="text-base leading-relaxed text-muted md:text-lg">
-              {p}
-            </p>
+      <RevealOnScroll className="max-w-prose space-y-6">
+        {profile.summary.map((p, i) => (
+          <p key={i} className="text-lg leading-relaxed text-muted">
+            {p}
+          </p>
+        ))}
+      </RevealOnScroll>
+
+      <RevealOnScroll className="mt-16">
+        <dl className="grid grid-cols-1 border-t border-line sm:grid-cols-3">
+          {profile.facts.map((f) => (
+            <div
+              key={f.label}
+              className="border-b border-line py-6 sm:border-b-0 sm:border-r sm:pr-6 sm:last:border-r-0 sm:[&:not(:first-child)]:pl-6"
+            >
+              <dt className="font-display text-4xl font-bold tracking-tight text-text">
+                {f.value}
+              </dt>
+              <dd className="mt-2 text-sm text-text">{f.label}</dd>
+              <dd className="mt-1 font-mono text-xs text-faint">{f.hint}</dd>
+            </div>
           ))}
-        </RevealOnScroll>
+        </dl>
+      </RevealOnScroll>
 
-        <RevealOnScroll>
-          <div className="card p-5">
-            <div className="mono-label mb-3">education</div>
-            {education.map((e) => (
-              <div key={e.institution}>
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className="font-semibold text-text">{e.degree}</h3>
-                  <span className="font-mono text-xs text-faint">{e.period}</span>
-                </div>
-                <p className="mt-1 text-sm text-muted">{e.institution}</p>
-                <p className="mt-1 font-mono text-xs text-accent">{e.detail}</p>
-              </div>
-            ))}
+      <RevealOnScroll className="mt-12">
+        {education.map((e) => (
+          <div
+            key={e.institution}
+            className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+          >
+            <div>
+              <h3 className="text-base font-semibold text-text">{e.degree}</h3>
+              <p className="mt-1 text-sm text-muted">{e.institution}</p>
+              <p className="mt-1 text-sm text-accent-text">{e.detail}</p>
+            </div>
+            <span className="shrink-0 font-mono text-xs text-faint">{e.period}</span>
           </div>
-        </RevealOnScroll>
-      </div>
+        ))}
+      </RevealOnScroll>
     </SectionShell>
   );
 }

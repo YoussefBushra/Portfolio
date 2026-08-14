@@ -1,56 +1,51 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { skillGroups } from "@/content/skills";
+import { motion, useReducedMotion } from "framer-motion";
+import { skillGroups, spokenLanguages } from "@/content/skills";
 import { SectionShell } from "@/components/layout/SectionShell";
-import { SectionHeading } from "@/components/ui/SectionHeading";
-import { fadeUp } from "@/lib/motion";
+import { SectionHead } from "@/components/ui/SectionHead";
+import { Tag } from "@/components/ui/Tag";
 
 export function Skills() {
+  const reduce = useReducedMotion();
+
   return (
     <SectionShell id="skills">
-      <SectionHeading
-        index="04"
-        service="svc/skills"
-        title="Capability matrix"
-        description="The stack I reach for, grouped by the part of the system it serves."
-      />
+      <SectionHead title="What I reach for." />
 
-      <motion.div
+      <motion.dl
         variants={{ hidden: {}, show: { transition: { staggerChildren: 0.05 } } }}
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.1 }}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid grid-cols-1 gap-x-10 gap-y-10 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-3"
       >
         {skillGroups.map((group) => (
           <motion.div
             key={group.name}
-            variants={fadeUp}
-            className="card group p-5 transition-colors hover:border-accent/40"
+            variants={{
+              hidden: reduce ? {} : { opacity: 0, y: 16 },
+              show: {
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+              },
+            }}
           >
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-text">{group.name}</h3>
-              <span className="font-mono text-[11px] text-faint">
-                {group.service}
-              </span>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-1.5">
+            <dt className="border-b border-line pb-2 text-sm font-semibold text-text">
+              {group.name}
+            </dt>
+            <dd className="mt-4 flex flex-wrap gap-1.5">
               {group.items.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-md border border-border bg-surface-2/50 px-2.5 py-1 font-mono text-xs text-muted transition-colors group-hover:border-accent/20"
-                >
-                  {item}
-                </span>
+                <Tag key={item} label={item} />
               ))}
-            </div>
+            </dd>
           </motion.div>
         ))}
-      </motion.div>
+      </motion.dl>
 
-      <p className="mt-8 text-center font-mono text-xs text-faint">
-        Also fluent in the human layer — Arabic (native), English (C1), German (A1).
+      <p className="mt-12 text-sm text-muted">
+        Spoken languages: {spokenLanguages}.
       </p>
     </SectionShell>
   );

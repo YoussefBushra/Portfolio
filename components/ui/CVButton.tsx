@@ -10,16 +10,12 @@ interface CVButtonProps {
   className?: string;
 }
 
-export function CVButton({ from, variant = "primary", className = "" }: CVButtonProps) {
-  const base =
-    "focus-ring group inline-flex items-center gap-2 rounded-xl text-sm font-medium transition-all";
+export function CVButton({ from, variant = "ghost", className = "" }: CVButtonProps) {
   const styles = {
-    primary:
-      "bg-accent px-5 py-3 text-white shadow-glow hover:-translate-y-0.5",
-    ghost:
-      "border border-border bg-surface/60 px-5 py-3 text-text backdrop-blur-sm hover:border-accent/50 hover:text-accent",
+    primary: "btn-primary",
+    ghost: "btn-ghost",
     compact:
-      "border border-border bg-surface/70 px-3 py-1.5 font-mono text-xs text-muted hover:border-accent/50 hover:text-accent",
+      "focus-ring inline-flex items-center gap-2 whitespace-nowrap rounded border border-line bg-surface px-3 py-1.5 font-mono text-xs text-muted transition-colors duration-200 hover:border-accent hover:text-text",
   }[variant];
 
   return (
@@ -27,7 +23,7 @@ export function CVButton({ from, variant = "primary", className = "" }: CVButton
       href={CV_PATH}
       download
       onClick={() => track("cv_download", { from })}
-      className={`${base} ${styles} ${className}`}
+      className={`group ${styles} ${className}`}
     >
       <svg
         width="15"
@@ -38,7 +34,7 @@ export function CVButton({ from, variant = "primary", className = "" }: CVButton
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="transition-transform group-hover:translate-y-0.5"
+        className="transition-transform duration-200 group-hover:translate-y-0.5"
         aria-hidden="true"
       >
         <path d="M12 3v12M7 10l5 5 5-5M5 21h14" />

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { navNodes } from "@/content/profile";
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { navNodes, profile } from "@/content/profile";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { CVButton } from "@/components/ui/CVButton";
 import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
@@ -11,13 +11,14 @@ export function Nav() {
   const [active, setActive] = useState<string>("hero");
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  // Motion value event instead of a scroll listener: state changes only when
+  // the threshold is crossed, not on every frame.
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const next = y > 16;
+    setScrolled((cur) => (cur === next ? cur : next));
+  });
 
   useEffect(() => {
     const ids = ["hero", ...navNodes.map((n) => n.id)];
@@ -39,28 +40,24 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
         scrolled
-          ? "border-b border-border bg-bg/80 backdrop-blur-md"
+          ? "border-b border-line bg-bg/85 backdrop-blur-md"
           : "border-b border-transparent"
       }`}
     >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3 sm:px-8">
+      <nav className="mx-auto flex h-16 max-w-page items-center justify-between gap-6 px-6 md:px-10">
         <a
           href="#hero"
-          className="focus-ring group flex items-center gap-2.5 rounded-md"
-          aria-label="Home"
+          className="focus-ring flex shrink-0 items-center gap-3 rounded"
+          aria-label={`${profile.name}, back to top`}
         >
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-accent/40 bg-accent/10 font-mono text-sm font-bold text-accent">
-            YB
-            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-ok animate-blink" />
-          </span>
-          <span className="hidden font-mono text-xs text-muted sm:inline">
-            youssef<span className="text-faint">.systems</span>
+          <span className="h-1 w-6 bg-accent" aria-hidden="true" />
+          <span className="font-display text-[15px] font-bold tracking-tight text-text">
+            Youssef Bushra
           </span>
         </a>
 
-        {/* desktop node links */}
         <ul className="hidden items-center gap-1 md:flex">
           {navNodes.map((n) => {
             const isActive = active === n.id;
@@ -68,25 +65,17 @@ export function Nav() {
               <li key={n.id}>
                 <a
                   href={`#${n.id}`}
-                  className={`focus-ring group relative flex items-center gap-2 rounded-lg px-3 py-2 font-mono text-xs transition-colors ${
-                    isActive
-                      ? "text-accent"
-                      : "text-muted hover:text-text"
+                  aria-current={isActive ? "true" : undefined}
+                  className={`focus-ring relative block rounded px-3 py-2 text-sm transition-colors duration-200 ${
+                    isActive ? "text-text" : "text-muted hover:text-text"
                   }`}
                 >
-                  <span
-                    className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                      isActive
-                        ? "bg-accent shadow-glow-sm"
-                        : "bg-border group-hover:bg-accent-2"
-                    }`}
-                  />
                   {n.label}
                   {isActive ? (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-lg bg-accent/10"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      className="absolute inset-x-3 bottom-1 h-[2px] bg-accent"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
                     />
                   ) : null}
                 </a>
@@ -95,15 +84,15 @@ export function Nav() {
           })}
         </ul>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <CVButton from="nav" variant="compact" className="hidden lg:inline-flex" />
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
-            aria-label="Open command palette"
-            className="focus-ring hidden items-center gap-2 rounded-lg border border-border bg-surface/70 px-2.5 py-1.5 font-mono text-xs text-muted transition-colors hover:border-accent/50 hover:text-accent sm:inline-flex"
+            aria-label="Open command menu"
+            className="focus-ring hidden h-9 items-center gap-1 rounded border border-line bg-surface px-2.5 font-mono text-xs text-muted transition-colors duration-200 hover:border-accent hover:text-text sm:inline-flex"
           >
-            <span className="text-accent-2">⌘</span>K
+            ⌘K
           </button>
           <ThemeToggle />
           <button
@@ -111,72 +100,61 @@ export function Nav() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-surface/70 text-muted md:hidden"
+            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded border border-line bg-surface text-muted md:hidden"
           >
-            <div className="flex flex-col gap-1">
+            <span className="flex flex-col gap-1">
               <span
-                className={`h-0.5 w-4 bg-current transition-transform ${
-                  open ? "translate-y-1.5 rotate-45" : ""
+                className={`h-[1.5px] w-4 bg-current transition-transform duration-200 ${
+                  open ? "translate-y-[5.5px] rotate-45" : ""
                 }`}
               />
               <span
-                className={`h-0.5 w-4 bg-current transition-opacity ${
+                className={`h-[1.5px] w-4 bg-current transition-opacity duration-200 ${
                   open ? "opacity-0" : ""
                 }`}
               />
               <span
-                className={`h-0.5 w-4 bg-current transition-transform ${
-                  open ? "-translate-y-1.5 -rotate-45" : ""
+                className={`h-[1.5px] w-4 bg-current transition-transform duration-200 ${
+                  open ? "-translate-y-[5.5px] -rotate-45" : ""
                 }`}
               />
-            </div>
+            </span>
           </button>
         </div>
       </nav>
 
-      {/* mobile menu */}
       <AnimatePresence>
         {open ? (
-          <motion.ul
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t border-border bg-bg/95 backdrop-blur-md md:hidden"
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-line bg-bg/95 backdrop-blur-md md:hidden"
           >
-            {navNodes.map((n) => (
-              <li key={n.id} className="border-b border-border/60 last:border-0">
-                <a
-                  href={`#${n.id}`}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center justify-between px-6 py-4 font-mono text-sm text-muted"
-                >
-                  <span className="flex items-center gap-3">
+            <ul>
+              {navNodes.map((n) => (
+                <li key={n.id} className="border-b border-line/70">
+                  <a
+                    href={`#${n.id}`}
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-3 px-6 py-4 text-sm text-muted"
+                  >
                     <span
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        active === n.id ? "bg-accent" : "bg-border"
+                      className={`h-[2px] w-4 transition-colors ${
+                        active === n.id ? "bg-accent" : "bg-line"
                       }`}
+                      aria-hidden="true"
                     />
                     {n.label}
-                  </span>
-                  <span className="text-xs text-faint">{n.service}</span>
-                </a>
-              </li>
-            ))}
-            <li className="flex items-center gap-3 px-6 py-4">
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="px-6 py-4">
               <CVButton from="mobile-menu" variant="compact" />
-              <button
-                type="button"
-                onClick={() => {
-                  setOpen(false);
-                  window.dispatchEvent(new Event(OPEN_PALETTE_EVENT));
-                }}
-                className="focus-ring inline-flex items-center gap-2 rounded-lg border border-border bg-surface/70 px-3 py-1.5 font-mono text-xs text-muted"
-              >
-                <span className="text-accent-2">⌘</span>K · commands
-              </button>
-            </li>
-          </motion.ul>
+            </div>
+          </motion.div>
         ) : null}
       </AnimatePresence>
     </header>

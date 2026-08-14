@@ -2,7 +2,7 @@
   "name": "youssef-bushra-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Living System Map — the developer portfolio of Youssef Bushra Fouad",
+  "description": "The developer portfolio of Youssef Bushra Fouad",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

@@ -5,8 +5,11 @@ export const experience: Experience[] = [
     company: "Skil-Dev",
     role: "Web Full Stack Developer",
     location: "Cairo, Egypt",
-    period: "Aug 2024 — Present",
+    period: "Aug 2024 - Present",
+    start: "2024-08",
     current: true,
+    summary:
+      "Full-stack feature work on microservices that carry finance data between enterprise platforms.",
     stack: [
       "TypeScript",
       "NestJS",
@@ -22,7 +25,7 @@ export const experience: Experience[] = [
       "Jest",
     ],
     metrics: [
-      { label: "enterprise systems integrated", value: "D365 + Odoo" },
+      { label: "platforms integrated", value: "D365 + Odoo" },
       { label: "service messaging", value: "Event-driven" },
     ],
     highlights: [
@@ -40,7 +43,11 @@ export const experience: Experience[] = [
     company: "Block Gemini",
     role: "Full Stack Software Engineer",
     location: "Dubai, UAE",
-    period: "Jan 2024 — Aug 2024",
+    period: "Jan 2024 - Aug 2024",
+    start: "2024-01",
+    end: "2024-08",
+    summary:
+      "Led geo-search optimization over a 10M-record dataset and built the logging pipeline the team monitored it with.",
     stack: [
       "NestJS",
       "TypeORM",
@@ -57,16 +64,16 @@ export const experience: Experience[] = [
     ],
     metrics: [
       { label: "records searched", value: "10M+" },
-      { label: "geo-query p95 (target < 1s)", value: "600ms" },
+      { label: "geo-query p95, target under 1s", value: "600ms" },
     ],
     highlights: [
-      "Led the optimization of geo-location search queries over large datasets using Elasticsearch, achieving an average query response of 600ms (target < 1s) while processing 10 million records.",
+      "Led the optimization of geo-location search queries over large datasets using Elasticsearch, achieving an average query response of 600ms against a target under 1s while processing 10 million records.",
       "Designed RESTful APIs with NestJS, TypeORM and PostgreSQL, improving performance of complex data-retrieval operations.",
       "Used GraphQL to streamline data querying and improve client-side performance, with Redis as a caching layer.",
       "Integrated JWT authentication and role-based authorization across microservices, enhancing security while keeping the system scalable.",
-      "Built and maintained a comprehensive logging system with Filebeat, Kibana and Elasticsearch for real-time log collection, monitoring and visualization, collaborating with DevOps to integrate it into backend systems.",
+      "Built and maintained a logging system with Filebeat, Kibana and Elasticsearch for real-time log collection, monitoring and visualization, working with DevOps to integrate it into backend systems.",
       "Documented APIs with Swagger, improving developer experience and reducing integration time.",
-      "Contributed to frontend work with Next.js 14 and Tailwind CSS, integrating NestJS APIs with React/Next.js frontends.",
+      "Contributed to frontend work with Next.js 14 and Tailwind CSS, integrating NestJS APIs with React and Next.js frontends.",
       "Collaborated with a multi-national team across Dubai, India, Romania and Egypt in a fast-paced environment.",
     ],
   },
