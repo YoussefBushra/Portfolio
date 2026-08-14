@@ -11,7 +11,7 @@ import { track } from "@/lib/analytics";
  * While it is null the plate renders as a typographic monogram, so the
  * composition holds either way.
  */
-const PORTRAIT: string | null = null;
+const PORTRAIT: string | null = "/portrait.jpg";
 
 export function Hero() {
   const reduce = useReducedMotion();
@@ -89,7 +89,7 @@ export function Hero() {
                 fill
                 priority
                 sizes="(max-width: 768px) 380px, 40vw"
-                className="relative rounded object-cover"
+                className="relative rounded object-cover object-[50%_10%]"
               />
             ) : (
               <div className="relative flex h-full w-full items-end justify-start overflow-hidden rounded bg-accent px-5 pb-3">
