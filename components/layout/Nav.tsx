@@ -13,10 +13,8 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
 
-  // Motion value event instead of a scroll listener: state changes only when
-  // the threshold is crossed, not on every frame.
   useMotionValueEvent(scrollY, "change", (y) => {
-    const next = y > 16;
+    const next = y > 12;
     setScrolled((cur) => (cur === next ? cur : next));
   });
 
@@ -40,25 +38,25 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
+      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-200 ${
         scrolled
-          ? "border-b border-line bg-bg/85 backdrop-blur-md"
+          ? "border-b border-line bg-bg/90 backdrop-blur"
           : "border-b border-transparent"
       }`}
     >
-      <nav className="mx-auto flex h-16 max-w-page items-center justify-between gap-6 px-6 md:px-10">
+      <nav className="mx-auto flex h-14 max-w-page items-center justify-between gap-6 px-6 md:px-10">
         <a
           href="#hero"
-          className="focus-ring flex shrink-0 items-center gap-3 rounded"
+          className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
           aria-label={`${profile.name}, back to top`}
         >
-          <span className="h-1 w-6 bg-accent" aria-hidden="true" />
-          <span className="font-display text-[15px] font-bold tracking-tight text-text">
+          <span className="h-[3px] w-5 bg-accent" aria-hidden="true" />
+          <span className="text-sm font-semibold tracking-tight text-text">
             Youssef Bushra
           </span>
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-0.5 md:flex">
           {navNodes.map((n) => {
             const isActive = active === n.id;
             return (
@@ -66,7 +64,7 @@ export function Nav() {
                 <a
                   href={`#${n.id}`}
                   aria-current={isActive ? "true" : undefined}
-                  className={`focus-ring relative block rounded px-3 py-2 text-sm transition-colors duration-200 ${
+                  className={`focus-ring relative block rounded-sm px-2.5 py-1.5 text-[13px] transition-colors duration-150 ${
                     isActive ? "text-text" : "text-muted hover:text-text"
                   }`}
                 >
@@ -74,8 +72,8 @@ export function Nav() {
                   {isActive ? (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-x-3 bottom-1 h-[2px] bg-accent"
-                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      className="absolute inset-x-2.5 -bottom-px h-[2px] bg-accent"
+                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
                     />
                   ) : null}
                 </a>
@@ -84,13 +82,13 @@ export function Nav() {
           })}
         </ul>
 
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5">
           <CVButton from="nav" variant="compact" className="hidden lg:inline-flex" />
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
             aria-label="Open command menu"
-            className="focus-ring hidden h-9 items-center gap-1 rounded border border-line bg-surface px-2.5 font-mono text-xs text-muted transition-colors duration-200 hover:border-accent hover:text-text sm:inline-flex"
+            className="focus-ring hidden h-8 items-center rounded-sm border border-line bg-bg px-2 font-mono text-[11px] text-muted transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
           >
             ⌘K
           </button>
@@ -100,22 +98,22 @@ export function Nav() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded border border-line bg-surface text-muted md:hidden"
+            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
           >
-            <span className="flex flex-col gap-1">
+            <span className="flex flex-col gap-[3px]">
               <span
-                className={`h-[1.5px] w-4 bg-current transition-transform duration-200 ${
-                  open ? "translate-y-[5.5px] rotate-45" : ""
+                className={`h-[1.5px] w-3.5 bg-current transition-transform duration-150 ${
+                  open ? "translate-y-[4.5px] rotate-45" : ""
                 }`}
               />
               <span
-                className={`h-[1.5px] w-4 bg-current transition-opacity duration-200 ${
+                className={`h-[1.5px] w-3.5 bg-current transition-opacity duration-150 ${
                   open ? "opacity-0" : ""
                 }`}
               />
               <span
-                className={`h-[1.5px] w-4 bg-current transition-transform duration-200 ${
-                  open ? "-translate-y-[5.5px] -rotate-45" : ""
+                className={`h-[1.5px] w-3.5 bg-current transition-transform duration-150 ${
+                  open ? "-translate-y-[4.5px] -rotate-45" : ""
                 }`}
               />
             </span>
@@ -129,8 +127,8 @@ export function Nav() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-line bg-bg/95 backdrop-blur-md md:hidden"
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-line bg-bg/95 backdrop-blur md:hidden"
           >
             <ul>
               {navNodes.map((n) => (
@@ -138,10 +136,10 @@ export function Nav() {
                   <a
                     href={`#${n.id}`}
                     onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-6 py-4 text-sm text-muted"
+                    className="flex items-center gap-3 px-6 py-3 text-sm text-muted"
                   >
                     <span
-                      className={`h-[2px] w-4 transition-colors ${
+                      className={`h-[2px] w-3.5 transition-colors ${
                         active === n.id ? "bg-accent" : "bg-line"
                       }`}
                       aria-hidden="true"
@@ -151,7 +149,7 @@ export function Nav() {
                 </li>
               ))}
             </ul>
-            <div className="px-6 py-4">
+            <div className="px-6 py-3">
               <CVButton from="mobile-menu" variant="compact" />
             </div>
           </motion.div>

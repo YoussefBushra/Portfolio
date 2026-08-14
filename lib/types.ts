@@ -33,6 +33,8 @@ export interface Profile {
   email: string;
   phone: string;
   metaDescription: string;
+  /** Short status line, e.g. what kind of work is being sought. */
+  availability: string;
   summary: string[];
   socials: SocialLink[];
   facts: Fact[];

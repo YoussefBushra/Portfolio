@@ -1,54 +1,44 @@
 import { profile } from "@/content/profile";
 import { education } from "@/content/education";
 import { SectionShell } from "@/components/layout/SectionShell";
-import { SectionHead } from "@/components/ui/SectionHead";
-import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 export function About() {
   return (
-    <SectionShell id="about">
-      <SectionHead title="Clean service boundaries, measurable performance." />
-
-      <RevealOnScroll className="max-w-prose space-y-6">
-        {profile.summary.map((p, i) => (
-          <p key={i} className="text-lg leading-relaxed text-muted">
-            {p}
-          </p>
-        ))}
-      </RevealOnScroll>
-
-      <RevealOnScroll className="mt-16">
-        <dl className="grid grid-cols-1 border-t border-line sm:grid-cols-3">
-          {profile.facts.map((f) => (
-            <div
-              key={f.label}
-              className="border-b border-line py-6 sm:border-b-0 sm:border-r sm:pr-6 sm:last:border-r-0 sm:[&:not(:first-child)]:pl-6"
-            >
-              <dt className="font-display text-4xl font-bold tracking-tight text-text">
-                {f.value}
-              </dt>
-              <dd className="mt-2 text-sm text-text">{f.label}</dd>
-              <dd className="mt-1 font-mono text-xs text-faint">{f.hint}</dd>
-            </div>
+    <SectionShell id="about" label="About" meta={profile.location}>
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-14">
+        <div className="space-y-4">
+          {profile.summary.map((p, i) => (
+            <p key={i} className="max-w-prose text-[15px] leading-[1.7] text-muted">
+              {p}
+            </p>
           ))}
-        </dl>
-      </RevealOnScroll>
+        </div>
 
-      <RevealOnScroll className="mt-12">
-        {education.map((e) => (
-          <div
-            key={e.institution}
-            className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-          >
-            <div>
-              <h3 className="text-base font-semibold text-text">{e.degree}</h3>
-              <p className="mt-1 text-sm text-muted">{e.institution}</p>
-              <p className="mt-1 text-sm text-accent-text">{e.detail}</p>
-            </div>
-            <span className="shrink-0 font-mono text-xs text-faint">{e.period}</span>
+        <div className="space-y-6">
+          <div>
+            <h3 className="block-label">Education</h3>
+            {education.map((e) => (
+              <div key={e.institution} className="mt-2">
+                <p className="text-sm font-medium leading-snug text-text">
+                  {e.degree}
+                </p>
+                <p className="mt-1 text-sm leading-snug text-muted">
+                  {e.institution}
+                </p>
+                <p className="mt-1 text-sm text-accent-text">{e.detail}</p>
+                <p className="mt-1 font-mono text-[11px] text-faint">{e.period}</p>
+              </div>
+            ))}
           </div>
-        ))}
-      </RevealOnScroll>
+
+          <div>
+            <h3 className="block-label">Languages</h3>
+            <p className="mt-2 text-sm leading-snug text-muted">
+              Arabic (native), English (C1), German (A1)
+            </p>
+          </div>
+        </div>
+      </div>
     </SectionShell>
   );
 }

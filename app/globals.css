@@ -3,19 +3,18 @@
 @tailwind utilities;
 
 /* ============================================================
-   Palette: cool graphite ground, one signal-amber accent.
-   Values are RGB triplets consumed through
-   rgb(var(--token) / <alpha-value>). Light is :root, dark
-   overrides under .dark (next-themes class strategy).
+   Document palette. Light is the primary design target: a
+   near-white page with tinted panels, read like a printed
+   dossier. Dark mirrors it. One accent, signal amber.
    ============================================================ */
 :root {
-  --bg: 236 238 241;
-  --surface: 248 249 250;
-  --surface-2: 224 227 231;
-  --line: 205 211 217;
-  --text: 17 22 28;
-  --muted: 82 92 104;
-  --faint: 94 103 115;
+  --bg: 252 252 253;
+  --surface: 243 244 246;
+  --surface-2: 232 234 238;
+  --line: 217 221 226;
+  --text: 17 20 24;
+  --muted: 84 91 100;
+  --faint: 105 111 121;
   --accent: 245 165 36;
   --accent-text: 143 82 0;
   --on-accent: 20 16 6;
@@ -24,13 +23,13 @@
 }
 
 .dark {
-  --bg: 14 17 22;
-  --surface: 22 28 36;
-  --surface-2: 28 35 44;
-  --line: 42 51 62;
-  --text: 230 233 238;
-  --muted: 152 162 176;
-  --faint: 122 134 150;
+  --bg: 16 18 21;
+  --surface: 24 27 31;
+  --surface-2: 31 35 40;
+  --line: 46 51 58;
+  --text: 232 234 236;
+  --muted: 155 163 171;
+  --faint: 122 131 140;
   --accent: 245 165 36;
   --accent-text: 245 178 74;
   --on-accent: 20 16 6;
@@ -44,13 +43,14 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem;
+  scroll-padding-top: 4.5rem;
 }
 
 body {
   background-color: rgb(var(--bg));
   color: rgb(var(--text));
   font-family: var(--font-sans);
+  font-feature-settings: "cv05" 1;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -70,22 +70,15 @@ body {
 }
 
 @layer components {
-  /* The page's visual atom: a short amber bar, the same mark the trace
-     chart uses for a span. Marks section headings instead of an eyebrow. */
-  .span-mark {
-    @apply block h-1 w-10 bg-accent;
-  }
-
-  .rule {
-    @apply border-t border-line;
+  /* Small uppercase label that titles a data block. Used as a section
+     label in the left column of the two-column section grid, where it is
+     structural navigation rather than decoration. */
+  .block-label {
+    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-faint;
   }
 
   .tag {
-    @apply inline-flex items-center rounded border border-line bg-surface-2/60 px-2 py-0.5 font-mono text-[11px] leading-5 text-muted;
-  }
-
-  .panel {
-    @apply rounded border border-line bg-surface;
+    @apply inline-flex items-center rounded-sm border border-line bg-surface px-2 py-[3px] font-mono text-[11px] leading-4 text-muted;
   }
 
   .focus-ring {
@@ -93,16 +86,21 @@ body {
   }
 
   .link {
-    @apply text-accent-text underline decoration-accent/40 decoration-1 underline-offset-4 transition-colors hover:decoration-accent;
+    @apply text-accent-text underline decoration-accent/40 decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent;
   }
 
-  /* Primary action: solid amber, ink label. Contrast ~9:1 in both themes. */
   .btn-primary {
-    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded bg-accent px-5 py-3 text-sm font-semibold text-on-accent transition-transform duration-200 ease-out hover:-translate-y-px active:translate-y-px;
+    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm bg-accent px-4 py-2.5 text-sm font-semibold text-on-accent transition-transform duration-150 hover:-translate-y-px active:translate-y-px;
   }
 
   .btn-ghost {
-    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded border border-line bg-surface px-5 py-3 text-sm font-medium text-text transition-colors duration-200 hover:border-accent active:translate-y-px;
+    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-line bg-bg px-4 py-2.5 text-sm font-medium text-text transition-colors duration-150 hover:border-accent active:translate-y-px;
+  }
+
+  /* Numbers are tabular everywhere so columns of figures line up. */
+  .num {
+    @apply tabular-nums;
+    font-variant-numeric: tabular-nums;
   }
 }
 

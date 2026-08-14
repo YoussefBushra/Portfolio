@@ -1,7 +1,6 @@
 import { experience } from "@/content/experience";
 import { buildTrace } from "@/lib/timeline";
 import { SectionShell } from "@/components/layout/SectionShell";
-import { SectionHead } from "@/components/ui/SectionHead";
 import { TraceChart } from "@/components/system/TraceChart";
 
 /**
@@ -10,13 +9,15 @@ import { TraceChart } from "@/components/system/TraceChart";
  */
 export function Experience() {
   const trace = buildTrace(new Date());
+  const first = trace.years[0]?.label;
+  const last = trace.years[trace.years.length - 1]?.label;
 
   return (
-    <SectionShell id="experience">
-      <SectionHead
-        title="Study, then production."
-        lead="Each bar is placed and sized by real dates. Select a role to see what shipped inside it."
-      />
+    <SectionShell
+      id="experience"
+      label="Experience"
+      meta={first && last ? `${first} to ${last}` : undefined}
+    >
       <TraceChart trace={trace} roles={experience} />
     </SectionShell>
   );

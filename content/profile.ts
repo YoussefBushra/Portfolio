@@ -32,22 +32,29 @@ export const profile: Profile = {
       handle: "Youssefbushra16.4@gmail.com",
     },
   ],
-  /* Three facts, all taken from work described elsewhere on this page. */
+  availability: "Open to backend and full-stack roles",
+  /* Facts, all taken from work described elsewhere on this page. Years of
+     experience is computed from the roles, so it never goes stale. */
   facts: [
     {
       value: "~40",
       label: "services and frontends",
-      hint: "multi-tenant SaaS platform, message-driven",
+      hint: "multi-tenant SaaS platform",
     },
     {
       value: "10M+",
       label: "records under geo-search",
-      hint: "Elasticsearch, at Block Gemini",
+      hint: "Elasticsearch",
     },
     {
       value: "600ms",
-      label: "average geo-query response",
-      hint: "against a target under 1s",
+      label: "geo-query response",
+      hint: "target under 1s",
+    },
+    {
+      value: "4.00",
+      label: "cumulative GPA",
+      hint: "Distinction with Honors",
     },
   ],
 };

@@ -1,108 +1,100 @@
-"use client";
-
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
 import { profile } from "@/content/profile";
+import { experienceSince } from "@/lib/timeline";
 import { CVButton } from "@/components/ui/CVButton";
-import { track } from "@/lib/analytics";
+import { WorkLink } from "@/components/ui/WorkLink";
+import { SocialLinks } from "@/components/ui/SocialLinks";
+
+const PORTRAIT = "/portrait.jpg";
 
 /**
- * Drop a portrait at public/portrait.jpg and set this to "/portrait.jpg".
- * While it is null the plate renders as a typographic monogram, so the
- * composition holds either way.
+ * The identity band. Not a hero: it carries the photo, the name, the claim,
+ * the contact details and five figures in a single screen, because the first
+ * screen is the only one some readers will look at.
  */
-const PORTRAIT: string | null = "/portrait.jpg";
-
 export function Hero() {
-  const reduce = useReducedMotion();
+  const experience = experienceSince(new Date());
 
-  const rise = (delay: number) => ({
-    initial: reduce ? false : { opacity: 0, y: 18 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] as const },
-  });
+  const facts = [
+    { value: experience, label: "professional experience", hint: "since Jan 2024" },
+    ...profile.facts,
+  ];
 
   return (
-    <section
-      id="hero"
-      className="relative flex min-h-[100dvh] items-center px-6 pb-20 pt-24 md:px-10"
-    >
-      <div className="mx-auto grid w-full max-w-page grid-cols-1 items-center gap-12 md:grid-cols-12 md:gap-10 lg:gap-16">
-        <div className="md:col-span-7">
-          <motion.p
-            {...rise(0)}
-            className="font-mono text-xs leading-5 text-muted"
-          >
-            {profile.name}
-            <span className="px-2 text-faint">/</span>
-            {profile.role}
-          </motion.p>
-
-          <motion.h1
-            {...rise(0.08)}
-            className="mt-6 font-display text-[2.5rem] font-extrabold leading-[1.04] tracking-tight sm:text-5xl lg:text-[3.4rem]"
-          >
-            {profile.thesis}
-          </motion.h1>
-
-          <motion.p
-            {...rise(0.16)}
-            className="mt-6 max-w-prose text-base leading-relaxed text-muted md:text-lg"
-          >
-            {profile.tagline}
-          </motion.p>
-
-          <motion.div {...rise(0.24)} className="mt-9 flex flex-wrap gap-3">
-            <a
-              href="#projects"
-              onClick={() => track("cta_click", { cta: "work", from: "hero" })}
-              className="btn-primary group w-full sm:w-auto"
-            >
-              See selected work
-              <span
-                aria-hidden="true"
-                className="transition-transform duration-200 group-hover:translate-x-0.5"
-              >
-                &rarr;
-              </span>
-            </a>
-            <CVButton from="hero" variant="ghost" className="w-full sm:w-auto" />
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={reduce ? false : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-          className="relative md:col-span-5"
-        >
-          {/* The accent goes big exactly once, here. */}
-          <div className="relative mx-auto aspect-square w-full max-w-[340px] md:max-w-none">
-            <span
-              aria-hidden="true"
-              className="absolute inset-0 translate-x-3 translate-y-3 rounded border border-line bg-surface-2"
-            />
-            {PORTRAIT ? (
+    <section id="hero" className="px-6 md:px-10">
+      <div className="mx-auto max-w-page pb-10 pt-20 md:pb-12 md:pt-24">
+        <div className="grid gap-8 md:grid-cols-12 md:gap-10">
+          <div className="md:col-span-3">
+            <div className="relative aspect-[4/5] w-full max-w-[220px] overflow-hidden rounded-sm border border-line bg-surface md:max-w-none">
               <Image
                 src={PORTRAIT}
                 alt={`${profile.name}, ${profile.role}`}
                 fill
                 priority
-                sizes="(max-width: 768px) 380px, 40vw"
-                className="relative rounded object-cover object-[50%_10%]"
+                sizes="(max-width: 768px) 220px, 22vw"
+                className="object-cover object-[50%_12%]"
               />
-            ) : (
-              <div className="relative flex h-full w-full items-end justify-start overflow-hidden rounded bg-accent px-5 pb-3">
-                <span
-                  aria-hidden="true"
-                  className="font-display text-[10rem] font-extrabold leading-[0.72] tracking-[-0.06em] text-on-accent sm:text-[13rem] md:text-[9.5rem] lg:text-[13rem] xl:text-[15rem]"
-                >
-                  YB
-                </span>
-              </div>
-            )}
+            </div>
           </div>
-        </motion.div>
+
+          <div className="md:col-span-6">
+            <h1 className="text-[2rem] font-semibold leading-[1.05] tracking-tight sm:text-4xl">
+              {profile.name}
+            </h1>
+            <p className="mt-2 font-mono text-xs text-accent-text">{profile.role}</p>
+
+            <p className="mt-6 text-xl font-medium leading-snug tracking-tight text-text sm:text-2xl">
+              {profile.thesis}
+            </p>
+            <p className="mt-3 max-w-prose text-[15px] leading-relaxed text-muted">
+              {profile.tagline}
+            </p>
+
+            <div className="mt-7 flex flex-wrap gap-2.5">
+              <WorkLink />
+              <CVButton from="hero" variant="ghost" />
+            </div>
+          </div>
+
+          <div className="md:col-span-3">
+            <dl className="space-y-3 text-sm">
+              <div>
+                <dt className="block-label">Based in</dt>
+                <dd className="mt-1 text-text">{profile.location}</dd>
+              </div>
+              <div>
+                <dt className="block-label">Status</dt>
+                <dd className="mt-1 text-text">{profile.availability}</dd>
+              </div>
+              <div>
+                <dt className="block-label">Elsewhere</dt>
+                <dd className="mt-1.5">
+                  <SocialLinks from="hero" />
+                </dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+
+        {/* Figures, all of them defended further down the page. */}
+        <dl className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 lg:border-t lg:border-line">
+          {facts.map((f, i) => (
+            <div
+              key={f.label}
+              className={`border-t border-line py-4 lg:border-t-0 lg:py-5 ${
+                i === 0 ? "lg:pr-5" : "lg:border-l lg:border-line lg:px-5"
+              }`}
+            >
+              <dt className="num text-2xl font-semibold tracking-tight text-text">
+                {f.value}
+              </dt>
+              <dd className="mt-1 text-[13px] leading-tight text-text">{f.label}</dd>
+              <dd className="mt-0.5 font-mono text-[11px] leading-tight text-faint">
+                {f.hint}
+              </dd>
+            </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

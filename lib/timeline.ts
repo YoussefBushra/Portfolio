@@ -51,6 +51,12 @@ function formatDuration(months: number): string {
   return rest ? `${years} yr ${rest} mo` : `${years} yr`;
 }
 
+/** Total professional experience, measured from the earliest role. */
+export function experienceSince(now: Date): string {
+  const first = Math.min(...experience.map((r) => monthIndex(r.start)));
+  return formatDuration(now.getFullYear() * 12 + now.getMonth() - first);
+}
+
 export function buildTrace(now: Date): Trace {
   const nowIndex = now.getFullYear() * 12 + now.getMonth();
 

@@ -10,7 +10,6 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Tokens resolve to CSS variables set in globals.css.
         bg: "rgb(var(--bg) / <alpha-value>)",
         surface: "rgb(var(--surface) / <alpha-value>)",
         "surface-2": "rgb(var(--surface-2) / <alpha-value>)",
@@ -18,24 +17,22 @@ const config: Config = {
         text: "rgb(var(--text) / <alpha-value>)",
         muted: "rgb(var(--muted) / <alpha-value>)",
         faint: "rgb(var(--faint) / <alpha-value>)",
-        // Single accent. `accent` is the fill, `accent-text` is the same hue
-        // adjusted per theme so it passes contrast as text.
         accent: "rgb(var(--accent) / <alpha-value>)",
         "accent-text": "rgb(var(--accent-text) / <alpha-value>)",
         "on-accent": "rgb(var(--on-accent) / <alpha-value>)",
       },
       fontFamily: {
-        display: ["var(--font-display)", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
-      // Shape lock: one radius for every surface, button, input and tag.
+      // Shape lock: one radius, 3px, on every surface, control and tag.
       borderRadius: {
-        DEFAULT: "4px",
+        sm: "3px",
+        DEFAULT: "3px",
       },
       maxWidth: {
-        page: "1180px",
-        prose: "65ch",
+        page: "1240px",
+        prose: "68ch",
       },
       transitionTimingFunction: {
         out: "cubic-bezier(0.16, 1, 0.3, 1)",

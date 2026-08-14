@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Bricolage_Grotesque, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
+import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -10,20 +10,13 @@ import "./globals.css";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-/* Type roles:
-   display - Bricolage Grotesque, headings only, optical sizing on
-   body    - IBM Plex Sans
-   data    - IBM Plex Mono, for dates, durations and tags */
-const display = Bricolage_Grotesque({
+/* Two families, doing three jobs. Archivo is variable on both weight and
+   width, so headings can be set tight and heavy while body text stays at a
+   normal width, without pulling in a second sans that would clash with it.
+   Plex Mono carries every date, duration, figure and label. */
+const sans = Archivo({
   subsets: ["latin"],
-  axes: ["opsz"],
-  variable: "--font-display",
-  display: "swap",
-});
-
-const sans = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  axes: ["wdth"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -84,8 +77,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#eceef1" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e1116" },
+    { media: "(prefers-color-scheme: light)", color: "#fcfcfd" },
+    { media: "(prefers-color-scheme: dark)", color: "#101215" },
   ],
 };
 
@@ -96,9 +89,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${display.variable} ${sans.variable} ${mono.variable} font-sans`}
-      >
+      <body className={`${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

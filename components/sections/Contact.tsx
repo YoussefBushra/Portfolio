@@ -3,8 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { profile } from "@/content/profile";
 import { SectionShell } from "@/components/layout/SectionShell";
-import { SectionHead } from "@/components/ui/SectionHead";
-import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
+import { SocialLinks } from "@/components/ui/SocialLinks";
+import { CVButton } from "@/components/ui/CVButton";
 import { track } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
@@ -12,7 +12,7 @@ type Status = "idle" | "submitting" | "success" | "error";
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID;
 
 const field =
-  "focus-ring w-full rounded border border-line bg-surface px-4 py-3 text-sm text-text placeholder:text-faint transition-colors duration-200 focus:border-accent";
+  "focus-ring w-full rounded-sm border border-line bg-bg px-3 py-2 text-sm text-text placeholder:text-faint transition-colors duration-150 focus:border-accent";
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
@@ -32,7 +32,6 @@ export function Contact() {
       return;
     }
 
-    // Without Formspree configured, hand off to the visitor's mail client.
     if (!FORMSPREE_ID) {
       const subject = encodeURIComponent(`Portfolio contact from ${name}`);
       const body = encodeURIComponent(`${message}\n\n${name}\n${email}`);
@@ -69,135 +68,134 @@ export function Contact() {
   }
 
   return (
-    <SectionShell id="contact">
-      <SectionHead
-        title="Get in touch."
-        lead="Backend and full-stack roles building scalable services and integrations, plus freelance systems work. Remote or Cairo."
-      />
-
-      <RevealOnScroll>
-        <a
-          href={`mailto:${profile.email}`}
-          onClick={() => track("social_click", { label: "Email", from: "contact" })}
-          className="focus-ring inline-block break-words rounded font-display text-xl font-bold tracking-tight text-text underline decoration-accent decoration-2 underline-offset-[6px] transition-colors duration-200 hover:text-accent-text sm:text-3xl lg:text-4xl"
-        >
-          {profile.email}
-        </a>
-
-        <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2">
-          {profile.socials
-            .filter((s) => s.label !== "Email")
-            .map((s) => (
-              <a
-                key={s.label}
-                href={s.href}
-                target="_blank"
-                rel="noreferrer noopener"
-                onClick={() =>
-                  track("social_click", { label: s.label, from: "contact" })
-                }
-                className="focus-ring group flex items-baseline gap-2 rounded text-sm"
+    <SectionShell id="contact" label="Contact" meta={profile.availability}>
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:gap-14">
+        <div>
+          {status === "success" ? (
+            <div className="rounded-sm border border-line bg-surface p-6">
+              <h3 className="text-base font-semibold tracking-tight text-text">
+                Message sent
+              </h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                Thanks for reaching out. I will get back to you shortly.
+              </p>
+              <button
+                type="button"
+                onClick={() => setStatus("idle")}
+                className="focus-ring mt-4 rounded-sm text-sm text-muted underline decoration-line underline-offset-[3px] transition-colors hover:text-text"
               >
-                <span className="text-accent-text underline decoration-accent/40 decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
-                  {s.label}
-                </span>
-                <span className="font-mono text-xs text-faint">{s.handle}</span>
-              </a>
-            ))}
+                Send another
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} noValidate>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="name" className="text-[13px] font-medium text-text">
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    autoComplete="name"
+                    required
+                    className={field}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="email"
+                    className="text-[13px] font-medium text-text"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder="you@company.com"
+                    className={field}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-1.5">
+                <label
+                  htmlFor="message"
+                  className="text-[13px] font-medium text-text"
+                >
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  aria-describedby="message-help"
+                  className={`${field} resize-y`}
+                />
+                <p id="message-help" className="text-xs text-muted">
+                  A few lines about the role or the system is plenty.
+                </p>
+              </div>
+
+              {status === "error" ? (
+                <p
+                  role="alert"
+                  className="mt-4 rounded-sm border border-line bg-surface px-3 py-2 text-sm text-text"
+                >
+                  {errorMsg}
+                </p>
+              ) : null}
+
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <button
+                  type="submit"
+                  disabled={status === "submitting"}
+                  className="btn-primary disabled:cursor-not-allowed disabled:opacity-70"
+                >
+                  {status === "submitting" ? "Sending" : "Send message"}
+                </button>
+                {!FORMSPREE_ID ? (
+                  <span className="text-xs text-muted">
+                    Opens your mail client.
+                  </span>
+                ) : null}
+              </div>
+            </form>
+          )}
         </div>
-      </RevealOnScroll>
 
-      <RevealOnScroll className="mt-16 max-w-2xl">
-        {status === "success" ? (
-          <div className="rounded border border-line bg-surface p-8">
-            <h3 className="font-display text-xl font-bold tracking-tight text-text">
-              Message sent
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted">
-              Thanks for reaching out. I will get back to you shortly.
-            </p>
-            <button
-              type="button"
-              onClick={() => setStatus("idle")}
-              className="focus-ring mt-6 rounded text-sm text-muted underline decoration-line underline-offset-4 transition-colors hover:text-text"
+        <div className="space-y-6">
+          <div>
+            <h3 className="block-label">Email</h3>
+            <a
+              href={`mailto:${profile.email}`}
+              onClick={() =>
+                track("social_click", { label: "Email", from: "contact" })
+              }
+              className="focus-ring link mt-1.5 block break-words rounded-sm text-sm"
             >
-              Send another
-            </button>
+              {profile.email}
+            </a>
           </div>
-        ) : (
-          <form onSubmit={handleSubmit} noValidate>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <div className="flex flex-col gap-2">
-                <label htmlFor="name" className="text-sm font-medium text-text">
-                  Name
-                </label>
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className={field}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="email" className="text-sm font-medium text-text">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="you@company.com"
-                  className={field}
-                />
-              </div>
+          <div>
+            <h3 className="block-label">Profiles</h3>
+            <div className="mt-1.5">
+              <SocialLinks from="contact" exclude={["Email"]} />
             </div>
-
-            <div className="mt-5 flex flex-col gap-2">
-              <label htmlFor="message" className="text-sm font-medium text-text">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                required
-                rows={5}
-                aria-describedby="message-help"
-                className={`${field} resize-y`}
-              />
-              <p id="message-help" className="text-xs text-muted">
-                A few lines about the role or the system is plenty.
-              </p>
+          </div>
+          <div>
+            <h3 className="block-label">CV</h3>
+            <div className="mt-2">
+              <CVButton from="contact" variant="ghost" />
             </div>
-
-            {status === "error" ? (
-              <p
-                role="alert"
-                className="mt-5 rounded border border-line bg-surface-2 px-4 py-3 text-sm text-text"
-              >
-                {errorMsg}
-              </p>
-            ) : null}
-
-            <button
-              type="submit"
-              disabled={status === "submitting"}
-              className="btn-primary mt-6 w-full disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
-            >
-              {status === "submitting" ? "Sending" : "Send message"}
-            </button>
-
-            {!FORMSPREE_ID ? (
-              <p className="mt-3 text-xs text-muted">
-                This opens your mail client.
-              </p>
-            ) : null}
-          </form>
-        )}
-      </RevealOnScroll>
+          </div>
+        </div>
+      </div>
     </SectionShell>
   );
 }
