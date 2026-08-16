@@ -150,7 +150,7 @@ public/         CV PDF, portrait, robots.txt
 
 - The CV lives at `public/portfolio.pdf`. Replace that file to update the
   download everywhere (nav, hero, contact, command palette). It downloads as
-  `Youssef-Bushra-Fouad-CV.pdf`. Check any replacement for a phone number or
+  `youssefbushra.pdf`. Check any replacement for a phone number or
   email address before committing it.
 - Section ids (`#about`, `#experience`, `#skills`, `#contact`) are stable, so
   existing links and analytics keep working.

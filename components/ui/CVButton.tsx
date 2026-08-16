@@ -1,10 +1,7 @@
 "use client";
 
 import { track } from "@/lib/analytics";
-
-const CV_PATH = "/portfolio.pdf";
-/** What the file is called once it lands in the reader's downloads folder. */
-const CV_FILENAME = "Youssef-Bushra-Fouad-CV.pdf";
+import { CV_FILENAME, CV_PATH } from "@/lib/cv";
 
 interface CVButtonProps {
   from: string;

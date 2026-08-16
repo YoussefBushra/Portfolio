@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { navNodes, profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
+import { CV_FILENAME, CV_PATH } from "@/lib/cv";
 
 interface Command {
   id: string;
@@ -16,8 +17,6 @@ interface Command {
 }
 
 export const OPEN_PALETTE_EVENT = "yb:open-palette";
-
-const CV_PATH = "/portfolio.pdf";
 
 function scrollToId(id: string) {
   const el = document.getElementById(id);
@@ -69,7 +68,7 @@ export function CommandPalette() {
           track("cv_download", { from: "palette" });
           const a = document.createElement("a");
           a.href = CV_PATH;
-          a.download = "Youssef-Bushra-Fouad-CV.pdf";
+          a.download = CV_FILENAME;
           a.click();
         },
       },
