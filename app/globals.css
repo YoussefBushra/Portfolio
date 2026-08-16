@@ -214,23 +214,6 @@ body {
     @apply font-mono text-[11px] uppercase tracking-[0.16em] text-faint;
   }
 
-  /* Glass chip. Surface-based fill keeps light text legible in dark mode, but
-     a translucent value plus a top-edge highlight makes it read as frosted
-     glass and sit consistently with the panels rather than as a flat block. */
-  .tag {
-    @apply inline-flex items-center rounded-full px-3 py-[4px] text-[12px] font-medium leading-5 text-muted transition-all duration-200;
-    background-color: rgb(var(--surface-2) / 0.55);
-    border: 1px solid rgb(var(--line) / 0.7);
-    box-shadow: inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.12);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-  .tag:hover {
-    @apply -translate-y-px text-text;
-    background-color: rgb(var(--surface-2) / 0.85);
-    border-color: rgb(var(--accent) / 0.55);
-  }
-
   .focus-ring {
     @apply outline-none ring-offset-2 ring-offset-bg focus-visible:ring-2 focus-visible:ring-accent;
   }

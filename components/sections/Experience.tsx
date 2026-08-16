@@ -22,13 +22,10 @@ function RoleEntry({ role }: { role: Role }) {
       </p>
 
       {role.metrics?.length ? (
-        <div className="mt-5 flex flex-wrap gap-3">
+        <div className="mt-5 flex flex-wrap gap-x-10 gap-y-4">
           {role.metrics.map((m) => (
-            <div
-              key={m.label}
-              className="rounded-lg border border-line bg-surface-2/70 px-3.5 py-2 backdrop-blur-sm"
-            >
-              <div className="num font-display text-lg font-bold leading-none tracking-tight text-accent-text">
+            <div key={m.label}>
+              <div className="num font-display text-xl font-bold leading-none tracking-tight text-accent-text">
                 {m.value}
               </div>
               <div className="mt-1.5 font-mono text-[11px] text-muted">{m.label}</div>
@@ -47,17 +44,6 @@ function RoleEntry({ role }: { role: Role }) {
           </li>
         ))}
       </ul>
-
-      <div className="mt-6 border-t border-line pt-3">
-        <h4 className="block-label">Stack</h4>
-        <ul className="mt-2 flex flex-wrap gap-1.5">
-          {role.stack.map((s) => (
-            <li key={s} className="tag">
-              {s}
-            </li>
-          ))}
-        </ul>
-      </div>
     </article>
   );
 }
