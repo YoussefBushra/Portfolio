@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { VisitTracker } from "@/components/system/VisitTracker";
@@ -28,7 +28,17 @@ const mono = IBM_Plex_Mono({
   display: "swap",
 });
 
-const siteUrl = "https://youssefbushra.dev";
+/**
+ * Absolute base for canonical URLs and Open Graph images. On Vercel this
+ * resolves itself from the project's production URL, so a preview or a
+ * *.vercel.app deployment still emits working absolute URLs. Set
+ * NEXT_PUBLIC_SITE_URL once a custom domain is attached.
+ */
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://youssefbushra.dev");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
