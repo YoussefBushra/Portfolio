@@ -24,7 +24,7 @@ Backend-focused full-stack software engineer with 2.5+ years of professional exp
 
 ## Work Experience
 
-### Web Full Stack Developer | Skil-Dev, Cairo, Egypt
+### Full Stack Software Engineer | Skil-Dev, Cairo, Egypt
 
 **Aug 2024 - Present**
 
