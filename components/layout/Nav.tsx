@@ -38,20 +38,25 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-200 ${
-        // Solid, not translucent: on a text-dense page, content passing
-        // behind a see-through bar reads as an overlap bug.
-        scrolled ? "border-b border-line bg-bg" : "border-b border-transparent"
+      className={`fixed inset-x-0 top-0 z-40 px-4 pt-3 transition-all duration-300 md:pt-4 ${
+        scrolled ? "pt-2 md:pt-2.5" : ""
       }`}
     >
-      <nav className="mx-auto flex h-14 max-w-page items-center justify-between gap-6 px-6 md:px-10">
+      <nav
+        className={`glass mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-6 rounded-full px-4 pl-5 transition-all duration-300 md:px-5 ${
+          scrolled ? "shadow-lg" : ""
+        }`}
+      >
         <a
           href="#hero"
-          className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
+          className="focus-ring flex shrink-0 items-center gap-2.5 rounded-full"
           aria-label={`${profile.name}, back to top`}
         >
-          <span className="h-[3px] w-5 bg-accent" aria-hidden="true" />
-          <span className="text-sm font-semibold tracking-tight text-text">
+          <span
+            className="h-4 w-4 rounded-md bg-gradient-to-br from-accent to-accent/60 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.6)]"
+            aria-hidden="true"
+          />
+          <span className="font-display text-sm font-bold tracking-tight text-text">
             Youssef Bushra
           </span>
         </a>
@@ -64,18 +69,18 @@ export function Nav() {
                 <a
                   href={`#${n.id}`}
                   aria-current={isActive ? "true" : undefined}
-                  className={`focus-ring relative block rounded-sm px-2.5 py-1.5 text-[13px] transition-colors duration-150 ${
+                  className={`focus-ring relative block rounded-full px-3 py-1.5 text-[13px] transition-colors duration-150 ${
                     isActive ? "text-text" : "text-muted hover:text-text"
                   }`}
                 >
-                  {n.label}
                   {isActive ? (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-x-2.5 -bottom-px h-[2px] bg-accent"
+                      className="absolute inset-0 -z-10 rounded-full border border-white/25 bg-white/15"
                       transition={{ type: "spring", stiffness: 400, damping: 34 }}
                     />
                   ) : null}
+                  {n.label}
                 </a>
               </li>
             );
@@ -88,7 +93,7 @@ export function Nav() {
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
             aria-label="Open command menu"
-            className="focus-ring hidden h-8 items-center rounded-sm border border-line bg-bg px-2 font-mono text-[11px] text-muted transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
+            className="focus-ring hidden h-8 items-center rounded-full border border-white/25 bg-white/10 px-2.5 font-mono text-[11px] text-muted backdrop-blur-sm transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
           >
             ⌘K
           </button>
@@ -98,7 +103,7 @@ export function Nav() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
+            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-muted backdrop-blur-sm md:hidden"
           >
             <span className="flex flex-col gap-[3px]">
               <span
@@ -128,11 +133,11 @@ export function Nav() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-line bg-bg md:hidden"
+            className="glass mx-1 mt-2 overflow-hidden rounded-xl md:hidden"
           >
             <ul>
               {navNodes.map((n) => (
-                <li key={n.id} className="border-b border-line/70">
+                <li key={n.id} className="border-b border-white/10 last:border-b-0">
                   <a
                     href={`#${n.id}`}
                     onClick={() => setOpen(false)}

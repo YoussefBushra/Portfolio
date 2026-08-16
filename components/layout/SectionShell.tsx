@@ -39,14 +39,20 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
   }, [id]);
 
   return (
-    // Anchor clearance comes from `scroll-padding-top` on <html>; a
-    // scroll-margin here as well would stack into a double offset.
-    <section ref={ref} id={id} className="border-t border-line">
-      <div className="mx-auto grid max-w-page gap-5 px-6 py-11 md:grid-cols-[150px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-14">
-        <div className="md:sticky md:top-20 md:self-start">
-          <h2 className="block-label">{label}</h2>
+    // Anchor clearance comes from `scroll-padding-top` on <html>. The shell is
+    // transparent: each section supplies its own glass so panels never nest.
+    <section ref={ref} id={id} className="scroll-mt-24">
+      <div className="mx-auto grid max-w-page gap-5 px-6 py-9 md:grid-cols-[160px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-12">
+        <div className="md:sticky md:top-24 md:self-start">
+          <div className="flex items-center gap-2">
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px_1px_rgb(var(--accent)/0.6)]"
+            />
+            <h2 className="block-label">{label}</h2>
+          </div>
           {meta ? (
-            <p className="mt-1.5 font-mono text-[11px] leading-4 text-faint">{meta}</p>
+            <p className="mt-2 pl-4 font-mono text-[11px] leading-4 text-faint">{meta}</p>
           ) : null}
         </div>
         <div className="min-w-0">{children}</div>

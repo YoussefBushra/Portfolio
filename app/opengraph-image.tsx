@@ -6,7 +6,7 @@ export const alt = `${profile.name}, ${profile.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/** Mirrors the hero: ink ground, one amber mark, the thesis in large type. */
+/** Mirrors the hero: aurora ground, a glass mark, the thesis in large type. */
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -17,13 +17,24 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          background: "#0e1116",
-          color: "#e6e9ee",
+          background:
+            "radial-gradient(40% 60% at 15% 20%, #7c5cff88, transparent), radial-gradient(45% 65% at 85% 15%, #40c4ff77, transparent), radial-gradient(50% 70% at 75% 90%, #ec54a877, transparent), #0a0a14",
+          color: "#eceef5",
           padding: "84px",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", width: 96, height: 10, background: "#f5a524" }} />
+        <div
+          style={{
+            display: "flex",
+            width: 72,
+            height: 72,
+            borderRadius: 20,
+            background: "linear-gradient(135deg, #8b74ff, #40c4ff)",
+            border: "1px solid rgba(255,255,255,0.4)",
+            boxShadow: "inset 0 2px 0 rgba(255,255,255,0.5)",
+          }}
+        />
 
         <div
           style={{
@@ -44,9 +55,9 @@ export default function OpengraphImage() {
             display: "flex",
             marginTop: 56,
             paddingTop: 28,
-            borderTop: "1px solid #2a333e",
+            borderTop: "1px solid rgba(255,255,255,0.18)",
             fontSize: 28,
-            color: "#98a2b0",
+            color: "#b9bdd0",
             fontFamily: "monospace",
           }}
         >

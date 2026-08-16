@@ -2,8 +2,12 @@ import { profile } from "@/content/profile";
 
 export function Footer() {
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto max-w-page px-6 py-7 md:px-10">
+    <footer className="px-6 pb-8 pt-4 md:px-10">
+      <div className="glass mx-auto flex max-w-page items-center gap-2.5 rounded-full px-6 py-3.5">
+        <span
+          aria-hidden="true"
+          className="h-2 w-2 rounded-full bg-gradient-to-br from-accent to-accent/50"
+        />
         <p className="text-[13px] text-muted">
           © {new Date().getFullYear()} {profile.name}
         </p>

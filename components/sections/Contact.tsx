@@ -15,7 +15,7 @@ import { useEffect } from "react";
 const FORM_ID = "xnpabgrq";
 
 const field =
-  "focus-ring w-full rounded-sm border border-line bg-bg px-3 py-2 text-sm text-text placeholder:text-faint transition-colors duration-150 focus:border-accent";
+  "focus-ring w-full rounded-sm border border-white/25 bg-white/10 px-3 py-2 text-sm text-text placeholder:text-faint backdrop-blur-sm transition-colors duration-150 focus:border-accent";
 
 const errorText = "text-xs leading-snug text-danger";
 
@@ -29,10 +29,10 @@ export function Contact() {
   return (
     <SectionShell id="contact" label="Contact" meta={profile.availability}>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:gap-14">
-        <div>
+        <div className="glass-strong rounded-xl p-6 sm:p-8">
           {state.succeeded ? (
-            <div className="rounded-sm border border-line bg-surface p-6">
-              <h3 className="text-base font-semibold tracking-tight text-text">
+            <div>
+              <h3 className="font-display text-base font-bold tracking-tight text-text">
                 Message sent
               </h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">
@@ -142,13 +142,12 @@ export function Contact() {
                 >
                   {state.submitting ? "Sending" : "Send message"}
                 </button>
-               
               </div>
             </form>
           )}
         </div>
 
-        <div className="space-y-6">
+        <div className="glass rounded-xl p-6 space-y-6 self-start">
           <div>
             <h3 className="block-label">Profiles</h3>
             <div className="mt-1.5">

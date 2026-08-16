@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -10,18 +10,22 @@ import "./globals.css";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-/* Two families, doing three jobs. Archivo is variable on both weight and
-   width, so headings can be set tight and heavy while body text stays at a
-   normal width, without pulling in a second sans that would clash with it.
-   Plex Mono carries every date, duration, figure and label. */
-const sans = Archivo({
+/* Plus Jakarta Sans carries both display and body — a rounded, premium
+   humanist face that suits the soft, luminous liquid-glass surfaces.
+   JetBrains Mono keeps every date, figure and label crisp. */
+const display = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  axes: ["wdth"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const mono = IBM_Plex_Mono({
+const mono = JetBrains_Mono({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-mono",
@@ -77,7 +81,7 @@ export const metadata: Metadata = {
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='#0e1116'/><rect x='5' y='9' width='22' height='4' rx='1' fill='#f5a524'/><rect x='9' y='19' width='14' height='4' rx='1' fill='#f5a524' opacity='0.55'/></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%238b74ff'/><stop offset='1' stop-color='%2340c4ff'/></linearGradient></defs><rect width='32' height='32' rx='9' fill='%230a0a14'/><rect x='6' y='6' width='20' height='20' rx='7' fill='url(%23g)' opacity='0.9'/><rect x='6' y='6' width='20' height='10' rx='7' fill='%23ffffff' opacity='0.22'/></svg>`
           ),
         type: "image/svg+xml",
       },
@@ -87,8 +91,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fcfcfd" },
-    { media: "(prefers-color-scheme: dark)", color: "#101215" },
+    { media: "(prefers-color-scheme: light)", color: "#ecedf7" },
+    { media: "(prefers-color-scheme: dark)", color: "#080912" },
   ],
 };
 
@@ -99,13 +103,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${sans.variable} ${mono.variable} font-sans`}>
+      <body className={`${display.variable} ${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+          {/* The living aurora the glass refracts. */}
+          <div className="aurora" aria-hidden="true" />
+          <div className="aurora-grain" aria-hidden="true" />
           {children}
         </ThemeProvider>
 

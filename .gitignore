@@ -29,3 +29,8 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# installed Agent Skills (kept local, not vendored)
+/.agents/
+/.claude/
+/skills-lock.json

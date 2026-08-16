@@ -8,26 +8,28 @@ import { SectionShell } from "@/components/layout/SectionShell";
 export function Skills() {
   return (
     <SectionShell id="skills" label="Stack">
-      <div className="gap-x-14 sm:columns-2">
-        {skillGroups.map((group) => (
-          <div key={group.name} className="mb-6 break-inside-avoid">
-            <h3 className="text-[13px] font-semibold tracking-tight text-text">
-              {group.name}
-            </h3>
-            <ul className="mt-2 flex flex-wrap gap-1.5">
-              {group.items.map((item) => (
-                <li key={item} className="tag">
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
+      <div className="glass-strong rounded-xl p-6 sm:p-8">
+        <div className="gap-x-14 sm:columns-2">
+          {skillGroups.map((group) => (
+            <div key={group.name} className="mb-6 break-inside-avoid">
+              <h3 className="font-display text-[13px] font-bold tracking-tight text-text">
+                {group.name}
+              </h3>
+              <ul className="mt-2 flex flex-wrap gap-1.5">
+                {group.items.map((item) => (
+                  <li key={item} className="tag">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
 
-      <p className="mt-6 border-t border-line pt-4 text-[13px] text-muted">
-        Spoken languages: {spokenLanguages}.
-      </p>
+        <p className="mt-4 border-t border-white/15 pt-4 text-[13px] text-muted">
+          Spoken languages: {spokenLanguages}.
+        </p>
+      </div>
     </SectionShell>
   );
 }

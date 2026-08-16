@@ -5,7 +5,7 @@ import { SectionShell } from "@/components/layout/SectionShell";
 export function About() {
   return (
     <SectionShell id="about" label="About" meta={profile.location}>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-14">
+      <div className="glass-strong grid gap-10 rounded-xl p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-14">
         <div className="space-y-4">
           {profile.summary.map((p, i) => (
             <p key={i} className="max-w-prose text-[15px] leading-[1.7] text-muted">
