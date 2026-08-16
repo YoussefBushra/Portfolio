@@ -2,8 +2,18 @@ import type { SkillGroup } from "@/lib/types";
 
 export const skillGroups: SkillGroup[] = [
   {
-    name: "Backend",
-    items: ["Node.js", "NestJS", "Express.js", "TypeScript", "TypeORM", "Mongoose"],
+    name: "Core",
+    items: [
+      "Node.js",
+      "NestJS",
+      "TypeScript",
+      "PostgreSQL",
+      "MongoDB",
+      "Redis",
+      "RabbitMQ",
+      "React",
+      "Next.js",
+    ],
   },
   {
     name: "Architecture",
@@ -11,51 +21,17 @@ export const skillGroups: SkillGroup[] = [
       "Microservices",
       "Multi-tenant SaaS",
       "Event-driven architecture",
-      "Service decomposition",
-      "API gateway pattern",
+      "API gateway",
       "Micro-frontends",
     ],
   },
   {
-    name: "Messaging and caching",
-    items: [
-      "RabbitMQ",
-      "Redis",
-      "Idempotent consumers",
-      "Async processing",
-      "Query optimization",
-    ],
+    name: "Observability and infrastructure",
+    items: ["Elasticsearch", "OpenTelemetry", "Grafana", "Docker", "GitHub Actions"],
   },
   {
-    name: "Data and storage",
-    items: ["PostgreSQL", "MongoDB", "MS SQL Server", "PL/SQL", "SQLite"],
-  },
-  {
-    name: "APIs",
-    items: ["REST", "GraphQL", "Swagger", "JWT and role-based access"],
-  },
-  {
-    name: "Search and observability",
-    items: [
-      "Elasticsearch",
-      "Kibana",
-      "Filebeat",
-      "Logstash",
-      "Grafana",
-      "OpenTelemetry",
-    ],
-  },
-  {
-    name: "Frontend",
-    items: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Redux"],
-  },
-  {
-    name: "Testing and delivery",
-    items: ["Jest", "Docker", "GitHub Actions", "Git", "Postman"],
-  },
-  {
-    name: "Languages",
-    items: ["TypeScript", "JavaScript", "Python", "Java", "C#", "C++", "X++"],
+    name: "APIs and testing",
+    items: ["REST", "GraphQL", "Jest", "Swagger"],
   },
 ];
 

@@ -25,7 +25,7 @@ export const profile: Profile = {
       handle: "in/youssefbushra",
     },
   ],
-  availability: "Open to backend and full-stack roles",
+  availability: "Open to Backend / Software Engineer roles",
   /* Facts, all taken from work described elsewhere on this page. Years of
      experience is computed from the roles, so it never goes stale. */
   facts: [

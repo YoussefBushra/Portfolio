@@ -17,26 +17,26 @@
   --text: 22 24 40;
   --muted: 78 84 110;
   --faint: 120 126 150;
-  --accent: 108 76 246;
-  --accent-text: 91 58 232;
+  --accent: 79 70 229;
+  --accent-text: 67 56 202;
   --on-accent: 255 255 255;
   --danger: 200 40 60;
 
   /* Glass material (over a light aurora). */
   --glass-fill: 255 255 255;
-  --glass-fill-alpha: 0.55;
+  --glass-fill-alpha: 0.5;
   --glass-stroke: 255 255 255;
-  --glass-stroke-alpha: 0.7;
-  --glass-blur: 20px;
-  --glass-shadow: 0 12px 40px -12px rgb(60 50 120 / 0.35);
+  --glass-stroke-alpha: 0.75;
+  --glass-blur: 26px;
+  --glass-shadow: 0 14px 44px -14px rgb(40 44 90 / 0.32);
   --glass-highlight: 255 255 255;
 
-  /* Aurora blobs. */
-  --aura-1: 124 92 255;
-  --aura-2: 64 196 255;
-  --aura-3: 255 122 182;
-  --aura-4: 120 220 200;
-  --aura-strength: 0.55;
+  /* Aurora blobs — a calm, cool indigo/blue family. */
+  --aura-1: 99 102 241;
+  --aura-2: 59 130 246;
+  --aura-3: 96 118 240;
+  --aura-4: 79 130 220;
+  --aura-strength: 0.4;
 
   color-scheme: light;
 }
@@ -49,24 +49,24 @@
   --text: 233 235 245;
   --muted: 165 170 195;
   --faint: 128 134 165;
-  --accent: 141 116 255;
-  --accent-text: 186 170 255;
-  --on-accent: 12 10 28;
+  --accent: 129 140 248;
+  --accent-text: 165 180 252;
+  --on-accent: 10 12 28;
   --danger: 255 120 138;
 
   --glass-fill: 255 255 255;
-  --glass-fill-alpha: 0.07;
+  --glass-fill-alpha: 0.1;
   --glass-stroke: 255 255 255;
-  --glass-stroke-alpha: 0.16;
-  --glass-blur: 22px;
-  --glass-shadow: 0 18px 50px -14px rgb(0 0 0 / 0.6);
+  --glass-stroke-alpha: 0.18;
+  --glass-blur: 28px;
+  --glass-shadow: 0 20px 54px -16px rgb(0 0 0 / 0.62);
   --glass-highlight: 255 255 255;
 
-  --aura-1: 138 96 255;
-  --aura-2: 40 150 255;
-  --aura-3: 236 84 168;
-  --aura-4: 44 200 178;
-  --aura-strength: 0.5;
+  --aura-1: 110 120 255;
+  --aura-2: 60 130 250;
+  --aura-3: 90 120 245;
+  --aura-4: 70 100 210;
+  --aura-strength: 0.4;
 
   color-scheme: dark;
 }
@@ -156,20 +156,30 @@ body {
      top-edge highlight standing in for the refracted light. */
   .glass {
     background-color: rgb(var(--glass-fill) / var(--glass-fill-alpha));
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    background-image: linear-gradient(
+      135deg,
+      rgb(var(--glass-highlight) / 0.18),
+      transparent 42%
+    );
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(190%);
+    backdrop-filter: blur(var(--glass-blur)) saturate(190%);
     border: 1px solid rgb(var(--glass-stroke) / var(--glass-stroke-alpha));
     box-shadow: var(--glass-shadow),
-      inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.5);
+      inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.55);
   }
   /* A denser variant for content that must stay very readable. */
   .glass-strong {
     background-color: rgb(var(--glass-fill) / calc(var(--glass-fill-alpha) + 0.14));
-    -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(180%);
-    backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(180%);
+    background-image: linear-gradient(
+      135deg,
+      rgb(var(--glass-highlight) / 0.2),
+      transparent 44%
+    );
+    -webkit-backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(190%);
+    backdrop-filter: blur(calc(var(--glass-blur) + 6px)) saturate(190%);
     border: 1px solid rgb(var(--glass-stroke) / var(--glass-stroke-alpha));
     box-shadow: var(--glass-shadow),
-      inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.55);
+      inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.6);
   }
 
   .block-label {

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { navNodes, profile } from "@/content/profile";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { DesignSettings } from "@/components/system/DesignSettings";
 import { CVButton } from "@/components/ui/CVButton";
 import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
 
@@ -97,6 +98,7 @@ export function Nav() {
           >
             ⌘K
           </button>
+          <DesignSettings />
           <ThemeToggle />
           <button
             type="button"
