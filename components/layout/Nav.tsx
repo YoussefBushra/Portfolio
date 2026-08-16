@@ -39,9 +39,9 @@ export function Nav() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-40 transition-colors duration-200 ${
-        scrolled
-          ? "border-b border-line bg-bg/90 backdrop-blur"
-          : "border-b border-transparent"
+        // Solid, not translucent: on a text-dense page, content passing
+        // behind a see-through bar reads as an overlap bug.
+        scrolled ? "border-b border-line bg-bg" : "border-b border-transparent"
       }`}
     >
       <nav className="mx-auto flex h-14 max-w-page items-center justify-between gap-6 px-6 md:px-10">
@@ -128,7 +128,7 @@ export function Nav() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-line bg-bg/95 backdrop-blur md:hidden"
+            className="overflow-hidden border-t border-line bg-bg md:hidden"
           >
             <ul>
               {navNodes.map((n) => (

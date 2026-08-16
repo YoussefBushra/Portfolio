@@ -47,9 +47,13 @@ function RoleEntry({ role }: { role: Role }) {
 
       <div className="mt-6 border-t border-line pt-3">
         <h4 className="block-label">Stack</h4>
-        <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
-          {role.stack.join(", ")}
-        </p>
+        <ul className="mt-2 flex flex-wrap gap-1.5">
+          {role.stack.map((s) => (
+            <li key={s} className="tag">
+              {s}
+            </li>
+          ))}
+        </ul>
       </div>
     </article>
   );

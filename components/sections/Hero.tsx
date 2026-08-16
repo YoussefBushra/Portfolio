@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { profile } from "@/content/profile";
-import { experienceSince } from "@/lib/timeline";
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -13,13 +12,6 @@ const PORTRAIT = "/portrait.jpg";
  * screen is the only one some readers will look at.
  */
 export function Hero() {
-  const experience = experienceSince(new Date());
-
-  const facts = [
-    { value: experience, label: "professional experience", hint: "since Jan 2024" },
-    ...profile.facts,
-  ];
-
   return (
     <section id="hero" className="px-6 md:px-10">
       <div className="mx-auto max-w-page pb-10 pt-20 md:pb-12 md:pt-24">
@@ -77,8 +69,8 @@ export function Hero() {
         </div>
 
         {/* Figures, all of them defended further down the page. */}
-        <dl className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 lg:border-t lg:border-line">
-          {facts.map((f, i) => (
+        <dl className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:border-t lg:border-line">
+          {profile.facts.map((f, i) => (
             <div
               key={f.label}
               className={`border-t border-line py-4 lg:border-t-0 lg:py-5 ${

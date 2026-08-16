@@ -45,7 +45,8 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 4.5rem;
+  /* Nav is 56px; this clears it with a little air below. */
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -77,6 +78,12 @@ body {
      structural navigation rather than decoration. */
   .block-label {
     @apply font-mono text-[11px] uppercase tracking-[0.14em] text-faint;
+  }
+
+  /* Tinted, not outlined. A border on every item rebuilds the wall of boxes
+     the tags are meant to avoid. */
+  .tag {
+    @apply inline-flex items-center rounded-sm bg-surface px-2 py-[3px] text-[12px] leading-5 text-muted;
   }
 
   .focus-ring {

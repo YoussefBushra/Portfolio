@@ -39,7 +39,9 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
   }, [id]);
 
   return (
-    <section ref={ref} id={id} className="scroll-mt-14 border-t border-line">
+    // Anchor clearance comes from `scroll-padding-top` on <html>; a
+    // scroll-margin here as well would stack into a double offset.
+    <section ref={ref} id={id} className="border-t border-line">
       <div className="mx-auto grid max-w-page gap-5 px-6 py-11 md:grid-cols-[150px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-14">
         <div className="md:sticky md:top-20 md:self-start">
           <h2 className="block-label">{label}</h2>
