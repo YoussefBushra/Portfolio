@@ -42,6 +42,11 @@ export const profile: Profile = {
       hint: "multi-tenant SaaS platform",
     },
     {
+      value: "3+",
+      label: "financial systems integrated",
+      hint: "enterprise platforms, event-driven",
+    },
+    {
       value: "10M+",
       label: "records under geo-search",
       hint: "Elasticsearch",
@@ -50,11 +55,6 @@ export const profile: Profile = {
       value: "600ms",
       label: "geo-query response",
       hint: "target under 1s",
-    },
-    {
-      value: "4.00",
-      label: "cumulative GPA",
-      hint: "Distinction with Honors",
     },
   ],
 };
