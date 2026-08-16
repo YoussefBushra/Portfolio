@@ -15,7 +15,7 @@ import { useEffect } from "react";
 const FORM_ID = "xnpabgrq";
 
 const field =
-  "focus-ring w-full rounded-sm border border-white/25 bg-white/10 px-3 py-2 text-sm text-text placeholder:text-faint backdrop-blur-sm transition-colors duration-150 focus:border-accent";
+  "focus-ring w-full rounded-sm border border-line bg-surface-2/70 px-3 py-2 text-sm text-text placeholder:text-faint backdrop-blur-sm transition-colors duration-150 focus:border-accent";
 
 const errorText = "text-xs leading-snug text-danger";
 

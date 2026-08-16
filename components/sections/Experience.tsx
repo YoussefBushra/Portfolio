@@ -26,7 +26,7 @@ function RoleEntry({ role }: { role: Role }) {
           {role.metrics.map((m) => (
             <div
               key={m.label}
-              className="rounded-lg border border-white/25 bg-white/10 px-3.5 py-2 backdrop-blur-sm"
+              className="rounded-lg border border-line bg-surface-2/70 px-3.5 py-2 backdrop-blur-sm"
             >
               <div className="num font-display text-lg font-bold leading-none tracking-tight text-accent-text">
                 {m.value}

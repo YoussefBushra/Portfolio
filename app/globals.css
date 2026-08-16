@@ -186,15 +186,16 @@ body {
     @apply font-mono text-[11px] uppercase tracking-[0.16em] text-faint;
   }
 
-  /* Glass chip. */
+  /* Glass chip. Fill is surface-based, not white, so in dark mode the chip
+     stays darker than its light text instead of washing it out. */
   .tag {
     @apply inline-flex items-center rounded-full px-3 py-[4px] text-[12px] leading-5 text-muted transition-colors;
-    background-color: rgb(var(--glass-fill) / calc(var(--glass-fill-alpha) * 0.7));
-    border: 1px solid rgb(var(--glass-stroke) / calc(var(--glass-stroke-alpha) * 0.8));
+    background-color: rgb(var(--surface-2) / 0.72);
+    border: 1px solid rgb(var(--line) / 0.9);
     -webkit-backdrop-filter: blur(8px);
     backdrop-filter: blur(8px);
   }
-  .tag:hover { @apply text-text; border-color: rgb(var(--accent) / 0.5); }
+  .tag:hover { @apply text-text; border-color: rgb(var(--accent) / 0.55); }
 
   .focus-ring {
     @apply outline-none ring-offset-2 ring-offset-bg focus-visible:ring-2 focus-visible:ring-accent;
