@@ -17,7 +17,7 @@ interface Command {
 
 export const OPEN_PALETTE_EVENT = "yb:open-palette";
 
-const CV_PATH = "/Youssef_Bushra_Fouad_CV.pdf";
+const CV_PATH = "/portfolio.pdf";
 
 function scrollToId(id: string) {
   const el = document.getElementById(id);
@@ -31,7 +31,6 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
-  const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setTheme, resolvedTheme } = useTheme();
   const reduce = useReducedMotion();
@@ -40,7 +39,6 @@ export function CommandPalette() {
     setOpen(false);
     setQuery("");
     setActive(0);
-    setCopied(false);
   }, []);
 
   const commands: Command[] = useMemo(
@@ -71,19 +69,8 @@ export function CommandPalette() {
           track("cv_download", { from: "palette" });
           const a = document.createElement("a");
           a.href = CV_PATH;
-          a.download = "";
+          a.download = "Youssef-Bushra-Fouad-CV.pdf";
           a.click();
-        },
-      },
-      {
-        id: "copy-email",
-        label: "Copy email address",
-        hint: profile.email,
-        group: "Actions",
-        keywords: "email copy contact mail",
-        run: () => {
-          navigator.clipboard?.writeText(profile.email);
-          setCopied(true);
         },
       },
       {
@@ -98,19 +85,17 @@ export function CommandPalette() {
           setTheme(next);
         },
       },
-      ...profile.socials
-        .filter((s) => s.label !== "Email")
-        .map((s) => ({
-          id: `open-${s.label}`,
-          label: `Open ${s.label}`,
-          hint: s.handle,
-          group: "Links",
-          keywords: `${s.label} ${s.handle} profile`,
-          run: () => {
-            track("social_click", { label: s.label, from: "palette" });
-            window.open(s.href, "_blank", "noreferrer,noopener");
-          },
-        })),
+      ...profile.socials.map((s) => ({
+        id: `open-${s.label}`,
+        label: `Open ${s.label}`,
+        hint: s.handle,
+        group: "Links",
+        keywords: `${s.label} ${s.handle} profile`,
+        run: () => {
+          track("social_click", { label: s.label, from: "palette" });
+          window.open(s.href, "_blank", "noreferrer,noopener");
+        },
+      })),
     ],
     [resolvedTheme, setTheme]
   );
@@ -158,7 +143,7 @@ export function CommandPalette() {
   function runCommand(cmd: Command) {
     track("command_run", { command: cmd.id });
     cmd.run();
-    if (cmd.id !== "copy-email" && cmd.id !== "toggle-theme") close();
+    if (cmd.id !== "toggle-theme") close();
   }
 
   function onKeyDown(e: React.KeyboardEvent) {
@@ -244,9 +229,7 @@ export function CommandPalette() {
                             }`}
                             aria-hidden="true"
                           />
-                          {cmd.id === "copy-email" && copied
-                            ? "Email address copied"
-                            : cmd.label}
+                          {cmd.label}
                         </span>
                         <span className="truncate font-mono text-[11px] text-faint">
                           {cmd.hint}

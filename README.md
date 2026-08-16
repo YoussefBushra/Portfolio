@@ -1,8 +1,8 @@
 # Youssef Bushra, portfolio
 
-> A developer portfolio built around one idea: a career reads like a distributed
-> trace. Study, roles and shipped work are drawn as spans on a single time axis,
-> every bar positioned and sized by a real date from `content/`.
+> A developer portfolio built as a dossier: one continuous document, dense
+> enough that every screen carries information, legible to a recruiter and
+> an engineer alike.
 
 Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 **Framer Motion**. Light and dark themed, responsive, accessible, and static
@@ -12,13 +12,11 @@ enough to deploy to Vercel in one click.
 
 | Token | Choice |
 | --- | --- |
-| Ground | Cool graphite. `#ECEEF1` light, `#0E1116` dark. No pure black or white. |
-| Accent | One signal amber, `#F5A524`, used for fills. Text and links use `--accent-text`, the same hue darkened for light mode so it passes WCAG AA. |
-| Display type | Bricolage Grotesque, headings only, optical sizing on |
-| Body type | IBM Plex Sans |
-| Data type | IBM Plex Mono, for dates, durations, tags and metadata |
-| Radius | 4px, everywhere, no exceptions |
-| Section marker | A short amber bar, the same mark the trace chart uses for a span. There are no eyebrow labels or section numbers. |
+| Ground | Near-white page with tinted panels. `#FCFCFD` light, `#101215` dark. No pure black or white. Light is the primary design target. |
+| Accent | One signal amber, `#F5A524`, used for fills. Text and links use `--accent-text`, the same hue adjusted per theme so it passes WCAG AA. |
+| Type | Archivo, variable on weight and width, carrying both headings and body. IBM Plex Mono for every date, figure and label. |
+| Radius | 3px, everywhere, no exceptions |
+| Structure | Each section is a row in one document: a hairline rule, a sticky label gutter carrying the section name and a piece of real metadata, then the content. No centred headings. |
 
 Colors are RGB CSS variables in `app/globals.css` (`:root` light, `.dark` dark)
 surfaced to Tailwind in `tailwind.config.ts`. Change `--accent` in one place to
@@ -26,21 +24,18 @@ re-skin the site.
 
 ## What's on the page
 
-- **Trace chart** (`components/system/TraceChart.tsx`), the signature element.
-  `lib/timeline.ts` turns the ISO dates in `content/` into span offsets and
-  widths on a shared axis, so a wider bar always means a longer stretch of work.
-  Selecting a role swaps the detail panel below it. The chart is computed on the
-  server with a single `now`, so the client never disagrees about today's date.
+- **Identity band**, not a hero. The first screen carries the photo, name,
+  role, the claim, both actions, location, availability, profile links and four
+  figures, because it is the only screen some readers will look at.
 - **Command palette (⌘K / Ctrl+K)**, jump to any section, toggle theme, download
-  the CV, copy the email, open links. Fully keyboard-navigable.
-- **Tech filter**, select any tag on a project to filter the list by technology.
+  the CV, open links. Fully keyboard-navigable.
 - **Light and dark** via `next-themes`, following the system preference by
   default, with a toggle in the nav.
-- **Working contact form** (Formspree) with a `mailto:` fallback, plus loading,
-  error and success states.
+- **Working contact form** posting to Formspree through `@formspree/react`,
+  with per-field validation errors plus loading, error and success states.
 - **Data-driven content**, everything lives in typed files under `content/`.
-- Scroll-spy navigation, reveal-on-scroll, visible keyboard focus, and
-  `prefers-reduced-motion` honored throughout.
+- Scroll-spy navigation, visible keyboard focus, and `prefers-reduced-motion`
+  honored throughout.
 
 ## Knowing your visitors (analytics)
 
@@ -61,7 +56,7 @@ privacy-first with no cookies.
 | `cv_download` | the CV is downloaded, with source |
 | `contact_submit` | the contact form is submitted |
 | `command_palette_open`, `command_run` | palette usage |
-| `theme_toggle`, `tech_filter`, `project_archive_toggle`, `social_click`, `cta_click` | corresponding interactions |
+| `theme_toggle`, `social_click`, `cta_click` | corresponding interactions |
 
 No PII and no fingerprinting libraries, just the signals a browser already
 exposes plus the actions people take.
@@ -92,73 +87,73 @@ All content is centralized and typed, so you edit data rather than JSX:
 | File | What it holds |
 | --- | --- |
 | `content/profile.ts` | Name, role, hero thesis, tagline, summary, socials, headline facts, nav items |
-| `content/experience.ts` | Roles, including the `start` / `end` dates the trace chart is drawn from |
-| `content/projects.ts` | Projects, set `featured: true/false` to split the bento grid from the archive |
+| `content/experience.ts` | Roles, including the `start` date the Experience heading is derived from |
 | `content/skills.ts` | Skill groups and spoken languages |
-| `content/education.ts` | Degree, including its `start` / `end` dates |
+| `content/education.ts` | Degree and dates |
 
 Types live in `lib/types.ts`, so your editor will guide the shape of each entry.
 
 **Dates matter.** `start` and `end` are ISO year-month strings (`"2024-08"`).
-Omit `end` on the current role and set `current: true`, and the span runs to
-today.
+Omit `end` on the current role and set `current: true`.
+
+There is no Work section at present. To bring one back, recover
+`content/projects.ts` and `components/sections/Projects.tsx` from commit
+`055ae74`, re-add `Projects` to `app/page.tsx`, and put a `projects` entry back
+in `navNodes`.
 
 ## Portrait
 
-The hero has a portrait slot. Until an image is supplied it renders a
-typographic amber plate, which is a finished composition rather than a
-placeholder. To use a photo, drop it at `public/portrait.jpg` and set
-`PORTRAIT` at the top of `components/sections/Hero.tsx`:
-
-```ts
-const PORTRAIT: string | null = "/portrait.jpg";
-```
-
-Aim for a square crop, at least 800x800.
+The hero photo is `public/portrait.jpg`, framed with `object-position` in
+`components/sections/Hero.tsx` rather than a destructive crop, so the framing
+can be changed without re-exporting. Aim for a square-ish crop, 800x800 or
+larger.
 
 ## Contact form (Formspree)
 
-The form works out of the box using a `mailto:` fallback. To receive messages
-in-page without opening a mail client:
+The form posts to Formspree via `@formspree/react` and needs no configuration.
+The form id is a constant at the top of `components/sections/Contact.tsx`; it
+is public either way, since it ships in the client bundle. To point the form at
+a different Formspree form, change that constant.
 
-1. Create a free form at <https://formspree.io>.
-2. Copy the ID from the endpoint URL: `https://formspree.io/f/<THIS_PART>`.
-3. Add it to `.env.local` (copy from `.env.example`):
-
-   ```bash
-   NEXT_PUBLIC_FORMSPREE_ID=your_form_id
-   ```
-
-4. On Vercel, add the same variable under **Project, Settings, Environment
-   Variables**.
+**No email address or phone number appears anywhere on the site or in the CV.**
+The form is the only contact route, alongside the GitHub and LinkedIn links.
+Keep it that way when editing `content/profile.ts`: adding a `mailto:` link
+would put the address back in front of scrapers.
 
 ## Deploying to Vercel
 
 1. Push this repo to GitHub.
 2. Import it at <https://vercel.com/new>, the framework auto-detects as Next.js.
-3. Optionally add `NEXT_PUBLIC_FORMSPREE_ID` under Environment Variables.
-4. Deploy. No extra configuration required.
+3. Deploy. No environment variables are required.
+4. Enable **Analytics** and **Speed Insights** in the project's dashboard tabs;
+   the code is already wired, but nothing is recorded until they are switched
+   on.
+5. Once a custom domain is attached, set `NEXT_PUBLIC_SITE_URL` so canonical
+   and Open Graph URLs point at it. Without it the site falls back to Vercel's
+   production URL, which is correct for a `*.vercel.app` deployment.
 
 ## Project structure
 
 ```
 app/            layout, page, global styles, opengraph-image
 components/
-  system/       TraceChart, CommandPalette, TechContext, VisitTracker
+  system/       CommandPalette, VisitTracker
   layout/       Nav, ThemeToggle, Footer, ThemeProvider, SectionShell
-  sections/     Hero, About, Experience, Projects, Skills, Contact
-  ui/           SectionHead, Tag, CVButton, RevealOnScroll
+  sections/     Hero, About, Experience, Skills, Contact
+  ui/           CVButton, ContactLink, SocialLinks
 content/        typed CV data (edit here)
 lib/            types, timeline math, Framer Motion variants, analytics helpers
-public/         CV PDF, robots.txt
+public/         CV PDF, portrait, robots.txt
 ```
 
 ## Notes
 
-- The CV lives at `public/Youssef_Bushra_Fouad_CV.pdf`. Replace that file to
-  update the download everywhere (nav, hero, command palette).
-- Section ids (`#about`, `#experience`, `#projects`, `#skills`, `#contact`) are
-  stable, so existing links and analytics keep working.
+- The CV lives at `public/portfolio.pdf`. Replace that file to update the
+  download everywhere (nav, hero, contact, command palette). It downloads as
+  `Youssef-Bushra-Fouad-CV.pdf`. Check any replacement for a phone number or
+  email address before committing it.
+- Section ids (`#about`, `#experience`, `#skills`, `#contact`) are stable, so
+  existing links and analytics keep working.
 
 ---
 

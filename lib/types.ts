@@ -29,8 +29,6 @@ export interface Profile {
   thesis: string;
   tagline: string;
   location: string;
-  email: string;
-  phone: string;
   metaDescription: string;
   /** Short status line, e.g. what kind of work is being sought. */
   availability: string;
