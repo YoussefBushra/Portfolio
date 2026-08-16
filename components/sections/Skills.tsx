@@ -57,18 +57,18 @@ function Tool({ name }: { name: string }) {
   if (!icon) return null;
   return (
     <div
-      className="group flex flex-col items-center gap-2.5 rounded-lg px-2 py-3.5 text-center transition-colors duration-200 hover:bg-white/[0.06]"
+      className="group flex flex-col items-center justify-center gap-2.5 rounded-xl border border-line bg-white/50 p-4 text-center backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:bg-white/70 hover:shadow-lg dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-accent/40 dark:hover:bg-white/[0.08]"
       style={{ ["--brand" as string]: brandColor(icon.hex) }}
     >
       <svg
         role="img"
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className="h-7 w-7 text-faint transition-colors duration-200 group-hover:text-[var(--brand)]"
+        className="h-8 w-8 text-muted transition-colors duration-200 group-hover:text-[var(--brand)]"
       >
         <path fill="currentColor" d={icon.path} />
       </svg>
-      <span className="text-[11px] leading-tight text-muted transition-colors duration-200 group-hover:text-text">
+      <span className="text-[11px] font-medium leading-tight text-muted transition-colors duration-200 group-hover:text-text">
         {name}
       </span>
     </div>
@@ -88,7 +88,7 @@ export function Skills() {
           {skillTools.map((group) => (
             <div key={group.name}>
               <h3 className="block-label">{group.name}</h3>
-              <div className="mt-3 grid grid-cols-3 gap-1 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-9">
+              <div className="mt-3 grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6">
                 {group.items.map((item) => (
                   <Tool key={item} name={item} />
                 ))}
