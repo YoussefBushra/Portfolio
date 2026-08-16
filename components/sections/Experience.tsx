@@ -31,7 +31,7 @@ function RoleEntry({ role }: { role: Role }) {
               <div className="num font-display text-lg font-bold leading-none tracking-tight text-accent-text">
                 {m.value}
               </div>
-              <div className="mt-1.5 font-mono text-[11px] text-faint">{m.label}</div>
+              <div className="mt-1.5 font-mono text-[11px] text-muted">{m.label}</div>
             </div>
           ))}
         </div>
