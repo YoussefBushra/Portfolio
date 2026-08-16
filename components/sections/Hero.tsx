@@ -1,22 +1,52 @@
+"use client";
+
 import Image from "next/image";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { CountUp } from "@/components/system/CountUp";
 
 const PORTRAIT = "/portrait.jpg";
 
 /**
  * The identity band, as a pane of glass floating on the aurora: the photo,
  * the name, the claim, both actions, location, availability, profile links
- * and four figures on a single screen, because the first screen is the only
- * one some readers will look at.
+ * and four figures on a single screen. It plays a short entrance on load —
+ * the card settles in, then the figures stagger and count up — all dropped
+ * under reduced motion.
  */
+const ease = [0.16, 1, 0.3, 1] as const;
+const wrap: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.14, delayChildren: 0.05 } },
+};
+const card: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease } },
+};
+const facts: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } },
+};
+const tile: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease } },
+};
+
 export function Hero() {
+  const reduce = useReducedMotion();
+
   return (
     <section id="hero" className="px-6 md:px-10">
-      <div className="mx-auto max-w-page pb-10 pt-28 md:pb-14 md:pt-32">
-        <div className="glass-strong rounded-xl p-6 sm:p-8 md:p-10">
+      <motion.div
+        className="mx-auto max-w-page pb-10 pt-28 md:pb-14 md:pt-32"
+        variants={wrap}
+        initial={reduce ? false : "hidden"}
+        animate={reduce ? false : "show"}
+      >
+        <motion.div variants={card} className="glass-strong rounded-xl p-6 sm:p-8 md:p-10">
           <div className="grid gap-8 md:grid-cols-12 md:gap-10">
             <div className="md:col-span-3">
               <div className="relative aspect-[4/5] w-full max-w-[220px] overflow-hidden rounded-lg border border-white/30 bg-surface/40 shadow-lg md:max-w-none">
@@ -71,23 +101,27 @@ export function Hero() {
               </dl>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Figures, all of them defended further down the page, as small glass tiles. */}
-        <dl className="mt-5 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+        {/* Figures, all of them defended further down the page, counting up as
+            small glass tiles. */}
+        <motion.dl
+          variants={facts}
+          className="mt-5 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4"
+        >
           {profile.facts.map((f) => (
-            <div key={f.label} className="glass rounded-lg p-4 md:p-5">
+            <motion.div variants={tile} key={f.label} className="glass rounded-lg p-4 md:p-5">
               <dt className="num font-display text-2xl font-bold tracking-tight text-accent-text">
-                {f.value}
+                <CountUp value={f.value} />
               </dt>
               <dd className="mt-1.5 text-[13px] leading-tight text-text">{f.label}</dd>
               <dd className="mt-0.5 font-mono text-[11px] leading-tight text-faint">
                 {f.hint}
               </dd>
-            </div>
+            </motion.div>
           ))}
-        </dl>
-      </div>
+        </motion.dl>
+      </motion.div>
     </section>
   );
 }
