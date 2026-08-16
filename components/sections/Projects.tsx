@@ -78,12 +78,12 @@ export function Projects() {
       )
     : [];
 
+  const years = projects.map((p) => Number(p.year)).sort((a, b) => a - b);
+  const span =
+    years.length > 1 ? `${years[0]} to ${years[years.length - 1]}` : `${years[0]}`;
+
   return (
-    <SectionShell
-      id="projects"
-      label="Work"
-      meta={`${projects.length} projects, 2021 to 2024`}
-    >
+    <SectionShell id="projects" label="Work" meta={span}>
       {filter ? (
         <div>
           <div className="mb-1 flex flex-wrap items-center gap-3">

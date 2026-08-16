@@ -12,8 +12,8 @@ export const profile: Profile = {
   metaDescription:
     "Youssef Bushra Fouad, backend-focused full stack engineer building microservices for a multi-tenant SaaS platform with NestJS, Node.js, TypeScript, RabbitMQ, PostgreSQL and MongoDB. Experienced in event-driven architecture, enterprise integrations and high-volume search.",
   summary: [
-    "I build backend services for a production multi-tenant SaaS platform, where roughly 40 services and frontend applications talk over RabbitMQ message patterns behind a single API gateway rather than calling each other directly. My work sits in service decomposition, message contracts, tenant-isolated data models, and the asynchronous flows that keep them consistent.",
-    "I have integrated Microsoft Dynamics 365 Finance and Odoo with custom financial systems, optimized geo-search across 10M+ records with Elasticsearch, and built the Next.js frontends that consume the services I ship. I care about clean service boundaries, measurable performance, and interfaces that feel effortless.",
+    "I build backend services for a production multi-tenant SaaS platform. Services are decomposed by business domain, own their data, and communicate asynchronously through a message broker, behind a single API gateway that resolves authentication and authorization centrally.",
+    "Most of my work sits between services: boundaries and message contracts, tenant isolation enforced at the data-access layer, idempotent consumers, and the asynchronous flows that keep independently deployed services consistent under load. I build the interfaces on top of them too, and I care about clean boundaries, measurable performance, and systems that stay legible as they grow.",
   ],
   socials: [
     {

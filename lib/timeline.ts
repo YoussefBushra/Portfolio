@@ -1,6 +1,5 @@
 import { education } from "@/content/education";
 import { experience } from "@/content/experience";
-import { projects } from "@/content/projects";
 
 /**
  * Builds the data behind the trace chart: every span is positioned and sized
@@ -25,15 +24,8 @@ export interface TraceSpan {
   current: boolean;
 }
 
-export interface ShippedTick {
-  year: string;
-  count: number;
-  offset: number;
-}
-
 export interface Trace {
   spans: TraceSpan[];
-  ticks: ShippedTick[];
   years: { label: string; offset: number }[];
   endLabel: string;
 }
@@ -100,21 +92,6 @@ export function buildTrace(now: Date): Trace {
     current: s.current,
   }));
 
-  const byYear = new Map<string, number>();
-  for (const p of projects) {
-    byYear.set(p.year, (byYear.get(p.year) ?? 0) + 1);
-  }
-
-  const ticks: ShippedTick[] = [...byYear.entries()]
-    .map(([year, count]) => ({
-      year,
-      count,
-      // Ticks sit mid-year, which is as precise as the source data gets.
-      offset: (Number(year) * 12 + 6 - axisStart) / axisLength,
-    }))
-    .filter((t) => t.offset >= 0 && t.offset <= 1)
-    .sort((a, b) => a.offset - b.offset);
-
   const years: { label: string; offset: number }[] = [];
   for (let y = firstYear; y * 12 <= axisEnd; y += 1) {
     years.push({ label: String(y), offset: (y * 12 - axisStart) / axisLength });
@@ -122,7 +99,6 @@ export function buildTrace(now: Date): Trace {
 
   return {
     spans,
-    ticks,
     years,
     endLabel: now.toLocaleDateString("en-GB", { month: "short", year: "numeric" }),
   };

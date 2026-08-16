@@ -9,7 +9,7 @@ export const experience: Experience[] = [
     start: "2024-08",
     current: true,
     summary:
-      "Backend services for a production multi-tenant SaaS platform, where domain services communicate over RabbitMQ message patterns behind a single API gateway rather than direct HTTP calls.",
+      "Backend services for a production multi-tenant SaaS platform, where domain services communicate asynchronously over RabbitMQ message patterns behind a single API gateway.",
     stack: [
       "TypeScript",
       "NestJS",

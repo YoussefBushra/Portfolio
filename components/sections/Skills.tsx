@@ -5,11 +5,7 @@ import { Tag } from "@/components/ui/Tag";
 /** A spec table, not a card grid: group name left, its tools right. */
 export function Skills() {
   return (
-    <SectionShell
-      id="skills"
-      label="Stack"
-      meta={`${skillGroups.length} groups`}
-    >
+    <SectionShell id="skills" label="Stack">
       <dl>
         {skillGroups.map((group) => (
           <div
