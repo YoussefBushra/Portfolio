@@ -54,9 +54,9 @@ const ACCENTS: Accent[] = [
 type Glass = { id: string; label: string; light: [number, number]; dark: [number, number] };
 // [fill-alpha, blur-px]
 const GLASS: Glass[] = [
-  { id: "subtle", label: "Subtle", light: [0.62, 16], dark: [0.05, 16] },
-  { id: "medium", label: "Medium", light: [0.5, 26], dark: [0.1, 28] },
-  { id: "heavy", label: "Heavy", light: [0.4, 36], dark: [0.14, 40] },
+  { id: "subtle", label: "Subtle", light: [0.62, 16], dark: [0.42, 18] },
+  { id: "medium", label: "Medium", light: [0.5, 26], dark: [0.55, 28] },
+  { id: "heavy", label: "Heavy", light: [0.4, 36], dark: [0.72, 42] },
 ];
 
 const DEFAULT_ACCENT = "indigo";

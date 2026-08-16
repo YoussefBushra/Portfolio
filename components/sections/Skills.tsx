@@ -1,115 +1,57 @@
-import { skillTools, practices, spokenLanguages } from "@/content/skills";
-import { SectionShell } from "@/components/layout/SectionShell";
-import {
-  siNodedotjs,
-  siNestjs,
-  siTypescript,
-  siPostgresql,
-  siMongodb,
-  siRedis,
-  siRabbitmq,
-  siReact,
-  siNextdotjs,
-  siElasticsearch,
-  siOpentelemetry,
-  siGrafana,
-  siDocker,
-  siGithubactions,
-  siGraphql,
-  siJest,
-  siSwagger,
-  type SimpleIcon,
-} from "simple-icons";
+"use client";
 
-/** Tool name to its brand mark. Keys must match content/skills.ts exactly. */
-const ICONS: Record<string, SimpleIcon> = {
-  "Node.js": siNodedotjs,
-  NestJS: siNestjs,
-  TypeScript: siTypescript,
-  PostgreSQL: siPostgresql,
-  MongoDB: siMongodb,
-  Redis: siRedis,
-  RabbitMQ: siRabbitmq,
-  React: siReact,
-  "Next.js": siNextdotjs,
-  Elasticsearch: siElasticsearch,
-  OpenTelemetry: siOpentelemetry,
-  Grafana: siGrafana,
-  Docker: siDocker,
-  "GitHub Actions": siGithubactions,
-  GraphQL: siGraphql,
-  Jest: siJest,
-  Swagger: siSwagger,
+import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { stackGroups, spokenLanguages } from "@/content/skills";
+import { SectionShell } from "@/components/layout/SectionShell";
+
+/**
+ * The stack as a capability index rather than a wall of chips or logos: a mono
+ * eyebrow per group with its tools set in the display face, so typography does
+ * the work. Each group's items reveal in a short stagger as they scroll in,
+ * and lift to the accent on hover — one quiet, deliberate motion, skipped
+ * entirely under reduced motion.
+ */
+const list: Variants = {
+  show: { transition: { staggerChildren: 0.035 } },
+};
+const item: Variants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } },
 };
 
-/**
- * The hover colour. Near-black brand marks (Next.js, OpenTelemetry) would
- * vanish on the dark theme, so those fall back to the accent instead.
- */
-function brandColor(hex: string): string {
-  const n = parseInt(hex, 16);
-  const lum = 0.2126 * ((n >> 16) & 255) + 0.7152 * ((n >> 8) & 255) + 0.0722 * (n & 255);
-  return lum < 42 ? "rgb(var(--accent-text))" : `#${hex}`;
-}
-
-function Tool({ name }: { name: string }) {
-  const icon = ICONS[name];
-  if (!icon) return null;
-  return (
-    <div
-      className="group flex flex-col items-center justify-center gap-2.5 rounded-xl border border-line bg-white/50 p-4 text-center backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-accent/40 hover:bg-white/70 hover:shadow-lg dark:border-white/10 dark:bg-white/[0.04] dark:hover:border-accent/40 dark:hover:bg-white/[0.08]"
-      style={{ ["--brand" as string]: brandColor(icon.hex) }}
-    >
-      <svg
-        role="img"
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        className="h-8 w-8 text-muted transition-colors duration-200 group-hover:text-[var(--brand)]"
-      >
-        <path fill="currentColor" d={icon.path} />
-      </svg>
-      <span className="text-[11px] font-medium leading-tight text-muted transition-colors duration-200 group-hover:text-text">
-        {name}
-      </span>
-    </div>
-  );
-}
-
-/**
- * Tools shown as brand marks in a quiet grid — monochrome at rest, lit in the
- * brand's own colour on hover. Patterns and approaches, which have no logo,
- * follow as a plain list. No pills anywhere.
- */
 export function Skills() {
+  const reduce = useReducedMotion();
+
   return (
     <SectionShell id="skills" label="Stack">
-      <div className="glass-strong rounded-xl p-6 sm:p-8">
-        <div className="space-y-8">
-          {skillTools.map((group) => (
-            <div key={group.name}>
-              <h3 className="block-label">{group.name}</h3>
-              <div className="mt-3 grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6">
-                {group.items.map((item) => (
-                  <Tool key={item} name={item} />
+      <div className="glass-strong rounded-xl p-6 sm:p-8 md:p-10">
+        <div className="divide-y divide-white/10">
+          {stackGroups.map((group) => (
+            <div
+              key={group.name}
+              className="grid gap-x-8 gap-y-3 py-6 first:pt-0 last:pb-0 md:grid-cols-[190px_minmax(0,1fr)]"
+            >
+              <h3 className="block-label md:pt-2">{group.name}</h3>
+              <motion.ul
+                className="flex flex-wrap gap-x-6 gap-y-2.5"
+                variants={reduce ? undefined : list}
+                initial={reduce ? undefined : "hidden"}
+                whileInView={reduce ? undefined : "show"}
+                viewport={{ once: true, margin: "-60px" }}
+              >
+                {group.items.map((name) => (
+                  <motion.li key={name} variants={reduce ? undefined : item}>
+                    <span className="cursor-default font-display text-[17px] font-medium tracking-tight text-text transition-colors duration-200 hover:text-accent-text">
+                      {name}
+                    </span>
+                  </motion.li>
                 ))}
-              </div>
+              </motion.ul>
             </div>
           ))}
         </div>
 
-        <div className="mt-8 border-t border-white/10 pt-6">
-          <h3 className="block-label">Architecture and practices</h3>
-          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2.5">
-            {practices.map((p) => (
-              <li key={p} className="flex items-center gap-2 text-[13px] text-muted">
-                <span className="h-1 w-1 rounded-full bg-accent/70" aria-hidden="true" />
-                {p}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <p className="mt-6 border-t border-white/10 pt-4 text-[13px] text-muted">
+        <p className="mt-7 border-t border-white/10 pt-5 font-mono text-[12px] text-muted">
           Spoken languages: {spokenLanguages}.
         </p>
       </div>

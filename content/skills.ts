@@ -1,10 +1,11 @@
 import type { SkillGroup } from "@/lib/types";
 
 /**
- * Concrete tools, grouped. These render as brand logos in the Stack section.
- * Every name here must have a matching icon in the Stack component's map.
+ * The stack, as a capability index: each group is an eyebrow with its members
+ * set as type. Order runs from what the work is built on outward to how it is
+ * shaped and shipped.
  */
-export const skillTools: SkillGroup[] = [
+export const stackGroups: SkillGroup[] = [
   {
     name: "Core",
     items: [
@@ -20,26 +21,23 @@ export const skillTools: SkillGroup[] = [
     ],
   },
   {
-    name: "Observability and infrastructure",
+    name: "Observability & infrastructure",
     items: ["Elasticsearch", "OpenTelemetry", "Grafana", "Docker", "GitHub Actions"],
   },
   {
-    name: "APIs and testing",
-    items: ["GraphQL", "Jest", "Swagger"],
+    name: "APIs & testing",
+    items: ["REST", "GraphQL", "Swagger", "Jest"],
   },
-];
-
-/**
- * Approaches and patterns — not products, so they have no logo and are set as
- * plain text rather than dressed up as tools.
- */
-export const practices = [
-  "Microservices",
-  "Event-driven architecture",
-  "Multi-tenant SaaS",
-  "API gateway",
-  "Micro-frontends",
-  "REST",
+  {
+    name: "Architecture",
+    items: [
+      "Microservices",
+      "Event-driven architecture",
+      "Multi-tenant SaaS",
+      "API gateway",
+      "Micro-frontends",
+    ],
+  },
 ];
 
 export const spokenLanguages = "Arabic (native), English (C1), German (A1)";

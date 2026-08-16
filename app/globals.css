@@ -54,12 +54,14 @@
   --on-accent: 10 12 28;
   --danger: 255 120 138;
 
-  --glass-fill: 255 255 255;
-  --glass-fill-alpha: 0.1;
+  /* Dark glass is dark-tinted, not white-frosted: panels stay deep so light
+     text keeps real contrast, while the blur and a light rim read as glass. */
+  --glass-fill: 20 24 42;
+  --glass-fill-alpha: 0.55;
   --glass-stroke: 255 255 255;
-  --glass-stroke-alpha: 0.18;
+  --glass-stroke-alpha: 0.14;
   --glass-blur: 28px;
-  --glass-shadow: 0 20px 54px -16px rgb(0 0 0 / 0.62);
+  --glass-shadow: 0 20px 54px -16px rgb(0 0 0 / 0.66);
   --glass-highlight: 255 255 255;
 
   --aura-1: 110 120 255;
