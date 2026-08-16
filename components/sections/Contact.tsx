@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm, ValidationError } from "@formspree/react";
-import { profile } from "@/content/profile";
 import { SectionShell } from "@/components/layout/SectionShell";
-import { SocialLinks } from "@/components/ui/SocialLinks";
 import { CVButton } from "@/components/ui/CVButton";
+import { SocialLinks } from "@/components/ui/SocialLinks";
+import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
+import { useForm, ValidationError } from "@formspree/react";
+import { useEffect } from "react";
 
 /**
  * Formspree form id. Public by design: it ships in the client bundle either
@@ -142,9 +142,7 @@ export function Contact() {
                 >
                   {state.submitting ? "Sending" : "Send message"}
                 </button>
-                <span className="text-xs text-muted">
-                  Or email {profile.email} directly.
-                </span>
+               
               </div>
             </form>
           )}
