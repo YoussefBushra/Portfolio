@@ -62,7 +62,6 @@ export const profile: Profile = {
 export const navNodes: NavNode[] = [
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
-  { id: "projects", label: "Work" },
   { id: "skills", label: "Stack" },
   { id: "contact", label: "Contact" },
 ];

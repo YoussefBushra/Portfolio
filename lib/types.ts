@@ -2,7 +2,6 @@ export type SectionId =
   | "hero"
   | "about"
   | "experience"
-  | "projects"
   | "skills"
   | "contact";
 
@@ -55,17 +54,6 @@ export interface Experience {
   stack: string[];
   metrics?: { label: string; value: string }[];
   highlights: string[];
-}
-
-export interface Project {
-  name: string;
-  kind: string;
-  year: string;
-  featured: boolean;
-  blurb: string;
-  metrics?: { label: string; value: string }[];
-  tech: string[];
-  links?: { label: string; href: string }[];
 }
 
 export interface SkillGroup {

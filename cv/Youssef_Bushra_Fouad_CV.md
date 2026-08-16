@@ -25,6 +25,7 @@ Backend-focused full-stack software engineer with 2.5+ years of professional exp
 ## Work Experience
 
 ### Web Full Stack Developer | Skil-Dev, Cairo, Egypt
+
 **Aug 2024 - Present**
 
 - Build backend services for a production multi-tenant SaaS platform spanning roughly 40 service and frontend applications, where domain services communicate over RabbitMQ message patterns behind a single API gateway rather than direct HTTP calls.
@@ -37,9 +38,10 @@ Backend-focused full-stack software engineer with 2.5+ years of professional exp
 - Built features in independently deployed Next.js micro-frontends composed behind a shared shell application, shipped services as Docker images through GitHub Actions CI, and increased Jest coverage on backend logic to reduce production defects.
 
 ### Full Stack Software Engineer | Block Gemini, Dubai, UAE
+
 **Jan 2024 - Aug 2024**
 
-- Led the optimization of geo-location search over large datasets with Elasticsearch, reaching ~600 ms average query response against a sub-1-second target while processing 10 million records.
+- Led the optimization of geo-location search over a 10-million-record dataset using Elasticsearch, achieving a 600 ms average query response time against a sub-1-second target.
 - Designed RESTful APIs with NestJS, TypeORM and PostgreSQL, improving performance of complex data-retrieval operations, and used GraphQL with a Redis caching layer to streamline client-side querying.
 - Implemented JWT authentication and role-based authorization across microservices, keeping access control consistent between services without sacrificing scalability.
 - Built and maintained a centralized logging pipeline with Filebeat, Elasticsearch and Kibana for real-time log collection, monitoring and visualization, working with DevOps to integrate it into backend services.
@@ -49,12 +51,14 @@ Backend-focused full-stack software engineer with 2.5+ years of professional exp
 ## Projects
 
 ### Data Dashboard Outlook Add-on
+
 **Jul 2023 - Aug 2023**
 
 - Built a cross-platform MS Outlook add-on (web and desktop) with JavaScript, Node.js, Express.js and MongoDB, following current Microsoft guidance for centralized deployment and distribution.
 - Surfaced contextual data cards in the task pane, pulling records related to the selected mail content from the organization's database and presenting them in a structured, actionable view.
 
 ### Memories, Social Media Web Application
+
 **Aug 2023**
 
 - Developed a responsive full-stack application on the MERN stack with Redux for state management, exposing a RESTful API consumed by the React client.
@@ -63,6 +67,7 @@ Backend-focused full-stack software engineer with 2.5+ years of professional exp
 ## Education
 
 ### The British University in Egypt (BUE), with London South Bank University (LSBU)
+
 **Oct 2018 - Jul 2022**
 
 BSc Computer Science, Software Engineering major. Cumulative GPA 4.00 (Distinction with Honors).

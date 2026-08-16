@@ -2,7 +2,7 @@ import Image from "next/image";
 import { profile } from "@/content/profile";
 import { experienceSince } from "@/lib/timeline";
 import { CVButton } from "@/components/ui/CVButton";
-import { WorkLink } from "@/components/ui/WorkLink";
+import { ContactLink } from "@/components/ui/ContactLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 
 const PORTRAIT = "/portrait.jpg";
@@ -51,8 +51,8 @@ export function Hero() {
             </p>
 
             <div className="mt-7 flex flex-wrap gap-2.5">
-              <WorkLink />
-              <CVButton from="hero" variant="ghost" />
+              <CVButton from="hero" variant="primary" />
+              <ContactLink />
             </div>
           </div>
 

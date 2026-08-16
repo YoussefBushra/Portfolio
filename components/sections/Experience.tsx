@@ -1,9 +1,7 @@
 import { experience } from "@/content/experience";
 import type { Experience as Role } from "@/lib/types";
-import { buildTrace } from "@/lib/timeline";
+import { careerStartYear } from "@/lib/timeline";
 import { SectionShell } from "@/components/layout/SectionShell";
-import { TraceChart } from "@/components/system/TraceChart";
-import { Tag } from "@/components/ui/Tag";
 
 function RoleEntry({ role }: { role: Role }) {
   return (
@@ -47,33 +45,24 @@ function RoleEntry({ role }: { role: Role }) {
         ))}
       </ul>
 
-      <div className="mt-6 flex flex-wrap gap-1.5">
-        {role.stack.map((s) => (
-          <Tag key={s} label={s} />
-        ))}
+      <div className="mt-6 border-t border-line pt-3">
+        <h4 className="block-label">Stack</h4>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-muted">
+          {role.stack.join(", ")}
+        </p>
       </div>
     </article>
   );
 }
 
-/**
- * Server component: the trace is computed once here, with a single `now`, so
- * the client chart never disagrees with the server about today's date.
- */
 export function Experience() {
-  const trace = buildTrace(new Date());
-  const first = trace.years[0]?.label;
-  const last = trace.years[trace.years.length - 1]?.label;
-
   return (
     <SectionShell
       id="experience"
       label="Experience"
-      meta={first && last ? `${first} to ${last}` : undefined}
+      meta={`${careerStartYear()} to present`}
     >
-      <TraceChart trace={trace} />
-
-      <div className="mt-10 space-y-9">
+      <div className="space-y-9">
         {experience.map((role) => (
           <RoleEntry key={role.company} role={role} />
         ))}

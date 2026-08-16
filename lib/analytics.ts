@@ -18,8 +18,6 @@ export type AnalyticsEvent =
   | "command_run"
   | "theme_toggle"
   | "section_view"
-  | "project_archive_toggle"
-  | "tech_filter"
   | "social_click"
   | "boot_skipped"
   | "cta_click";

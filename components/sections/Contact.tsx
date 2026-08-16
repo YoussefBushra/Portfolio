@@ -1,77 +1,36 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect } from "react";
+import { useForm, ValidationError } from "@formspree/react";
 import { profile } from "@/content/profile";
 import { SectionShell } from "@/components/layout/SectionShell";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { CVButton } from "@/components/ui/CVButton";
 import { track } from "@/lib/analytics";
 
-type Status = "idle" | "submitting" | "success" | "error";
-
-const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+/**
+ * Formspree form id. Public by design: it ships in the client bundle either
+ * way, and Formspree scopes abuse protection to the form itself.
+ */
+const FORM_ID = "xnpabgrq";
 
 const field =
   "focus-ring w-full rounded-sm border border-line bg-bg px-3 py-2 text-sm text-text placeholder:text-faint transition-colors duration-150 focus:border-accent";
 
+const errorText = "text-xs leading-snug text-danger";
+
 export function Contact() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMsg, setErrorMsg] = useState<string>("");
+  const [state, handleSubmit, reset] = useForm(FORM_ID);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const name = String(data.get("name") ?? "").trim();
-    const email = String(data.get("email") ?? "").trim();
-    const message = String(data.get("message") ?? "").trim();
-
-    if (!name || !email || !message) {
-      setStatus("error");
-      setErrorMsg("Fill in your name, email and message, then send again.");
-      return;
-    }
-
-    if (!FORMSPREE_ID) {
-      const subject = encodeURIComponent(`Portfolio contact from ${name}`);
-      const body = encodeURIComponent(`${message}\n\n${name}\n${email}`);
-      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-      track("contact_submit", { method: "mailto" });
-      setStatus("success");
-      return;
-    }
-
-    try {
-      setStatus("submitting");
-      setErrorMsg("");
-      const res = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: data,
-      });
-      if (res.ok) {
-        track("contact_submit", { method: "formspree" });
-        setStatus("success");
-        form.reset();
-      } else {
-        const json = await res.json().catch(() => null);
-        setStatus("error");
-        setErrorMsg(
-          json?.errors?.[0]?.message ??
-            `That did not send. Email ${profile.email} instead.`
-        );
-      }
-    } catch {
-      setStatus("error");
-      setErrorMsg(`Network error. Try again, or email ${profile.email}.`);
-    }
-  }
+  useEffect(() => {
+    if (state.succeeded) track("contact_submit", { method: "formspree" });
+  }, [state.succeeded]);
 
   return (
     <SectionShell id="contact" label="Contact" meta={profile.availability}>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:gap-14">
         <div>
-          {status === "success" ? (
+          {state.succeeded ? (
             <div className="rounded-sm border border-line bg-surface p-6">
               <h3 className="text-base font-semibold tracking-tight text-text">
                 Message sent
@@ -81,7 +40,7 @@ export function Contact() {
               </p>
               <button
                 type="button"
-                onClick={() => setStatus("idle")}
+                onClick={reset}
                 className="focus-ring mt-4 rounded-sm text-sm text-muted underline decoration-line underline-offset-[3px] transition-colors hover:text-text"
               >
                 Send another
@@ -89,6 +48,14 @@ export function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate>
+              {/* Sets the subject line of the notification email. */}
+              <input
+                type="hidden"
+                name="_subject"
+                value="Portfolio contact"
+                readOnly
+              />
+
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="name" className="text-[13px] font-medium text-text">
@@ -101,6 +68,12 @@ export function Contact() {
                     autoComplete="name"
                     required
                     className={field}
+                  />
+                  <ValidationError
+                    field="name"
+                    prefix="Name"
+                    errors={state.errors}
+                    className={errorText}
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -118,6 +91,12 @@ export function Contact() {
                     required
                     placeholder="you@company.com"
                     className={field}
+                  />
+                  <ValidationError
+                    field="email"
+                    prefix="Email"
+                    errors={state.errors}
+                    className={errorText}
                   />
                 </div>
               </div>
@@ -140,30 +119,32 @@ export function Contact() {
                 <p id="message-help" className="text-xs text-muted">
                   A few lines about the role or the system is plenty.
                 </p>
+                <ValidationError
+                  field="message"
+                  prefix="Message"
+                  errors={state.errors}
+                  className={errorText}
+                />
               </div>
 
-              {status === "error" ? (
-                <p
-                  role="alert"
-                  className="mt-4 rounded-sm border border-line bg-surface px-3 py-2 text-sm text-text"
-                >
-                  {errorMsg}
-                </p>
-              ) : null}
+              {/* Anything Formspree rejects at the form level, e.g. a blocked
+                  submission or an outage, rather than a single bad field. */}
+              <ValidationError
+                errors={state.errors}
+                className={`${errorText} mt-4`}
+              />
 
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <button
                   type="submit"
-                  disabled={status === "submitting"}
+                  disabled={state.submitting}
                   className="btn-primary disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {status === "submitting" ? "Sending" : "Send message"}
+                  {state.submitting ? "Sending" : "Send message"}
                 </button>
-                {!FORMSPREE_ID ? (
-                  <span className="text-xs text-muted">
-                    Opens your mail client.
-                  </span>
-                ) : null}
+                <span className="text-xs text-muted">
+                  Or email {profile.email} directly.
+                </span>
               </div>
             </form>
           )}

@@ -20,6 +20,7 @@ const config: Config = {
         accent: "rgb(var(--accent) / <alpha-value>)",
         "accent-text": "rgb(var(--accent-text) / <alpha-value>)",
         "on-accent": "rgb(var(--on-accent) / <alpha-value>)",
+        danger: "rgb(var(--danger) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

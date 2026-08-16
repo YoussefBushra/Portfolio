@@ -71,7 +71,7 @@ export const experience: Experience[] = [
       { label: "geo-query p95, target under 1s", value: "600ms" },
     ],
     highlights: [
-      "Led the optimization of geo-location search over large datasets with Elasticsearch, reaching 600ms average query response against a sub-1-second target while processing 10 million records.",
+      "Led the optimization of geo-location search over a 10-million-record dataset using Elasticsearch, achieving a 600 ms average query response time against a sub-1-second target.",
       "Designed RESTful APIs with NestJS, TypeORM and PostgreSQL, improving performance of complex data-retrieval operations, and used GraphQL with a Redis caching layer to streamline client-side querying.",
       "Implemented JWT authentication and role-based authorization across microservices, keeping access control consistent between services without sacrificing scalability.",
       "Built and maintained a centralized logging pipeline with Filebeat, Elasticsearch and Kibana for real-time log collection, monitoring and visualization, working with DevOps to integrate it into backend services.",

@@ -18,6 +18,7 @@
   --accent: 245 165 36;
   --accent-text: 143 82 0;
   --on-accent: 20 16 6;
+  --danger: 180 35 24;
 
   color-scheme: light;
 }
@@ -33,6 +34,7 @@
   --accent: 245 165 36;
   --accent-text: 245 178 74;
   --on-accent: 20 16 6;
+  --danger: 249 112 102;
 
   color-scheme: dark;
 }
@@ -75,10 +77,6 @@ body {
      structural navigation rather than decoration. */
   .block-label {
     @apply font-mono text-[11px] uppercase tracking-[0.14em] text-faint;
-  }
-
-  .tag {
-    @apply inline-flex items-center rounded-sm border border-line bg-surface px-2 py-[3px] font-mono text-[11px] leading-4 text-muted;
   }
 
   .focus-ring {
