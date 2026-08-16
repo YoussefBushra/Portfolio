@@ -4,23 +4,14 @@ import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 
 /** Compact list of external profiles, one per row. */
-export function SocialLinks({
-  from,
-  exclude = [],
-}: {
-  from: string;
-  /** Labels to leave out, e.g. where email already has its own block. */
-  exclude?: string[];
-}) {
-  const links = profile.socials.filter((s) => !exclude.includes(s.label));
-
+export function SocialLinks({ from }: { from: string }) {
   return (
     <ul className="space-y-1">
-      {links.map((s) => (
+      {profile.socials.map((s) => (
         <li key={s.label}>
           <a
             href={s.href}
-            target={s.href.startsWith("http") ? "_blank" : undefined}
+            target="_blank"
             rel="noreferrer noopener"
             onClick={() => track("social_click", { label: s.label, from })}
             className="focus-ring group inline-flex items-baseline gap-2 rounded-sm text-sm"

@@ -2,7 +2,9 @@
 
 import { track } from "@/lib/analytics";
 
-const CV_PATH = "/Youssef_Bushra_Fouad_CV.pdf";
+const CV_PATH = "/portfolio.pdf";
+/** What the file is called once it lands in the reader's downloads folder. */
+const CV_FILENAME = "Youssef-Bushra-Fouad-CV.pdf";
 
 interface CVButtonProps {
   from: string;
@@ -21,7 +23,7 @@ export function CVButton({ from, variant = "ghost", className = "" }: CVButtonPr
   return (
     <a
       href={CV_PATH}
-      download
+      download={CV_FILENAME}
       onClick={() => track("cv_download", { from })}
       className={`group ${styles} ${className}`}
     >

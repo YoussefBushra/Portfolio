@@ -7,8 +7,6 @@ export const profile: Profile = {
   tagline:
     "Backend and distributed systems: message-driven microservices on a multi-tenant SaaS platform, search at scale, and enterprise integrations.",
   location: "Cairo, Egypt",
-  email: "Youssefbushra16.4@gmail.com",
-  phone: "+20 120 149 3395",
   metaDescription:
     "Youssef Bushra Fouad, backend-focused full stack engineer building microservices for a multi-tenant SaaS platform with NestJS, Node.js, TypeScript, RabbitMQ, PostgreSQL and MongoDB. Experienced in event-driven architecture, enterprise integrations and high-volume search.",
   summary: [
@@ -25,11 +23,6 @@ export const profile: Profile = {
       label: "LinkedIn",
       href: "https://linkedin.com/in/youssefbushra",
       handle: "in/youssefbushra",
-    },
-    {
-      label: "Email",
-      href: "mailto:Youssefbushra16.4@gmail.com",
-      handle: "Youssefbushra16.4@gmail.com",
     },
   ],
   availability: "Open to backend and full-stack roles",

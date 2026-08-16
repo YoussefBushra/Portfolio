@@ -150,21 +150,9 @@ export function Contact() {
 
         <div className="space-y-6">
           <div>
-            <h3 className="block-label">Email</h3>
-            <a
-              href={`mailto:${profile.email}`}
-              onClick={() =>
-                track("social_click", { label: "Email", from: "contact" })
-              }
-              className="focus-ring link mt-1.5 block break-words rounded-sm text-sm"
-            >
-              {profile.email}
-            </a>
-          </div>
-          <div>
             <h3 className="block-label">Profiles</h3>
             <div className="mt-1.5">
-              <SocialLinks from="contact" exclude={["Email"]} />
+              <SocialLinks from="contact" />
             </div>
           </div>
           <div>
