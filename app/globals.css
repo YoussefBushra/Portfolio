@@ -3,38 +3,45 @@
 @tailwind utilities;
 
 /* ============================================================
-   Document palette. Light is the primary design target: a
-   near-white page with tinted panels, read like a printed
-   dossier. Dark mirrors it. One accent, signal amber.
+   "Control plane" palette. The portfolio is presented as the
+   observability console for the systems Youssef builds, so dark
+   is the primary target: a blue-graphite ground with panels that
+   sit just above it, read like an instrument surface. One signal
+   colour, a telemetry teal, marks anything live or active. Light
+   is a blueprint-on-paper mirror. No pure black or white.
    ============================================================ */
 :root {
-  --bg: 252 252 253;
-  --surface: 243 244 246;
-  --surface-2: 232 234 238;
-  --line: 217 221 226;
-  --text: 17 20 24;
-  --muted: 84 91 100;
-  --faint: 105 111 121;
-  --accent: 245 165 36;
-  --accent-text: 143 82 0;
-  --on-accent: 20 16 6;
-  --danger: 180 35 24;
+  /* Light: blueprint on cool paper. */
+  --bg: 244 246 249;
+  --surface: 255 255 255;
+  --surface-2: 233 238 243;
+  --line: 214 221 229;
+  --text: 15 20 27;
+  --muted: 74 84 97;
+  --faint: 116 127 140;
+  --accent: 15 165 146;
+  --accent-text: 13 118 104;
+  --on-accent: 255 255 255;
+  --danger: 190 40 30;
+  --grid: 15 20 27; /* hairline schematic grid, used at very low alpha */
 
   color-scheme: light;
 }
 
 .dark {
-  --bg: 16 18 21;
-  --surface: 24 27 31;
-  --surface-2: 31 35 40;
-  --line: 46 51 58;
-  --text: 232 234 236;
-  --muted: 155 163 171;
-  --faint: 122 131 140;
-  --accent: 245 165 36;
-  --accent-text: 245 178 74;
-  --on-accent: 20 16 6;
-  --danger: 249 112 102;
+  /* Dark: console. Blue-graphite ground, teal signal. */
+  --bg: 9 12 17;
+  --surface: 17 22 31;
+  --surface-2: 25 32 44;
+  --line: 35 44 59;
+  --text: 228 233 240;
+  --muted: 151 163 179;
+  --faint: 98 110 126;
+  --accent: 45 224 194;
+  --accent-text: 94 231 208;
+  --on-accent: 4 17 15;
+  --danger: 248 113 113;
+  --grid: 148 197 255;
 
   color-scheme: dark;
 }
@@ -46,17 +53,35 @@
 html {
   scroll-behavior: smooth;
   /* Nav is 56px; this clears it with a little air below. */
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 5.5rem;
 }
 
 body {
   background-color: rgb(var(--bg));
   color: rgb(var(--text));
   font-family: var(--font-sans);
-  font-feature-settings: "cv05" 1;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+/* The whole page sits on a faint schematic grid, like a diagram
+   canvas. Quiet enough to read as texture, not decoration. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--grid) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--grid) / 0.04) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(ellipse 120% 80% at 50% 0%, #000 20%, transparent 78%);
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -73,17 +98,19 @@ body {
 }
 
 @layer components {
-  /* Small uppercase label that titles a data block. Used as a section
-     label in the left column of the two-column section grid, where it is
-     structural navigation rather than decoration. */
+  /* Small uppercase mono label that titles a data block or names a
+     section in the rail. Structural navigation, not decoration. */
   .block-label {
-    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-faint;
+    @apply font-mono text-[11px] uppercase tracking-[0.16em] text-faint;
   }
 
-  /* Tinted, not outlined. A border on every item rebuilds the wall of boxes
-     the tags are meant to avoid. */
+  /* Tinted chip. A border on every item would rebuild a wall of boxes;
+     the fill keeps a long list reading as one soft block. */
   .tag {
-    @apply inline-flex items-center rounded-sm bg-surface px-2 py-[3px] text-[12px] leading-5 text-muted;
+    @apply inline-flex items-center rounded-sm bg-surface-2/70 px-2.5 py-[3px] font-mono text-[12px] leading-5 text-muted ring-1 ring-inset ring-line/60 transition-colors;
+  }
+  .tag:hover {
+    @apply text-text ring-accent/40;
   }
 
   .focus-ring {
@@ -95,11 +122,16 @@ body {
   }
 
   .btn-primary {
-    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm bg-accent px-4 py-2.5 text-sm font-semibold text-on-accent transition-transform duration-150 hover:-translate-y-px active:translate-y-px;
+    @apply focus-ring relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded bg-accent px-4 py-2.5 text-sm font-semibold text-on-accent transition-all duration-150 hover:-translate-y-px hover:shadow-glow active:translate-y-0;
   }
 
   .btn-ghost {
-    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-line bg-bg px-4 py-2.5 text-sm font-medium text-text transition-colors duration-150 hover:border-accent active:translate-y-px;
+    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded border border-line bg-surface/60 px-4 py-2.5 text-sm font-medium text-text transition-colors duration-150 hover:border-accent hover:text-accent-text active:translate-y-px;
+  }
+
+  /* A panel: the console module every section content sits inside. */
+  .panel {
+    @apply rounded-lg border border-line bg-surface/70 backdrop-blur-[2px];
   }
 
   /* Numbers are tabular everywhere so columns of figures line up. */
@@ -107,10 +139,23 @@ body {
     @apply tabular-nums;
     font-variant-numeric: tabular-nums;
   }
+
+  /* Blinking "live" dot for status readouts. */
+  .live-dot {
+    @apply inline-block h-1.5 w-1.5 rounded-full bg-accent;
+    box-shadow: 0 0 0 0 rgb(var(--accent) / 0.5);
+    animation: pulse-ring 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgb(var(--accent) / 0.5); }
+  70% { box-shadow: 0 0 0 6px rgb(var(--accent) / 0); }
+  100% { box-shadow: 0 0 0 0 rgb(var(--accent) / 0); }
 }
 
 ::selection {
-  background: rgb(var(--accent) / 0.3);
+  background: rgb(var(--accent) / 0.28);
   color: rgb(var(--text));
 }
 

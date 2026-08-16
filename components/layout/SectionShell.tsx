@@ -42,11 +42,23 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
     // Anchor clearance comes from `scroll-padding-top` on <html>; a
     // scroll-margin here as well would stack into a double offset.
     <section ref={ref} id={id} className="border-t border-line">
-      <div className="mx-auto grid max-w-page gap-5 px-6 py-11 md:grid-cols-[150px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-14">
-        <div className="md:sticky md:top-20 md:self-start">
-          <h2 className="block-label">{label}</h2>
+      <div className="mx-auto grid max-w-page gap-5 px-6 py-12 md:grid-cols-[170px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-16">
+        <div className="md:sticky md:top-24 md:self-start">
+          {/* Waypoint on the trace: the section marker, echoing the nodes in
+              the architecture diagram rather than decorating the heading. */}
+          <div className="flex items-center gap-2.5">
+            <span
+              aria-hidden="true"
+              className="grid h-3.5 w-3.5 shrink-0 place-items-center rounded-full border border-accent/60 bg-bg"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            </span>
+            <h2 className="block-label">{label}</h2>
+          </div>
           {meta ? (
-            <p className="mt-1.5 font-mono text-[11px] leading-4 text-faint">{meta}</p>
+            <p className="mt-2 pl-6 font-mono text-[11px] leading-4 text-faint">
+              {meta}
+            </p>
           ) : null}
         </div>
         <div className="min-w-0">{children}</div>

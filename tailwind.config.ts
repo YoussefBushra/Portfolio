@@ -23,13 +23,19 @@ const config: Config = {
         danger: "rgb(var(--danger) / <alpha-value>)",
       },
       fontFamily: {
+        display: ["var(--font-display)", "var(--font-sans)", "system-ui", "sans-serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
-      // Shape lock: one radius, 3px, on every surface, control and tag.
+      // A small, deliberate radius scale: tight controls, softer panels.
       borderRadius: {
-        sm: "3px",
-        DEFAULT: "3px",
+        sm: "4px",
+        DEFAULT: "6px",
+        lg: "10px",
+      },
+      boxShadow: {
+        // Signal-teal glow, for the primary action and live surfaces.
+        glow: "0 0 0 1px rgb(var(--accent) / 0.25), 0 8px 30px -12px rgb(var(--accent) / 0.5)",
       },
       maxWidth: {
         page: "1240px",

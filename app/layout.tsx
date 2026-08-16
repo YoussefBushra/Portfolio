@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Archivo, IBM_Plex_Mono } from "next/font/google";
+import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -10,20 +10,26 @@ import "./globals.css";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-/* Two families, doing three jobs. Archivo is variable on both weight and
-   width, so headings can be set tight and heavy while body text stays at a
-   normal width, without pulling in a second sans that would clash with it.
-   Plex Mono carries every date, duration, figure and label. */
-const sans = Archivo({
+/* Three faces, three jobs. Space Grotesk is the display voice: technical,
+   geometric, with just enough character to feel engineered rather than
+   generic. Inter carries dense body copy at small sizes. JetBrains Mono is
+   the telemetry voice, on every date, duration, figure and label. */
+const display = Space_Grotesk({
   subsets: ["latin"],
-  axes: ["wdth"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sans = Inter({
+  subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const mono = IBM_Plex_Mono({
+const mono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   variable: "--font-mono",
   display: "swap",
 });
@@ -77,7 +83,7 @@ export const metadata: Metadata = {
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='#0e1116'/><rect x='5' y='9' width='22' height='4' rx='1' fill='#f5a524'/><rect x='9' y='19' width='14' height='4' rx='1' fill='#f5a524' opacity='0.55'/></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='#090c11'/><circle cx='8' cy='16' r='2.6' fill='#2de0c2'/><circle cx='24' cy='9' r='2.6' fill='#2de0c2'/><circle cx='24' cy='23' r='2.6' fill='#2de0c2'/><path d='M10.3 15 L21.7 9.6 M10.3 17 L21.7 22.4' stroke='#2de0c2' stroke-width='1.5' opacity='0.6'/></svg>`
           ),
         type: "image/svg+xml",
       },
@@ -87,8 +93,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fcfcfd" },
-    { media: "(prefers-color-scheme: dark)", color: "#101215" },
+    { media: "(prefers-color-scheme: light)", color: "#f4f6f9" },
+    { media: "(prefers-color-scheme: dark)", color: "#090c11" },
   ],
 };
 
@@ -99,7 +105,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${sans.variable} ${mono.variable} font-sans`}>
+      <body className={`${display.variable} ${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

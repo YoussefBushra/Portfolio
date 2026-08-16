@@ -15,7 +15,7 @@ import { useEffect } from "react";
 const FORM_ID = "xnpabgrq";
 
 const field =
-  "focus-ring w-full rounded-sm border border-line bg-bg px-3 py-2 text-sm text-text placeholder:text-faint transition-colors duration-150 focus:border-accent";
+  "focus-ring w-full rounded border border-line bg-surface-2/60 px-3 py-2 text-sm text-text placeholder:text-faint transition-colors duration-150 focus:border-accent";
 
 const errorText = "text-xs leading-snug text-danger";
 
@@ -29,10 +29,10 @@ export function Contact() {
   return (
     <SectionShell id="contact" label="Contact" meta={profile.availability}>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:gap-14">
-        <div>
+        <div className="panel p-5 md:p-6">
           {state.succeeded ? (
-            <div className="rounded-sm border border-line bg-surface p-6">
-              <h3 className="text-base font-semibold tracking-tight text-text">
+            <div>
+              <h3 className="font-display text-base font-semibold tracking-tight text-text">
                 Message sent
               </h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">
@@ -142,7 +142,6 @@ export function Contact() {
                 >
                   {state.submitting ? "Sending" : "Send message"}
                 </button>
-               
               </div>
             </form>
           )}

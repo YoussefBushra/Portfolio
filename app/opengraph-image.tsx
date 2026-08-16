@@ -6,7 +6,7 @@ export const alt = `${profile.name}, ${profile.role}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-/** Mirrors the hero: ink ground, one amber mark, the thesis in large type. */
+/** Mirrors the hero: console ground, one teal signal mark, thesis in large type. */
 export default function OpengraphImage() {
   return new ImageResponse(
     (
@@ -17,13 +17,21 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          background: "#0e1116",
-          color: "#e6e9ee",
+          background: "#090c11",
+          backgroundImage:
+            "linear-gradient(#94c5ff0a 1px, transparent 1px), linear-gradient(90deg, #94c5ff0a 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
+          color: "#e4e9f0",
           padding: "84px",
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", width: 96, height: 10, background: "#f5a524" }} />
+        <svg width="120" height="44" viewBox="0 0 120 44">
+          <path d="M12 22 L60 10 M12 22 L60 34" stroke="#2de0c2" strokeWidth="2.4" opacity="0.6" />
+          <circle cx="12" cy="22" r="6.5" fill="#2de0c2" />
+          <circle cx="60" cy="10" r="6.5" fill="#2de0c2" />
+          <circle cx="60" cy="34" r="6.5" fill="#2de0c2" />
+        </svg>
 
         <div
           style={{
@@ -44,9 +52,9 @@ export default function OpengraphImage() {
             display: "flex",
             marginTop: 56,
             paddingTop: 28,
-            borderTop: "1px solid #2a333e",
+            borderTop: "1px solid #232c3b",
             fontSize: 28,
-            color: "#98a2b0",
+            color: "#97a3b3",
             fontFamily: "monospace",
           }}
         >

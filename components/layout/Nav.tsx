@@ -50,8 +50,13 @@ export function Nav() {
           className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
           aria-label={`${profile.name}, back to top`}
         >
-          <span className="h-[3px] w-5 bg-accent" aria-hidden="true" />
-          <span className="text-sm font-semibold tracking-tight text-text">
+          <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true" className="shrink-0">
+            <path d="M4.4 8 L17 3.2 M4.4 8 L17 12.8" stroke="rgb(var(--accent))" strokeWidth="1.4" opacity="0.6" />
+            <circle cx="4.4" cy="8" r="2.4" fill="rgb(var(--accent))" />
+            <circle cx="17.6" cy="3.2" r="2.4" fill="rgb(var(--accent))" />
+            <circle cx="17.6" cy="12.8" r="2.4" fill="rgb(var(--accent))" />
+          </svg>
+          <span className="font-display text-sm font-semibold tracking-tight text-text">
             Youssef Bushra
           </span>
         </a>
