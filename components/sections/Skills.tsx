@@ -25,13 +25,13 @@ export function Skills() {
   return (
     <SectionShell id="skills" label="Stack">
       <div className="glass-strong rounded-xl p-6 sm:p-8 md:p-10">
-        <div className="divide-y divide-white/10">
+        <div className="divide-y divide-line">
           {stackGroups.map((group) => (
             <div
               key={group.name}
-              className="grid gap-x-8 gap-y-3 py-6 first:pt-0 last:pb-0 md:grid-cols-[190px_minmax(0,1fr)]"
+              className="grid gap-x-8 gap-y-3 py-6 first:pt-0 last:pb-0 md:grid-cols-[190px_minmax(0,1fr)] md:items-center"
             >
-              <h3 className="block-label md:pt-2">{group.name}</h3>
+              <h3 className="block-label">{group.name}</h3>
               <motion.ul
                 className="flex flex-wrap gap-x-6 gap-y-2.5"
                 variants={reduce ? undefined : list}
@@ -51,7 +51,7 @@ export function Skills() {
           ))}
         </div>
 
-        <p className="mt-7 border-t border-white/10 pt-5 font-mono text-[12px] text-muted">
+        <p className="mt-7 border-t border-line pt-5 font-mono text-[12px] text-muted">
           Spoken languages: {spokenLanguages}.
         </p>
       </div>

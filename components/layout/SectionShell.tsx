@@ -44,15 +44,17 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
     <section ref={ref} id={id}>
       <div className="mx-auto grid max-w-page gap-5 px-6 py-9 md:grid-cols-[160px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-12">
         <div className="md:sticky md:top-24 md:self-start">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <span
               aria-hidden="true"
-              className="h-2 w-2 rounded-full bg-accent shadow-[0_0_10px_1px_rgb(var(--accent)/0.6)]"
+              className="h-2.5 w-2.5 rounded-full bg-accent shadow-[0_0_12px_2px_rgb(var(--accent)/0.7)]"
             />
-            <h2 className="block-label">{label}</h2>
+            <h2 className="font-mono text-[13px] font-semibold uppercase tracking-[0.18em] text-text">
+              {label}
+            </h2>
           </div>
           {meta ? (
-            <p className="mt-2 pl-4 font-mono text-[11px] leading-4 text-faint">{meta}</p>
+            <p className="mt-2 pl-5 font-mono text-[11px] leading-4 text-muted">{meta}</p>
           ) : null}
         </div>
         <div className="min-w-0">{children}</div>
