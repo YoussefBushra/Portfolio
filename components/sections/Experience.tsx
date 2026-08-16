@@ -37,10 +37,12 @@ function RoleEntry({ role }: { role: Role }) {
       <ul className="mt-6 grid gap-x-10 gap-y-2.5 lg:grid-cols-2">
         {role.highlights.map((h) => (
           <li
-            key={h}
+            key={h.lead}
             className="border-l border-accent/40 pl-3.5 text-[13px] leading-[1.6] text-muted"
           >
-            {h}
+            <span className="font-display font-semibold text-text">{h.lead}</span>
+            <span className="text-faint"> — </span>
+            {h.text}
           </li>
         ))}
       </ul>

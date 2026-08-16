@@ -31,7 +31,10 @@ export function Skills() {
               key={group.name}
               className="grid gap-x-8 gap-y-3 py-6 first:pt-0 last:pb-0 md:grid-cols-[190px_minmax(0,1fr)] md:items-center"
             >
-              <h3 className="block-label">{group.name}</h3>
+              <h3 className="flex items-center gap-2.5 font-mono text-[12px] font-semibold uppercase tracking-[0.14em] text-accent-text">
+                <span aria-hidden="true" className="h-3.5 w-[3px] rounded-full bg-accent" />
+                {group.name}
+              </h3>
               <motion.ul
                 className="flex flex-wrap gap-x-6 gap-y-2.5"
                 variants={reduce ? undefined : list}

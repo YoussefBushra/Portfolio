@@ -33,11 +33,26 @@ export const experience: Experience[] = [
       { label: "platforms integrated", value: "D365 + Odoo" },
     ],
     highlights: [
-      "Built backend services for a production multi-tenant SaaS platform spanning roughly 40 service and frontend applications, across logistics and financial-operations domains.",
-      "Contributed to domain microservices in TypeScript and NestJS — service boundaries, message contracts, tenant isolation, and event-driven communication over RabbitMQ with idempotent consumers.",
-      "Designed integrations between Microsoft Dynamics 365 Finance, Odoo and custom third-party financial systems, synchronizing documents and postings through asynchronous, message-based flows.",
-      "Worked across PostgreSQL, MongoDB and Redis, with OpenTelemetry tracing and Grafana dashboards, to keep production systems reliable and observable under load.",
-      "Built features across independently deployed Next.js applications composed behind a shared shell, shipped as Docker images through GitHub Actions CI.",
+      {
+        lead: "Platform",
+        text: "backend services for a production multi-tenant SaaS platform spanning roughly 40 service and frontend applications, across logistics and financial-operations domains.",
+      },
+      {
+        lead: "Microservices",
+        text: "service boundaries, message contracts, tenant isolation, and event-driven communication over RabbitMQ with idempotent consumers, in TypeScript and NestJS.",
+      },
+      {
+        lead: "Integrations",
+        text: "Microsoft Dynamics 365 Finance, Odoo and custom third-party financial systems, synchronized through asynchronous, message-based flows.",
+      },
+      {
+        lead: "Data & observability",
+        text: "PostgreSQL, MongoDB and Redis, with OpenTelemetry tracing and Grafana dashboards, to keep production systems reliable and observable under load.",
+      },
+      {
+        lead: "Delivery",
+        text: "features across independently deployed Next.js applications behind a shared shell, shipped as Docker images through GitHub Actions CI.",
+      },
     ],
   },
   {
@@ -68,11 +83,26 @@ export const experience: Experience[] = [
       { label: "geo-query p95, target under 1s", value: "600ms" },
     ],
     highlights: [
-      "Led the optimization of geo-location search over a 10-million-record dataset using Elasticsearch, achieving a 600 ms average query response time against a sub-1-second target.",
-      "Designed RESTful APIs with NestJS, TypeORM and PostgreSQL, improving performance of complex data-retrieval operations, and used GraphQL with a Redis caching layer to streamline client-side querying.",
-      "Implemented JWT authentication and role-based authorization across microservices, keeping access control consistent between services without sacrificing scalability.",
-      "Built and maintained a centralized logging pipeline with Filebeat, Elasticsearch and Kibana for real-time log collection, monitoring and visualization, working with DevOps to integrate it into backend services.",
-      "Contributed frontend features with Next.js 14 and Tailwind CSS and integrated them with the NestJS APIs, collaborating with a multi-national team across Dubai, India, Romania and Egypt.",
+      {
+        lead: "Geo-search",
+        text: "optimized geo-location search over a 10-million-record Elasticsearch dataset to a 600 ms average, against a sub-1-second target.",
+      },
+      {
+        lead: "APIs",
+        text: "RESTful APIs with NestJS, TypeORM and PostgreSQL, plus GraphQL over a Redis cache to streamline client-side querying.",
+      },
+      {
+        lead: "Access control",
+        text: "JWT authentication and role-based authorization across microservices, kept consistent between services without sacrificing scalability.",
+      },
+      {
+        lead: "Logging pipeline",
+        text: "Filebeat, Elasticsearch and Kibana for real-time log collection, monitoring and visualization, integrated with DevOps into backend services.",
+      },
+      {
+        lead: "Frontend",
+        text: "Next.js 14 and Tailwind features integrated with the NestJS APIs, with a multi-national team across Dubai, India, Romania and Egypt.",
+      },
     ],
   },
 ];
