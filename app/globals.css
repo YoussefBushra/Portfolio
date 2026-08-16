@@ -155,6 +155,7 @@ body {
   /* The material. A translucent fill, a blur behind it, a bright
      top-edge highlight standing in for the refracted light. */
   .glass {
+    position: relative;
     background-color: rgb(var(--glass-fill) / var(--glass-fill-alpha));
     background-image: linear-gradient(
       135deg,
@@ -169,6 +170,7 @@ body {
   }
   /* A denser variant for content that must stay very readable. */
   .glass-strong {
+    position: relative;
     background-color: rgb(var(--glass-fill) / calc(var(--glass-fill-alpha) + 0.14));
     background-image: linear-gradient(
       135deg,
@@ -182,20 +184,52 @@ body {
       inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.6);
   }
 
+  /* Interactive glass: a soft accent light that follows the pointer across a
+     panel, like the material catching a highlight. Pointer-inert and low
+     opacity, so it never touches text legibility; only on hover-capable
+     devices, and calm under reduced motion. */
+  @media (hover: hover) {
+    .glass::after,
+    .glass-strong::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      background: radial-gradient(
+        16rem circle at var(--gx, 50%) var(--gy, 50%),
+        rgb(var(--accent) / 0.16),
+        transparent 60%
+      );
+    }
+    .glass:hover::after,
+    .glass-strong:hover::after {
+      opacity: 1;
+    }
+  }
+
   .block-label {
     @apply font-mono text-[11px] uppercase tracking-[0.16em] text-faint;
   }
 
-  /* Glass chip. Fill is surface-based, not white, so in dark mode the chip
-     stays darker than its light text instead of washing it out. */
+  /* Glass chip. Surface-based fill keeps light text legible in dark mode, but
+     a translucent value plus a top-edge highlight makes it read as frosted
+     glass and sit consistently with the panels rather than as a flat block. */
   .tag {
-    @apply inline-flex items-center rounded-full px-3 py-[4px] text-[12px] leading-5 text-muted transition-colors;
-    background-color: rgb(var(--surface-2) / 0.72);
-    border: 1px solid rgb(var(--line) / 0.9);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
+    @apply inline-flex items-center rounded-full px-3 py-[4px] text-[12px] font-medium leading-5 text-muted transition-all duration-200;
+    background-color: rgb(var(--surface-2) / 0.55);
+    border: 1px solid rgb(var(--line) / 0.7);
+    box-shadow: inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.12);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
   }
-  .tag:hover { @apply text-text; border-color: rgb(var(--accent) / 0.55); }
+  .tag:hover {
+    @apply -translate-y-px text-text;
+    background-color: rgb(var(--surface-2) / 0.85);
+    border-color: rgb(var(--accent) / 0.55);
+  }
 
   .focus-ring {
     @apply outline-none ring-offset-2 ring-offset-bg focus-visible:ring-2 focus-visible:ring-accent;
