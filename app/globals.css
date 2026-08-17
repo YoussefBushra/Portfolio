@@ -42,10 +42,10 @@
 }
 
 .dark {
-  --bg: 8 9 18;
-  --surface: 22 24 38;
-  --surface-2: 30 33 52;
-  --line: 52 56 82;
+  --bg: 4 5 11;
+  --surface: 15 17 28;
+  --surface-2: 23 26 42;
+  --line: 46 50 74;
   --text: 237 239 248;
   --muted: 201 207 224;
   --faint: 171 178 200;
@@ -56,7 +56,7 @@
 
   /* Dark glass is dark-tinted, not white-frosted: panels stay deep so light
      text keeps real contrast, while the blur and a light rim read as glass. */
-  --glass-fill: 20 24 42;
+  --glass-fill: 13 16 30;
   --glass-fill-alpha: 0.55;
   --glass-stroke: 255 255 255;
   --glass-stroke-alpha: 0.14;
