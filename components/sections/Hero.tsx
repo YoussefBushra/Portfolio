@@ -6,6 +6,7 @@ import { profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { SocialIcons } from "@/components/ui/SocialIcons";
 import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 import { CountUp } from "@/components/system/CountUp";
 
@@ -88,21 +89,18 @@ export function Hero() {
                 {profile.tagline}
               </p>
 
-              {/* Primary actions, above the fold. Equal-width on phones, their
-                  natural width from md up. */}
-              <div className="mt-6 flex gap-3 md:mt-7">
-                <CVButton
-                  from="hero"
-                  variant="primary"
-                  className="flex-1 justify-center md:flex-none"
-                />
-                <ContactLink className="flex-1 justify-center md:flex-none" />
+              {/* Primary actions, above the fold. Full-width and stacked on
+                  phones so both read as equal weight; natural width in a row
+                  from md up. */}
+              <div className="mt-6 flex flex-col gap-2.5 md:mt-7 md:flex-row md:gap-3">
+                <CVButton from="hero" variant="primary" className="justify-center md:flex-none" />
+                <ContactLink className="justify-center md:flex-none" />
               </div>
 
-              {/* Availability + links, inline on phones. */}
-              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3 border-t border-white/10 pt-5 md:hidden">
+              {/* Availability + profile icons, inline on phones. */}
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5 md:hidden">
                 <AvailabilityBadge />
-                <SocialLinks from="hero" />
+                <SocialIcons from="hero" />
               </div>
             </div>
 
