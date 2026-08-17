@@ -77,7 +77,7 @@ export function Nav() {
                   {isActive ? (
                     <motion.span
                       layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-full border border-white/25 bg-white/15"
+                      className="absolute inset-0 -z-10 rounded-full border border-accent/50 bg-accent/20 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)]"
                       transition={{ type: "spring", stiffness: 400, damping: 34 }}
                     />
                   ) : null}
