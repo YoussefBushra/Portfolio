@@ -92,13 +92,13 @@ export function Hero() {
               {/* Primary actions, above the fold. Full-width and stacked on
                   phones so both read as equal weight; natural width in a row
                   from md up. */}
-              <div className="mt-6 flex flex-col gap-2.5 md:mt-7 md:flex-row md:gap-3">
+              <div className="mt-4 flex flex-col gap-2 md:mt-7 md:flex-row md:gap-3">
                 <CVButton from="hero" variant="primary" className="justify-center md:flex-none" />
                 <ContactLink className="justify-center md:flex-none" />
               </div>
 
               {/* Availability + profile icons, inline on phones. */}
-              <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5 md:hidden">
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-4 md:hidden">
                 <AvailabilityBadge />
                 <SocialIcons from="hero" />
               </div>

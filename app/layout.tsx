@@ -78,10 +78,12 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
+        // A liquid-glass app tile with a "Y" monogram. Written with real `#`
+        // colours and encoded once, so the data URI stays valid.
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%238b74ff'/><stop offset='1' stop-color='%2340c4ff'/></linearGradient></defs><rect width='32' height='32' rx='9' fill='%230a0a14'/><rect x='6' y='6' width='20' height='20' rx='7' fill='url(%23g)' opacity='0.9'/><rect x='6' y='6' width='20' height='10' rx='7' fill='%23ffffff' opacity='0.22'/></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#7c74ff'/><stop offset='0.55' stop-color='#5b8cff'/><stop offset='1' stop-color='#38c6ff'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='#0a0b16'/><rect x='2.5' y='2.5' width='27' height='27' rx='7.5' fill='url(#g)'/><rect x='2.5' y='2.5' width='27' height='13' rx='7.5' fill='#ffffff' opacity='0.22'/><path d='M9.5 9 L16 16.5 L22.5 9 M16 16.5 L16 23.5' fill='none' stroke='#ffffff' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/></svg>`
           ),
         type: "image/svg+xml",
       },
