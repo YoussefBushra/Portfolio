@@ -8,7 +8,6 @@ import { DesignSettings } from "@/components/system/DesignSettings";
 import { CVButton } from "@/components/ui/CVButton";
 import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
-import { track } from "@/lib/analytics";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
@@ -46,7 +45,7 @@ export function Nav() {
       }`}
     >
       <nav
-        className={`glass mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-2 rounded-full px-3 pl-4 transition-all duration-300 md:gap-6 md:px-5 md:pl-5 ${
+        className={`glass mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-6 rounded-full px-4 pl-5 transition-all duration-300 md:px-5 ${
           scrolled ? "shadow-lg" : ""
         }`}
       >
@@ -59,23 +58,10 @@ export function Nav() {
             className="h-4 w-4 rounded-md bg-gradient-to-br from-accent to-accent/60 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.6)]"
             aria-hidden="true"
           />
-          {/* Wordmark yields to the CTAs on phones; the mark stays as home. */}
-          <span className="hidden font-display text-sm font-bold tracking-tight text-text md:inline">
+          <span className="font-display text-sm font-bold tracking-tight text-text">
             Youssef Bushra
           </span>
         </a>
-
-        {/* Primary actions, moved off the hero on phones. */}
-        <div className="flex items-center gap-2 md:hidden">
-          <CVButton from="nav" variant="primary-compact" />
-          <a
-            href="#contact"
-            onClick={() => track("cta_click", { cta: "contact", from: "nav" })}
-            className="focus-ring inline-flex items-center whitespace-nowrap rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-xs font-medium text-text backdrop-blur-sm transition-colors duration-150 hover:border-accent"
-          >
-            Get in touch
-          </a>
-        </div>
 
         <ul className="hidden items-center gap-0.5 md:flex">
           {navNodes.map((n) => {
