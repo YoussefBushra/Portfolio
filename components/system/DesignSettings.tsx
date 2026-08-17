@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 
 /**
- * Lets the visitor retune the glass to taste: pick an accent and how heavy
- * the frosting sits. Choices are written as CSS variables on <html> and
- * persisted, so the whole token-driven design re-skins live. Accent and
- * glass values are theme-aware, re-applied whenever the theme flips.
+ * Lets the visitor retune the glass to taste: pick an accent and drag the
+ * frosting from clear to solid. Choices are written as CSS variables on
+ * <html> and persisted, so the whole token-driven design re-skins live.
+ * Accent and glass are theme-aware, re-applied whenever the theme flips.
  */
 
 type Tone = { a: string; at: string; on: string };
@@ -51,16 +51,21 @@ const ACCENTS: Accent[] = [
   },
 ];
 
-type Glass = { id: string; label: string; light: [number, number]; dark: [number, number] };
-// [fill-alpha, blur-px]
-const GLASS: Glass[] = [
-  { id: "subtle", label: "Subtle", light: [0.62, 16], dark: [0.42, 18] },
-  { id: "medium", label: "Medium", light: [0.5, 26], dark: [0.55, 28] },
-  { id: "heavy", label: "Heavy", light: [0.4, 36], dark: [0.72, 42] },
-];
-
 const DEFAULT_ACCENT = "indigo";
-const DEFAULT_GLASS = "medium";
+/** Glass is a 0–100 slider now. 50 ≈ the design's default frosting. */
+const DEFAULT_GLASS = 50;
+
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const clamp = (n: number) => Math.min(100, Math.max(0, n));
+
+/** Map the slider to fill-alpha + blur, per theme. The range is wide on both
+   ends: nearly clear at 0, nearly solid at 100. */
+function glassVars(pct: number, isDark: boolean): { alpha: number; blur: number } {
+  const t = pct / 100;
+  return isDark
+    ? { alpha: lerp(0.12, 0.96, t), blur: lerp(6, 50, t) }
+    : { alpha: lerp(0.18, 1, t), blur: lerp(6, 44, t) };
+}
 
 export function DesignSettings() {
   const { resolvedTheme } = useTheme();
@@ -77,7 +82,8 @@ export function DesignSettings() {
       const a = localStorage.getItem("design-accent");
       const g = localStorage.getItem("design-glass");
       if (a) setAccent(a);
-      if (g) setGlass(g);
+      const n = g == null ? NaN : Number(g);
+      if (Number.isFinite(n)) setGlass(clamp(n));
     } catch {}
   }, []);
 
@@ -93,10 +99,9 @@ export function DesignSettings() {
     root.style.setProperty("--accent-text", tone.at);
     root.style.setProperty("--on-accent", tone.on);
 
-    const gl = GLASS.find((x) => x.id === glass) ?? GLASS[1];
-    const [alpha, blur] = isDark ? gl.dark : gl.light;
-    root.style.setProperty("--glass-fill-alpha", String(alpha));
-    root.style.setProperty("--glass-blur", `${blur}px`);
+    const { alpha, blur } = glassVars(glass, isDark);
+    root.style.setProperty("--glass-fill-alpha", alpha.toFixed(3));
+    root.style.setProperty("--glass-blur", `${Math.round(blur)}px`);
   }, [mounted, accent, glass, resolvedTheme]);
 
   // Close on outside click / Escape.
@@ -120,11 +125,17 @@ export function DesignSettings() {
     } catch {}
   };
 
+  const setGlassValue = (v: number) => {
+    const n = clamp(v);
+    setGlass(n);
+    persist("design-glass", String(n));
+  };
+
   const reset = () => {
     setAccent(DEFAULT_ACCENT);
     setGlass(DEFAULT_GLASS);
     persist("design-accent", DEFAULT_ACCENT);
-    persist("design-glass", DEFAULT_GLASS);
+    persist("design-glass", String(DEFAULT_GLASS));
   };
 
   return (
@@ -180,26 +191,24 @@ export function DesignSettings() {
             ))}
           </div>
 
-          <p className="block-label mt-4">Glass</p>
-          <div className="mt-2.5 grid grid-cols-3 gap-1.5">
-            {GLASS.map((g) => (
-              <button
-                key={g.id}
-                type="button"
-                aria-pressed={glass === g.id}
-                onClick={() => {
-                  setGlass(g.id);
-                  persist("design-glass", g.id);
-                }}
-                className={`focus-ring rounded-lg border px-2 py-1.5 text-[12px] font-medium transition-colors ${
-                  glass === g.id
-                    ? "border-accent bg-accent/15 text-text"
-                    : "border-white/25 bg-white/5 text-muted hover:text-text"
-                }`}
-              >
-                {g.label}
-              </button>
-            ))}
+          <div className="mt-4 flex items-center justify-between">
+            <p className="block-label">Glass</p>
+            <span className="num font-mono text-[11px] text-muted">{glass}%</span>
+          </div>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={glass}
+            onChange={(e) => setGlassValue(Number(e.target.value))}
+            aria-label="Glass intensity"
+            className="range-glass mt-2.5 w-full"
+            style={{ ["--pct" as string]: `${glass}%` }}
+          />
+          <div className="mt-1 flex justify-between font-mono text-[10px] uppercase tracking-[0.1em] text-faint">
+            <span>Clear</span>
+            <span>Solid</span>
           </div>
 
           <button

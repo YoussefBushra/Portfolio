@@ -231,6 +231,66 @@ body {
   color: rgb(var(--text));
 }
 
+/* Glass-intensity slider in the appearance settings: a filled accent track
+   with a glass thumb. --pct (set inline) marks how far the fill reaches. */
+.range-glass {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+}
+.range-glass::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 999px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: linear-gradient(
+    to right,
+    rgb(var(--accent)) 0%,
+    rgb(var(--accent)) var(--pct, 50%),
+    rgb(var(--surface-2)) var(--pct, 50%),
+    rgb(var(--surface-2)) 100%
+  );
+}
+.range-glass::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -6px;
+  height: 18px;
+  width: 18px;
+  border-radius: 999px;
+  border: 2px solid rgb(255 255 255 / 0.65);
+  background: linear-gradient(180deg, rgb(var(--accent)), rgb(var(--accent) / 0.8));
+  box-shadow: 0 2px 8px -2px rgb(var(--accent) / 0.8),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.5);
+}
+.range-glass:focus-visible {
+  outline: none;
+}
+.range-glass:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgb(var(--accent) / 0.4),
+    inset 0 1px 0 0 rgb(255 255 255 / 0.5);
+}
+.range-glass::-moz-range-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgb(var(--surface-2));
+  border: 1px solid rgb(255 255 255 / 0.12);
+}
+.range-glass::-moz-range-progress {
+  height: 8px;
+  border-radius: 999px;
+  background: rgb(var(--accent));
+}
+.range-glass::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 999px;
+  border: 2px solid rgb(255 255 255 / 0.65);
+  background: rgb(var(--accent));
+  box-shadow: 0 2px 8px -2px rgb(var(--accent) / 0.8);
+}
+
 /* The scrollbar as a liquid-glass control: a floating accent pill, tinted and
    opaque enough to read as a handle rather than a hairline. */
 html {
