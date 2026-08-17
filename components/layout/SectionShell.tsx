@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { track } from "@/lib/analytics";
 
 interface SectionShellProps {
@@ -21,7 +21,6 @@ interface SectionShellProps {
 export function SectionShell({ id, label, meta, children }: SectionShellProps) {
   const ref = useRef<HTMLElement>(null);
   const seen = useRef(false);
-  const reduce = useReducedMotion();
 
   useEffect(() => {
     const el = ref.current;
@@ -61,8 +60,8 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
         </div>
         <motion.div
           className="min-w-0"
-          initial={reduce ? false : { opacity: 0, y: 16 }}
-          whileInView={reduce ? undefined : { opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         >

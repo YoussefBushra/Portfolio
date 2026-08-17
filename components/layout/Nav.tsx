@@ -7,42 +7,17 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { DesignSettings } from "@/components/system/DesignSettings";
 import { CVButton } from "@/components/ui/CVButton";
 import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
-import { scrollToId } from "@/lib/scroll";
-import { OVERLAY_OPEN_EVENT, announceOverlay } from "@/lib/overlays";
+import { MobileTabBar } from "@/components/layout/MobileTabBar";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (y) => {
     const next = y > 12;
     setScrolled((cur) => (cur === next ? cur : next));
   });
-
-  // Only one overlay open at a time: close the menu if another panel opens.
-  useEffect(() => {
-    const onOther = (e: Event) => {
-      if ((e as CustomEvent<string>).detail !== "menu") setOpen(false);
-    };
-    window.addEventListener(OVERLAY_OPEN_EVENT, onOther);
-    return () => window.removeEventListener(OVERLAY_OPEN_EVENT, onOther);
-  }, []);
-
-  const toggleMenu = () =>
-    setOpen((v) => {
-      if (!v) announceOverlay("menu");
-      return !v;
-    });
-
-  // Close the menu, then scroll to the target ourselves so navigation is
-  // reliable even as the menu unmounts (the plain anchor jump can be dropped
-  // mid-exit-animation on mobile).
-  const goTo = (id: string) => {
-    setOpen(false);
-    requestAnimationFrame(() => scrollToId(id));
-  };
 
   useEffect(() => {
     const ids = ["hero", ...navNodes.map((n) => n.id)];
@@ -63,6 +38,7 @@ export function Nav() {
   }, []);
 
   return (
+    <>
     <header
       className={`fixed inset-x-0 top-0 z-40 px-4 pt-3 transition-all duration-300 md:pt-4 ${
         scrolled ? "pt-2 md:pt-2.5" : ""
@@ -135,71 +111,12 @@ export function Nav() {
           </button>
           <DesignSettings />
           <ThemeToggle />
-          <button
-            type="button"
-            aria-label="Toggle menu"
-            aria-expanded={open}
-            onClick={toggleMenu}
-            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-muted backdrop-blur-sm md:hidden"
-          >
-            <span className="flex flex-col gap-[3px]">
-              <span
-                className={`h-[1.5px] w-3.5 bg-current transition-transform duration-150 ${
-                  open ? "translate-y-[4.5px] rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`h-[1.5px] w-3.5 bg-current transition-opacity duration-150 ${
-                  open ? "opacity-0" : ""
-                }`}
-              />
-              <span
-                className={`h-[1.5px] w-3.5 bg-current transition-transform duration-150 ${
-                  open ? "-translate-y-[4.5px] -rotate-45" : ""
-                }`}
-              />
-            </span>
-          </button>
         </div>
       </nav>
-
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="glass mx-1 mt-2 overflow-hidden rounded-xl md:hidden"
-          >
-            <ul>
-              {navNodes.map((n) => (
-                <li key={n.id} className="border-b border-white/10 last:border-b-0">
-                  <a
-                    href={`#${n.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      goTo(n.id);
-                    }}
-                    className="flex items-center gap-3 px-6 py-3.5 text-[15px] text-muted"
-                  >
-                    <span
-                      className={`h-[2px] w-3.5 transition-colors ${
-                        active === n.id ? "bg-accent" : "bg-line"
-                      }`}
-                      aria-hidden="true"
-                    />
-                    {n.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="px-6 py-3">
-              <CVButton from="mobile-menu" variant="compact" />
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
     </header>
+
+    {/* Section navigation on phones lives in a fixed bottom tab bar. */}
+    <MobileTabBar active={active} />
+    </>
   );
 }

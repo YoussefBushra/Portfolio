@@ -16,11 +16,9 @@ export function CountUp({ value, className }: { value: string; className?: strin
   const inView = useInView(ref, { once: true, margin: "-40px" });
   const reduce = useReducedMotion();
 
-  const initial = (() => {
-    const m = value.match(RE);
-    return reduce || !m ? value : `${m[1]}0${m[3]}`;
-  })();
-  const [display, setDisplay] = useState(initial);
+  // Render the final value on the server and the first client render so the two
+  // match exactly (no hydration mismatch); the count-up is set up after mount.
+  const [display, setDisplay] = useState(value);
 
   // Depend only on stable inputs (value is a string) so re-renders from the
   // count itself don't restart the animation.
@@ -29,6 +27,7 @@ export function CountUp({ value, className }: { value: string; className?: strin
     const m = value.match(RE);
     if (!m) return;
     const target = parseInt(m[2].replace(/,/g, ""), 10);
+    setDisplay(`${m[1]}0${m[3]}`); // start from zero, then animate up
     const controls = animate(0, target, {
       duration: 1.1,
       ease: [0.16, 1, 0.3, 1],
