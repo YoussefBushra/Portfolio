@@ -3,6 +3,7 @@
 import { SectionShell } from "@/components/layout/SectionShell";
 import { CVButton } from "@/components/ui/CVButton";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { SocialIcons } from "@/components/ui/SocialIcons";
 import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 import { useForm, ValidationError } from "@formspree/react";
@@ -147,7 +148,8 @@ export function Contact() {
           )}
         </div>
 
-        <div className="glass rounded-xl p-6 space-y-6 self-start">
+        {/* Desktop: a full side card that balances the two-column layout. */}
+        <div className="hidden glass rounded-xl p-6 space-y-6 self-start lg:block">
           <div>
             <h3 className="block-label">Profiles</h3>
             <div className="mt-1.5">
@@ -160,6 +162,13 @@ export function Contact() {
               <CVButton from="contact" variant="ghost" />
             </div>
           </div>
+        </div>
+
+        {/* Phones/tablets: a light strip, not a second card — the profiles and
+            CV already lead in the hero, so this is just a nearby fallback. */}
+        <div className="flex items-center justify-between gap-4 lg:hidden">
+          <SocialIcons from="contact" />
+          <CVButton from="contact" variant="compact" />
         </div>
       </div>
     </SectionShell>
