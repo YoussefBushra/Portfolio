@@ -42,10 +42,10 @@
 }
 
 .dark {
-  --bg: 4 5 11;
-  --surface: 15 17 28;
-  --surface-2: 23 26 42;
-  --line: 46 50 74;
+  --bg: 3 3 8;
+  --surface: 13 15 25;
+  --surface-2: 21 24 39;
+  --line: 44 48 70;
   --text: 237 239 248;
   --muted: 201 207 224;
   --faint: 171 178 200;
@@ -64,11 +64,13 @@
   --glass-shadow: 0 20px 54px -16px rgb(0 0 0 / 0.66);
   --glass-highlight: 255 255 255;
 
-  --aura-1: 110 120 255;
-  --aura-2: 60 130 250;
-  --aura-3: 90 120 245;
-  --aura-4: 70 100 210;
-  --aura-strength: 0.4;
+  /* Dimmer and deeper than before, so clear (glass 0) panels don't let a
+     bright aurora wash the page out. */
+  --aura-1: 74 84 190;
+  --aura-2: 44 92 185;
+  --aura-3: 62 86 180;
+  --aura-4: 52 74 160;
+  --aura-strength: 0.24;
 
   color-scheme: dark;
 }
