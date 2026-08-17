@@ -83,7 +83,7 @@ export const metadata: Metadata = {
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#3a3496'/><stop offset='0.55' stop-color='#28368a'/><stop offset='1' stop-color='#204f86'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='#050610'/><rect x='2.5' y='2.5' width='27' height='27' rx='7.5' fill='url(#g)'/><rect x='2.5' y='2.5' width='27' height='12' rx='7.5' fill='#ffffff' opacity='0.13'/><path d='M9.5 9 L16 16.5 L22.5 9 M16 16.5 L16 23.5' fill='none' stroke='#eef1ff' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#5b5b63'/><stop offset='0.55' stop-color='#3f3f46'/><stop offset='1' stop-color='#2a2a30'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='#08080b'/><rect x='2.5' y='2.5' width='27' height='27' rx='7.5' fill='url(#g)'/><rect x='2.5' y='2.5' width='27' height='12' rx='7.5' fill='#ffffff' opacity='0.13'/><path d='M9.5 9 L16 16.5 L22.5 9 M16 16.5 L16 23.5' fill='none' stroke='#f4f4f5' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/></svg>`
           ),
         type: "image/svg+xml",
       },

@@ -17,8 +17,9 @@
   --text: 22 24 40;
   --muted: 78 84 110;
   --faint: 120 126 150;
-  --accent: 79 70 229;
-  --accent-text: 67 56 202;
+  /* Neutral gray accent (zinc) — the design's signature is now monochrome. */
+  --accent: 82 82 91;
+  --accent-text: 63 63 70;
   --on-accent: 255 255 255;
   --danger: 200 40 60;
 
@@ -31,12 +32,12 @@
   --glass-shadow: 0 14px 44px -14px rgb(40 44 90 / 0.32);
   --glass-highlight: 255 255 255;
 
-  /* Aurora blobs — a calm, cool indigo/blue family. */
-  --aura-1: 99 102 241;
-  --aura-2: 59 130 246;
-  --aura-3: 96 118 240;
-  --aura-4: 79 130 220;
-  --aura-strength: 0.4;
+  /* Aurora blobs — a soft, neutral gray family (monochrome). */
+  --aura-1: 168 170 182;
+  --aura-2: 150 152 166;
+  --aura-3: 176 178 190;
+  --aura-4: 158 160 174;
+  --aura-strength: 0.42;
 
   color-scheme: light;
 }
@@ -49,9 +50,10 @@
   --text: 237 239 248;
   --muted: 201 207 224;
   --faint: 171 178 200;
-  --accent: 129 140 248;
-  --accent-text: 165 180 252;
-  --on-accent: 10 12 28;
+  /* Neutral gray accent (zinc), light enough to read on the deep background. */
+  --accent: 161 161 170;
+  --accent-text: 212 212 216;
+  --on-accent: 24 24 27;
   --danger: 255 120 138;
 
   /* Dark glass is dark-tinted, not white-frosted: panels stay deep so light
@@ -64,13 +66,12 @@
   --glass-shadow: 0 20px 54px -16px rgb(0 0 0 / 0.66);
   --glass-highlight: 255 255 255;
 
-  /* Dimmer and deeper than before, so clear (glass 0) panels don't let a
-     bright aurora wash the page out. */
-  --aura-1: 74 84 190;
-  --aura-2: 44 92 185;
-  --aura-3: 62 86 180;
-  --aura-4: 52 74 160;
-  --aura-strength: 0.24;
+  /* Neutral gray glow, kept dim so clear (glass 0) panels stay deep. */
+  --aura-1: 108 110 124;
+  --aura-2: 92 94 108;
+  --aura-3: 116 118 132;
+  --aura-4: 84 86 100;
+  --aura-strength: 0.22;
 
   color-scheme: dark;
 }

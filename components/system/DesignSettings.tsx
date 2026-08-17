@@ -53,13 +53,13 @@ const ACCENTS: Accent[] = [
   {
     id: "gray",
     label: "Gray",
-    dot: "#6b7280",
-    light: { a: "71 85 105", at: "51 65 85", on: "255 255 255" },
-    dark: { a: "148 163 184", at: "203 213 225", on: "15 23 42" },
+    dot: "#71717a",
+    light: { a: "82 82 91", at: "63 63 70", on: "255 255 255" },
+    dark: { a: "161 161 170", at: "212 212 216", on: "24 24 27" },
   },
 ];
 
-const DEFAULT_ACCENT = "indigo";
+const DEFAULT_ACCENT = "gray";
 /** Glass is a 0–100 slider. Until the visitor sets one, both themes default to
    clear (0); the frosting is opt-in via the slider. */
 const DEFAULT_GLASS = 0;
