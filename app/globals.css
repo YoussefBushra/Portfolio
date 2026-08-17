@@ -49,9 +49,11 @@
   --text: 237 239 248;
   --muted: 201 207 224;
   --faint: 171 178 200;
-  --accent: 129 140 248;
-  --accent-text: 165 180 252;
-  --on-accent: 10 12 28;
+  /* Dark mode carries a neutral gray accent (zinc) — calm and nocturnal —
+     while light mode keeps its indigo. The mode is part of the identity. */
+  --accent: 161 161 170;
+  --accent-text: 212 212 216;
+  --on-accent: 24 24 27;
   --danger: 255 120 138;
 
   /* Dark glass is dark-tinted, not white-frosted: panels stay deep so light
@@ -64,13 +66,13 @@
   --glass-shadow: 0 20px 54px -16px rgb(0 0 0 / 0.66);
   --glass-highlight: 255 255 255;
 
-  /* Dimmer and deeper than before, so clear (glass 0) panels don't let a
-     bright aurora wash the page out. */
-  --aura-1: 74 84 190;
-  --aura-2: 44 92 185;
-  --aura-3: 62 86 180;
-  --aura-4: 52 74 160;
-  --aura-strength: 0.24;
+  /* Neutral gray glow (matches the dark accent), kept dim so clear (glass 0)
+     panels stay deep. Light mode keeps its indigo/blue aurora above. */
+  --aura-1: 108 110 124;
+  --aura-2: 92 94 108;
+  --aura-3: 116 118 132;
+  --aura-4: 84 86 100;
+  --aura-strength: 0.22;
 
   color-scheme: dark;
 }
