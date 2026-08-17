@@ -50,6 +50,13 @@ const ACCENTS: Accent[] = [
     light: { a: "180 83 9", at: "146 64 14", on: "255 255 255" },
     dark: { a: "251 191 36", at: "252 211 77", on: "28 18 4" },
   },
+  {
+    id: "gray",
+    label: "Gray",
+    dot: "#6b7280",
+    light: { a: "71 85 105", at: "51 65 85", on: "255 255 255" },
+    dark: { a: "148 163 184", at: "203 213 225", on: "15 23 42" },
+  },
 ];
 
 const DEFAULT_ACCENT = "indigo";

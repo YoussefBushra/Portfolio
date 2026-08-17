@@ -6,9 +6,12 @@ import { profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
 import { CountUp } from "@/components/system/CountUp";
 
 const PORTRAIT = "/portrait.jpg";
+/** First and last name only — the compact identity used on phones. */
+const SHORT_NAME = profile.name.split(" ").slice(0, 2).join(" ");
 
 /**
  * The identity band, as a pane of glass floating on the aurora: the photo,
@@ -62,7 +65,7 @@ export function Hero() {
               </div>
               <div className="min-w-0 md:hidden">
                 <h1 className="font-display text-2xl font-bold leading-[1.05] tracking-tight">
-                  {profile.name}
+                  {SHORT_NAME}
                 </h1>
                 <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.12em] text-accent-text">
                   {profile.role}
@@ -85,37 +88,26 @@ export function Hero() {
                 {profile.tagline}
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-3 md:mt-7">
+              {/* CTAs live in the top nav on phones; here from md up. */}
+              <div className="mt-6 hidden flex-wrap gap-3 md:mt-7 md:flex">
                 <CVButton from="hero" variant="primary" />
                 <ContactLink />
               </div>
 
-              {/* Location / status / links, inline on phones, in the side
-                  column on desktop. */}
-              <dl className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/10 pt-5 text-[13px] md:hidden">
-                <div className="flex items-center gap-1.5">
-                  <dt className="text-faint">Based in</dt>
-                  <dd className="text-text">{profile.location}</dd>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <dt className="text-faint">Status</dt>
-                  <dd className="text-text">Open to roles</dd>
-                </div>
-                <div className="w-full">
-                  <SocialLinks from="hero" />
-                </div>
-              </dl>
+              {/* Availability + links, inline on phones. */}
+              <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3 border-t border-white/10 pt-5 md:hidden">
+                <AvailabilityBadge />
+                <SocialLinks from="hero" />
+              </div>
             </div>
 
             <div className="hidden md:col-span-3 md:block">
-              <dl className="space-y-4 text-sm">
-                <div>
-                  <dt className="block-label">Based in</dt>
-                  <dd className="mt-1 text-text">{profile.location}</dd>
-                </div>
+              <dl className="space-y-5 text-sm">
                 <div>
                   <dt className="block-label">Status</dt>
-                  <dd className="mt-1 text-text">{profile.availability}</dd>
+                  <dd className="mt-2">
+                    <AvailabilityBadge />
+                  </dd>
                 </div>
                 <div>
                   <dt className="block-label">Elsewhere</dt>
