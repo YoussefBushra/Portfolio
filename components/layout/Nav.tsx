@@ -74,13 +74,23 @@ export function Nav() {
                     isActive ? "text-text" : "text-muted hover:text-text"
                   }`}
                 >
-                  {isActive ? (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute inset-0 -z-10 rounded-full border border-accent/50 bg-accent/20 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)]"
-                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
-                    />
-                  ) : null}
+                  <AnimatePresence>
+                    {isActive ? (
+                      <motion.span
+                        layoutId="nav-active"
+                        initial={{ opacity: 0, scale: 0.4 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.4 }}
+                        className="absolute inset-0 -z-10 rounded-full border border-accent/50 bg-accent/20 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)]"
+                        transition={{
+                          type: "spring",
+                          stiffness: 320,
+                          damping: 24,
+                          mass: 0.7,
+                        }}
+                      />
+                    ) : null}
+                  </AnimatePresence>
                   {n.label}
                 </a>
               </li>
