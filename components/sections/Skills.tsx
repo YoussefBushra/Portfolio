@@ -1,22 +1,13 @@
-"use client";
-
-import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { stackGroups, spokenLanguages } from "@/content/skills";
 import { SectionShell } from "@/components/layout/SectionShell";
 
 /**
  * The stack as a bento of glass cells — one per category, weighted by
  * importance (Core is the feature cell), tools set in the display face rather
- * than as chips or logos. Cells reveal in a short stagger on scroll and lift
- * on hover; both are dropped under reduced motion. Glass sits directly on the
- * aurora so panels never nest.
+ * than as chips or logos. The whole block reveals with the section; cells stay
+ * statically rendered (only a CSS hover lift) so they are never briefly hidden
+ * on an instant jump. Glass sits directly on the aurora so panels never nest.
  */
-const grid: Variants = { show: { transition: { staggerChildren: 0.06 } } };
-const cell: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } },
-};
-
 function Cell({
   label,
   items,
@@ -29,8 +20,7 @@ function Cell({
   featured?: boolean;
 }) {
   return (
-    <motion.div
-      variants={cell}
+    <div
       className={`glass flex flex-col rounded-xl p-5 transition-transform duration-200 hover:-translate-y-0.5 md:p-6 ${className ?? ""}`}
     >
       <h3 className="flex items-center gap-2.5 font-mono text-[12px] font-semibold uppercase tracking-[0.14em] text-accent-text">
@@ -55,24 +45,17 @@ function Cell({
           </li>
         ))}
       </ul>
-    </motion.div>
+    </div>
   );
 }
 
 export function Skills() {
-  const reduce = useReducedMotion();
   const byName = (n: string) => stackGroups.find((g) => g.name === n)?.items ?? [];
   const languages = spokenLanguages.replace(/\.$/, "").split(", ");
 
   return (
     <SectionShell id="skills" label="Stack">
-      <motion.div
-        className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6"
-        variants={reduce ? undefined : grid}
-        initial={reduce ? undefined : "hidden"}
-        whileInView={reduce ? undefined : "show"}
-        viewport={{ once: true, margin: "-60px" }}
-      >
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-6">
         <Cell
           label="Core"
           items={byName("Core")}
@@ -95,7 +78,7 @@ export function Skills() {
           className="sm:col-span-2 lg:col-span-4"
         />
         <Cell label="Languages" items={languages} className="lg:col-span-2" />
-      </motion.div>
+      </div>
     </SectionShell>
   );
 }

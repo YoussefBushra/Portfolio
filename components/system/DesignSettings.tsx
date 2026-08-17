@@ -60,12 +60,10 @@ const ACCENTS: Accent[] = [
 ];
 
 const DEFAULT_ACCENT = "indigo";
-/** Glass is a 0–100 slider. Until the visitor sets one, the default depends on
-   the theme: clear in light (0), lightly frosted in dark (50). */
-const DEFAULT_GLASS_LIGHT = 0;
-const DEFAULT_GLASS_DARK = 50;
-const defaultGlassFor = (isDark: boolean) =>
-  isDark ? DEFAULT_GLASS_DARK : DEFAULT_GLASS_LIGHT;
+/** Glass is a 0–100 slider. Until the visitor sets one, both themes default to
+   clear (0); the frosting is opt-in via the slider. */
+const DEFAULT_GLASS = 0;
+const defaultGlassFor = (_isDark: boolean) => DEFAULT_GLASS;
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp = (n: number) => Math.min(100, Math.max(0, n));
