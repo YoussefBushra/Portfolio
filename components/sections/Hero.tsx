@@ -41,15 +41,15 @@ export function Hero() {
   return (
     <section id="hero" className="px-6 md:px-10">
       <motion.div
-        className="mx-auto max-w-page pb-10 pt-28 md:pb-14 md:pt-32"
+        className="mx-auto max-w-page pb-9 pt-24 md:pb-14 md:pt-32"
         variants={wrap}
         initial={reduce ? false : "hidden"}
         animate={reduce ? false : "show"}
       >
-        <motion.div variants={card} className="glass-strong rounded-xl p-6 sm:p-8 md:p-10">
-          <div className="grid gap-8 md:grid-cols-12 md:gap-10">
+        <motion.div variants={card} className="glass-strong rounded-xl p-5 sm:p-8 md:p-10">
+          <div className="grid gap-6 md:grid-cols-12 md:gap-10">
             <div className="md:col-span-3">
-              <div className="relative aspect-[4/5] w-full max-w-[220px] overflow-hidden rounded-lg border border-white/30 bg-surface/40 shadow-lg md:max-w-none">
+              <div className="relative aspect-[4/5] w-full max-w-[168px] overflow-hidden rounded-lg border border-white/30 bg-surface/40 shadow-lg sm:max-w-[220px] md:max-w-none">
                 <Image
                   src={PORTRAIT}
                   alt={`${profile.name}, ${profile.role}`}
@@ -62,21 +62,21 @@ export function Hero() {
             </div>
 
             <div className="md:col-span-6">
-              <h1 className="font-display text-[2.1rem] font-bold leading-[1.03] tracking-tight sm:text-[2.75rem]">
+              <h1 className="font-display text-[1.9rem] font-bold leading-[1.05] tracking-tight sm:text-[2.75rem]">
                 {profile.name}
               </h1>
-              <p className="mt-2.5 font-mono text-xs uppercase tracking-[0.14em] text-accent-text">
+              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.14em] text-accent-text sm:text-xs">
                 {profile.role}
               </p>
 
-              <p className="mt-6 font-display text-xl font-semibold leading-snug tracking-tight text-text sm:text-2xl">
+              <p className="mt-5 font-display text-lg font-semibold leading-snug tracking-tight text-text sm:mt-6 sm:text-2xl">
                 {profile.thesis}
               </p>
-              <p className="mt-3 max-w-prose text-[15px] leading-relaxed text-muted">
+              <p className="mt-3 max-w-prose text-[14px] leading-relaxed text-muted sm:text-[15px]">
                 {profile.tagline}
               </p>
 
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-wrap gap-3 sm:mt-7">
                 <CVButton from="hero" variant="primary" />
                 <ContactLink />
               </div>
@@ -107,10 +107,10 @@ export function Hero() {
             small glass tiles. */}
         <motion.dl
           variants={facts}
-          className="mt-5 grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4"
+          className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-5 lg:grid-cols-4"
         >
           {profile.facts.map((f) => (
-            <motion.div variants={tile} key={f.label} className="glass rounded-lg p-4 md:p-5">
+            <motion.div variants={tile} key={f.label} className="glass rounded-lg p-3.5 sm:p-4 md:p-5">
               <dt className="num font-display text-2xl font-bold tracking-tight text-accent-text">
                 <CountUp value={f.value} />
               </dt>

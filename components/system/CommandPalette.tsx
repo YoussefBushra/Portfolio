@@ -5,6 +5,8 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { navNodes, profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
+import { scrollToId } from "@/lib/scroll";
+import { OVERLAY_OPEN_EVENT, announceOverlay } from "@/lib/overlays";
 
 interface Command {
   id: string;
@@ -18,14 +20,6 @@ interface Command {
 export const OPEN_PALETTE_EVENT = "yb:open-palette";
 
 const CV_PATH = "/portfolio.pdf";
-
-function scrollToId(id: string) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-  history.replaceState(null, "", id === "hero" ? " " : `#${id}`);
-}
 
 export function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -120,14 +114,20 @@ export function CommandPalette() {
       if (e.key === "Escape") close();
     };
     const onOpenEvent = () => {
+      announceOverlay("palette");
       setOpen(true);
       track("command_palette_open", { source: "button" });
     };
+    const onOther = (e: Event) => {
+      if ((e as CustomEvent<string>).detail !== "palette") close();
+    };
     window.addEventListener("keydown", onKey);
     window.addEventListener(OPEN_PALETTE_EVENT, onOpenEvent);
+    window.addEventListener(OVERLAY_OPEN_EVENT, onOther);
     return () => {
       window.removeEventListener("keydown", onKey);
       window.removeEventListener(OPEN_PALETTE_EVENT, onOpenEvent);
+      window.removeEventListener(OVERLAY_OPEN_EVENT, onOther);
     };
   }, [close]);
 

@@ -89,7 +89,11 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
+  /* `clip`, not `hidden`: `overflow-x: hidden` makes `overflow-y` compute to
+     `auto`, which turns <body> into the scroll container and breaks window
+     scrolling, anchor jumps and scroll-padding-top on mobile. `clip` contains
+     horizontal overflow without establishing a scroll container. */
+  overflow-x: clip;
 }
 
 /* ---- The aurora. Fixed behind everything; the light the glass
@@ -129,6 +133,26 @@ body {
 @keyframes aurora-drift {
   0%   { transform: translate3d(-2%, -1%, 0) scale(1.05) rotate(0deg); }
   100% { transform: translate3d(3%, 2%, 0) scale(1.15) rotate(8deg); }
+}
+
+/* On phones the mobile URL bar shows/hides on scroll, which resizes the
+   viewport and makes a percent-inset fixed layer jump; the constant drift
+   animation behind backdrop-filter panels also repaints every frame. Pin the
+   aurora to the *largest* viewport, drop the animation, and hide the grain so
+   the background stays rock-steady while scrolling. */
+@media (max-width: 640px) {
+  .aurora {
+    inset: -15% -15% auto -15%;
+    height: 115lvh;
+    animation: none;
+    transform: translateZ(0);
+  }
+  .aurora::after {
+    animation: none;
+  }
+  .aurora-grain {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

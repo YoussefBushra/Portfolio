@@ -44,7 +44,7 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
     // Anchor clearance comes from `scroll-padding-top` on <html>. The shell is
     // transparent: each section supplies its own glass so panels never nest.
     <section ref={ref} id={id}>
-      <div className="mx-auto grid max-w-page gap-5 px-6 py-9 md:grid-cols-[160px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-12">
+      <div className="mx-auto grid max-w-page gap-4 px-5 py-8 sm:gap-5 sm:px-6 md:grid-cols-[160px_minmax(0,1fr)] md:gap-12 md:px-10 md:py-12">
         <div className="md:sticky md:top-24 md:self-start">
           <div className="flex items-center gap-2.5">
             <span

@@ -7,6 +7,8 @@ import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { DesignSettings } from "@/components/system/DesignSettings";
 import { CVButton } from "@/components/ui/CVButton";
 import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
+import { scrollToId } from "@/lib/scroll";
+import { OVERLAY_OPEN_EVENT, announceOverlay } from "@/lib/overlays";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
@@ -18,6 +20,29 @@ export function Nav() {
     const next = y > 12;
     setScrolled((cur) => (cur === next ? cur : next));
   });
+
+  // Only one overlay open at a time: close the menu if another panel opens.
+  useEffect(() => {
+    const onOther = (e: Event) => {
+      if ((e as CustomEvent<string>).detail !== "menu") setOpen(false);
+    };
+    window.addEventListener(OVERLAY_OPEN_EVENT, onOther);
+    return () => window.removeEventListener(OVERLAY_OPEN_EVENT, onOther);
+  }, []);
+
+  const toggleMenu = () =>
+    setOpen((v) => {
+      if (!v) announceOverlay("menu");
+      return !v;
+    });
+
+  // Close the menu, then scroll to the target ourselves so navigation is
+  // reliable even as the menu unmounts (the plain anchor jump can be dropped
+  // mid-exit-animation on mobile).
+  const goTo = (id: string) => {
+    setOpen(false);
+    requestAnimationFrame(() => scrollToId(id));
+  };
 
   useEffect(() => {
     const ids = ["hero", ...navNodes.map((n) => n.id)];
@@ -114,8 +139,8 @@ export function Nav() {
             type="button"
             aria-label="Toggle menu"
             aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/25 bg-white/10 text-muted backdrop-blur-sm md:hidden"
+            onClick={toggleMenu}
+            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-muted backdrop-blur-sm md:hidden"
           >
             <span className="flex flex-col gap-[3px]">
               <span
@@ -152,8 +177,11 @@ export function Nav() {
                 <li key={n.id} className="border-b border-white/10 last:border-b-0">
                   <a
                     href={`#${n.id}`}
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-6 py-3 text-sm text-muted"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      goTo(n.id);
+                    }}
+                    className="flex items-center gap-3 px-6 py-3.5 text-[15px] text-muted"
                   >
                     <span
                       className={`h-[2px] w-3.5 transition-colors ${

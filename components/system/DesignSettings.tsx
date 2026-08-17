@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
+import { OVERLAY_OPEN_EVENT, announceOverlay } from "@/lib/overlays";
 
 /**
  * Lets the visitor retune the glass to taste: pick an accent and drag the
@@ -104,6 +105,15 @@ export function DesignSettings() {
     root.style.setProperty("--glass-blur", `${Math.round(blur)}px`);
   }, [mounted, accent, glass, resolvedTheme]);
 
+  // Only one overlay open at a time: close if another panel announces itself.
+  useEffect(() => {
+    const onOther = (e: Event) => {
+      if ((e as CustomEvent<string>).detail !== "settings") setOpen(false);
+    };
+    window.addEventListener(OVERLAY_OPEN_EVENT, onOther);
+    return () => window.removeEventListener(OVERLAY_OPEN_EVENT, onOther);
+  }, []);
+
   // Close on outside click / Escape.
   useEffect(() => {
     if (!open) return;
@@ -144,7 +154,12 @@ export function DesignSettings() {
         type="button"
         aria-label="Appearance settings"
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() =>
+          setOpen((v) => {
+            if (!v) announceOverlay("settings");
+            return !v;
+          })
+        }
         className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-muted backdrop-blur-sm transition-colors duration-200 hover:border-accent hover:text-text"
       >
         <svg
