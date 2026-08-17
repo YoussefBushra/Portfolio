@@ -88,10 +88,15 @@ export function Hero() {
                 {profile.tagline}
               </p>
 
-              {/* CTAs live in the top nav on phones; here from md up. */}
-              <div className="mt-6 hidden flex-wrap gap-3 md:mt-7 md:flex">
-                <CVButton from="hero" variant="primary" />
-                <ContactLink />
+              {/* Primary actions, above the fold. Equal-width on phones, their
+                  natural width from md up. */}
+              <div className="mt-6 flex gap-3 md:mt-7">
+                <CVButton
+                  from="hero"
+                  variant="primary"
+                  className="flex-1 justify-center md:flex-none"
+                />
+                <ContactLink className="flex-1 justify-center md:flex-none" />
               </div>
 
               {/* Availability + links, inline on phones. */}
