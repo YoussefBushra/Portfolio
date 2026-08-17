@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { navNodes, profile } from "@/content/profile";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
+import { DesignSettings } from "@/components/system/DesignSettings";
 import { CVButton } from "@/components/ui/CVButton";
 import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
+import { MobileTabBar } from "@/components/layout/MobileTabBar";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
   const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
   const { scrollY } = useScroll();
 
   useMotionValueEvent(scrollY, "change", (y) => {
@@ -37,21 +38,27 @@ export function Nav() {
   }, []);
 
   return (
+    <>
     <header
-      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-200 ${
-        // Solid, not translucent: on a text-dense page, content passing
-        // behind a see-through bar reads as an overlap bug.
-        scrolled ? "border-b border-line bg-bg" : "border-b border-transparent"
+      className={`fixed inset-x-0 top-0 z-40 px-4 pt-3 transition-all duration-300 md:pt-4 ${
+        scrolled ? "pt-2 md:pt-2.5" : ""
       }`}
     >
-      <nav className="mx-auto flex h-14 max-w-page items-center justify-between gap-6 px-6 md:px-10">
+      <nav
+        className={`glass mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-6 rounded-full px-4 pl-5 transition-all duration-300 md:px-5 ${
+          scrolled ? "shadow-lg" : ""
+        }`}
+      >
         <a
           href="#hero"
-          className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
+          className="focus-ring flex shrink-0 items-center gap-2.5 rounded-full"
           aria-label={`${profile.name}, back to top`}
         >
-          <span className="h-[3px] w-5 bg-accent" aria-hidden="true" />
-          <span className="text-sm font-semibold tracking-tight text-text">
+          <span
+            className="h-4 w-4 rounded-md bg-gradient-to-br from-accent to-accent/60 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.6)]"
+            aria-hidden="true"
+          />
+          <span className="font-display text-sm font-bold tracking-tight text-text">
             Youssef Bushra
           </span>
         </a>
@@ -64,18 +71,28 @@ export function Nav() {
                 <a
                   href={`#${n.id}`}
                   aria-current={isActive ? "true" : undefined}
-                  className={`focus-ring relative block rounded-sm px-2.5 py-1.5 text-[13px] transition-colors duration-150 ${
+                  className={`focus-ring relative block rounded-full px-3 py-1.5 text-[13px] transition-colors duration-150 ${
                     isActive ? "text-text" : "text-muted hover:text-text"
                   }`}
                 >
+                  <AnimatePresence>
+                    {isActive ? (
+                      <motion.span
+                        layoutId="nav-active"
+                        initial={{ opacity: 0, scale: 0.4 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.4 }}
+                        className="absolute inset-0 -z-10 rounded-full border border-accent/50 bg-accent/20 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)]"
+                        transition={{
+                          type: "spring",
+                          stiffness: 320,
+                          damping: 24,
+                          mass: 0.7,
+                        }}
+                      />
+                    ) : null}
+                  </AnimatePresence>
                   {n.label}
-                  {isActive ? (
-                    <motion.span
-                      layoutId="nav-active"
-                      className="absolute inset-x-2.5 -bottom-px h-[2px] bg-accent"
-                      transition={{ type: "spring", stiffness: 400, damping: 34 }}
-                    />
-                  ) : null}
                 </a>
               </li>
             );
@@ -88,73 +105,18 @@ export function Nav() {
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
             aria-label="Open command menu"
-            className="focus-ring hidden h-8 items-center rounded-sm border border-line bg-bg px-2 font-mono text-[11px] text-muted transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
+            className="focus-ring hidden h-8 items-center rounded-full border border-white/25 bg-white/10 px-2.5 font-mono text-[11px] text-muted backdrop-blur-sm transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
           >
             ⌘K
           </button>
+          <DesignSettings />
           <ThemeToggle />
-          <button
-            type="button"
-            aria-label="Toggle menu"
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
-          >
-            <span className="flex flex-col gap-[3px]">
-              <span
-                className={`h-[1.5px] w-3.5 bg-current transition-transform duration-150 ${
-                  open ? "translate-y-[4.5px] rotate-45" : ""
-                }`}
-              />
-              <span
-                className={`h-[1.5px] w-3.5 bg-current transition-opacity duration-150 ${
-                  open ? "opacity-0" : ""
-                }`}
-              />
-              <span
-                className={`h-[1.5px] w-3.5 bg-current transition-transform duration-150 ${
-                  open ? "-translate-y-[4.5px] -rotate-45" : ""
-                }`}
-              />
-            </span>
-          </button>
         </div>
       </nav>
-
-      <AnimatePresence>
-        {open ? (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-line bg-bg md:hidden"
-          >
-            <ul>
-              {navNodes.map((n) => (
-                <li key={n.id} className="border-b border-line/70">
-                  <a
-                    href={`#${n.id}`}
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-3 px-6 py-3 text-sm text-muted"
-                  >
-                    <span
-                      className={`h-[2px] w-3.5 transition-colors ${
-                        active === n.id ? "bg-accent" : "bg-line"
-                      }`}
-                      aria-hidden="true"
-                    />
-                    {n.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-            <div className="px-6 py-3">
-              <CVButton from="mobile-menu" variant="compact" />
-            </div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
     </header>
+
+    {/* Section navigation on phones lives in a fixed bottom tab bar. */}
+    <MobileTabBar active={active} />
+    </>
   );
 }

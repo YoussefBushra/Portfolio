@@ -3,6 +3,7 @@
 import { SectionShell } from "@/components/layout/SectionShell";
 import { CVButton } from "@/components/ui/CVButton";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { SocialIcons } from "@/components/ui/SocialIcons";
 import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 import { useForm, ValidationError } from "@formspree/react";
@@ -15,7 +16,7 @@ import { useEffect } from "react";
 const FORM_ID = "xnpabgrq";
 
 const field =
-  "focus-ring w-full rounded-sm border border-line bg-bg px-3 py-2 text-sm text-text placeholder:text-faint transition-colors duration-150 focus:border-accent";
+  "focus-ring w-full rounded-lg border border-line bg-white/50 px-3.5 py-2.5 text-sm text-text placeholder:text-faint shadow-[inset_0_1px_2px_rgb(20_24_45/0.06)] backdrop-blur-md transition-colors duration-150 focus:border-accent dark:border-white/15 dark:bg-white/[0.06] dark:shadow-[inset_0_1px_3px_rgb(0_0_0/0.3)]";
 
 const errorText = "text-xs leading-snug text-danger";
 
@@ -29,10 +30,10 @@ export function Contact() {
   return (
     <SectionShell id="contact" label="Contact" meta={profile.availability}>
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:gap-14">
-        <div>
+        <div className="glass-strong rounded-xl p-6 sm:p-8">
           {state.succeeded ? (
-            <div className="rounded-sm border border-line bg-surface p-6">
-              <h3 className="text-base font-semibold tracking-tight text-text">
+            <div>
+              <h3 className="font-display text-base font-bold tracking-tight text-text">
                 Message sent
               </h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">
@@ -142,13 +143,13 @@ export function Contact() {
                 >
                   {state.submitting ? "Sending" : "Send message"}
                 </button>
-               
               </div>
             </form>
           )}
         </div>
 
-        <div className="space-y-6">
+        {/* Desktop: a full side card that balances the two-column layout. */}
+        <div className="hidden glass rounded-xl p-6 space-y-6 self-start lg:block">
           <div>
             <h3 className="block-label">Profiles</h3>
             <div className="mt-1.5">
@@ -161,6 +162,13 @@ export function Contact() {
               <CVButton from="contact" variant="ghost" />
             </div>
           </div>
+        </div>
+
+        {/* Phones/tablets: a light strip, not a second card — the profiles and
+            CV already lead in the hero, so this is just a nearby fallback. */}
+        <div className="flex items-center justify-between gap-4 lg:hidden">
+          <SocialIcons from="contact" />
+          <CVButton from="contact" variant="compact" />
         </div>
       </div>
     </SectionShell>

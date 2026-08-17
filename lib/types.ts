@@ -51,7 +51,8 @@ export interface Experience {
   summary: string;
   stack: string[];
   metrics?: { label: string; value: string }[];
-  highlights: string[];
+  /** Each highlight leads with a short scannable keyword, then the detail. */
+  highlights: { lead: string; text: string }[];
 }
 
 export interface SkillGroup {

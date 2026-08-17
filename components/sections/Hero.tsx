@@ -1,93 +1,147 @@
+"use client";
+
 import Image from "next/image";
+import { motion, type Variants } from "framer-motion";
 import { profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { SocialLinks } from "@/components/ui/SocialLinks";
+import { SocialIcons } from "@/components/ui/SocialIcons";
+import { AvailabilityBadge } from "@/components/ui/AvailabilityBadge";
+import { CountUp } from "@/components/system/CountUp";
 
 const PORTRAIT = "/portrait.jpg";
+/** First and last name only — the compact identity used on phones. */
+const SHORT_NAME = profile.name.split(" ").slice(0, 2).join(" ");
 
 /**
- * The identity band. Not a hero: it carries the photo, the name, the claim,
- * the contact details and five figures in a single screen, because the first
- * screen is the only one some readers will look at.
+ * The identity band, as a pane of glass floating on the aurora: the photo,
+ * the name, the claim, both actions, location, availability, profile links
+ * and four figures on a single screen. It plays a short entrance on load —
+ * the card settles in, then the figures stagger and count up — all dropped
+ * under reduced motion.
  */
+const ease = [0.16, 1, 0.3, 1] as const;
+const wrap: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.14, delayChildren: 0.05 } },
+};
+const card: Variants = {
+  hidden: { opacity: 0, y: 16 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease } },
+};
+const facts: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } },
+};
+const tile: Variants = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease } },
+};
+
 export function Hero() {
   return (
     <section id="hero" className="px-6 md:px-10">
-      <div className="mx-auto max-w-page pb-10 pt-20 md:pb-12 md:pt-24">
-        <div className="grid gap-8 md:grid-cols-12 md:gap-10">
-          <div className="md:col-span-3">
-            <div className="relative aspect-[4/5] w-full max-w-[220px] overflow-hidden rounded-sm border border-line bg-surface md:max-w-none">
-              <Image
-                src={PORTRAIT}
-                alt={`${profile.name}, ${profile.role}`}
-                fill
-                priority
-                sizes="(max-width: 768px) 220px, 22vw"
-                className="object-cover object-[50%_12%]"
-              />
+      <motion.div
+        className="mx-auto max-w-page pb-9 pt-24 md:pb-14 md:pt-32"
+        variants={wrap}
+        initial="hidden"
+        animate="show"
+      >
+        <motion.div variants={card} className="glass-strong rounded-xl p-5 sm:p-8 md:p-10">
+          <div className="grid gap-6 md:grid-cols-12 md:gap-10">
+            {/* Identity row. On phones the photo and name sit side by side so
+                the fold leads with the claim, not a tall portrait; the desktop
+                grid keeps the portrait as its own column. */}
+            <div className="flex items-center gap-4 md:col-span-3 md:block">
+              <div className="relative aspect-square w-16 shrink-0 overflow-hidden rounded-full border border-white/30 bg-surface/40 shadow-lg sm:w-20 md:aspect-[4/5] md:w-full md:max-w-none md:rounded-lg">
+                <Image
+                  src={PORTRAIT}
+                  alt={`${profile.name}, ${profile.role}`}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 80px, 22vw"
+                  className="object-cover object-[50%_12%]"
+                />
+              </div>
+              <div className="min-w-0 md:hidden">
+                <h1 className="font-display text-2xl font-bold leading-[1.05] tracking-tight">
+                  {SHORT_NAME}
+                </h1>
+                <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.12em] text-accent-text">
+                  {profile.role}
+                </p>
+              </div>
+            </div>
+
+            <div className="md:col-span-6">
+              <h1 className="hidden font-display font-bold leading-[1.05] tracking-tight md:block md:text-[2.75rem]">
+                {profile.name}
+              </h1>
+              <p className="hidden font-mono uppercase tracking-[0.14em] text-accent-text md:mt-2 md:block md:text-xs">
+                {profile.role}
+              </p>
+
+              <p className="font-display text-lg font-semibold leading-snug tracking-tight text-text md:mt-6 md:text-2xl">
+                {profile.thesis}
+              </p>
+              <p className="mt-2.5 max-w-prose text-[14px] leading-relaxed text-muted sm:text-[15px] md:mt-3">
+                {profile.tagline}
+              </p>
+
+              {/* Primary actions, above the fold. Full-width and stacked on
+                  phones so both read as equal weight; natural width in a row
+                  from md up. */}
+              <div className="mt-6 flex flex-col gap-2.5 md:mt-7 md:flex-row md:gap-3">
+                <CVButton from="hero" variant="primary" className="justify-center md:flex-none" />
+                <ContactLink className="justify-center md:flex-none" />
+              </div>
+
+              {/* Availability + profile icons, inline on phones. */}
+              <div className="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5 md:hidden">
+                <AvailabilityBadge />
+                <SocialIcons from="hero" />
+              </div>
+            </div>
+
+            <div className="hidden md:col-span-3 md:block">
+              <dl className="space-y-5 text-sm">
+                <div>
+                  <dt className="block-label">Status</dt>
+                  <dd className="mt-2">
+                    <AvailabilityBadge />
+                  </dd>
+                </div>
+                <div>
+                  <dt className="block-label">Elsewhere</dt>
+                  <dd className="mt-1.5">
+                    <SocialLinks from="hero" />
+                  </dd>
+                </div>
+              </dl>
             </div>
           </div>
+        </motion.div>
 
-          <div className="md:col-span-6">
-            <h1 className="text-[2rem] font-semibold leading-[1.05] tracking-tight sm:text-4xl">
-              {profile.name}
-            </h1>
-            <p className="mt-2 font-mono text-xs text-accent-text">{profile.role}</p>
-
-            <p className="mt-6 text-xl font-medium leading-snug tracking-tight text-text sm:text-2xl">
-              {profile.thesis}
-            </p>
-            <p className="mt-3 max-w-prose text-[15px] leading-relaxed text-muted">
-              {profile.tagline}
-            </p>
-
-            <div className="mt-7 flex flex-wrap gap-2.5">
-              <CVButton from="hero" variant="primary" />
-              <ContactLink />
-            </div>
-          </div>
-
-          <div className="md:col-span-3">
-            <dl className="space-y-3 text-sm">
-              <div>
-                <dt className="block-label">Based in</dt>
-                <dd className="mt-1 text-text">{profile.location}</dd>
-              </div>
-              <div>
-                <dt className="block-label">Status</dt>
-                <dd className="mt-1 text-text">{profile.availability}</dd>
-              </div>
-              <div>
-                <dt className="block-label">Elsewhere</dt>
-                <dd className="mt-1.5">
-                  <SocialLinks from="hero" />
-                </dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-
-        {/* Figures, all of them defended further down the page. */}
-        <dl className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:border-t lg:border-line">
-          {profile.facts.map((f, i) => (
-            <div
-              key={f.label}
-              className={`border-t border-line py-4 lg:border-t-0 lg:py-5 ${
-                i === 0 ? "lg:pr-5" : "lg:border-l lg:border-line lg:px-5"
-              }`}
-            >
-              <dt className="num text-2xl font-semibold tracking-tight text-text">
-                {f.value}
+        {/* Figures, all of them defended further down the page, counting up as
+            small glass tiles. */}
+        <motion.dl
+          variants={facts}
+          className="mt-4 grid grid-cols-2 gap-3 sm:mt-5 sm:gap-5 lg:grid-cols-4"
+        >
+          {profile.facts.map((f) => (
+            <motion.div variants={tile} key={f.label} className="glass rounded-lg p-3.5 sm:p-4 md:p-5">
+              <dt className="num font-display text-xl font-bold tracking-tight text-accent-text sm:text-2xl">
+                <CountUp value={f.value} />
               </dt>
-              <dd className="mt-1 text-[13px] leading-tight text-text">{f.label}</dd>
-              <dd className="mt-0.5 font-mono text-[11px] leading-tight text-faint">
+              <dd className="mt-1 text-[12.5px] leading-tight text-text sm:mt-1.5 sm:text-[13px]">{f.label}</dd>
+              <dd className="mt-0.5 font-mono text-[10.5px] leading-tight text-faint sm:text-[11px]">
                 {f.hint}
               </dd>
-            </div>
+            </motion.div>
           ))}
-        </dl>
-      </div>
+        </motion.dl>
+      </motion.div>
     </section>
   );
 }
