@@ -82,7 +82,7 @@ export function Nav() {
                         initial={{ opacity: 0, scale: 0.4 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.4 }}
-                        className="absolute inset-0 -z-10 rounded-full border border-accent/50 bg-accent/20 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)]"
+                        className="absolute inset-0 -z-10 rounded-full border border-white/45 bg-accent/20 bg-[linear-gradient(to_bottom,rgb(255_255_255/0.32),rgb(255_255_255/0.03)_58%)] shadow-[inset_0_1px_0_0_rgb(255_255_255/0.7),inset_0_-3px_6px_-2px_rgb(0_0_0/0.15),0_4px_14px_-5px_rgb(var(--accent)/0.5)] backdrop-blur-[2px]"
                         transition={{
                           type: "spring",
                           stiffness: 320,
