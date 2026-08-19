@@ -224,29 +224,64 @@ body {
     @apply text-accent-text underline decoration-accent/40 decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent;
   }
 
-  /* Prominent (tinted) glass action — the liquid-glass primary. */
+  /* Prominent (tinted) glass action — the liquid-glass primary. A vibrant
+     accent glass: translucent-but-legible tint, a blur behind, a white top
+     sheen, a bright rim and a thickness shadow. */
   .btn-primary {
     @apply focus-ring relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold text-on-accent transition-all duration-200 hover:-translate-y-px active:translate-y-0;
-    background-image: linear-gradient(135deg, rgb(var(--accent)), rgb(var(--accent) / 0.82));
-    border: 1px solid rgb(var(--glass-highlight) / 0.35);
-    box-shadow: 0 10px 30px -10px rgb(var(--accent) / 0.7),
-      inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.6);
+    background-color: rgb(var(--accent) / 0.86);
+    background-image: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.3),
+      rgb(255 255 255 / 0.04) 52%
+    );
+    -webkit-backdrop-filter: blur(10px) saturate(180%);
+    backdrop-filter: blur(10px) saturate(180%);
+    border: 1px solid rgb(255 255 255 / 0.4);
+    box-shadow: 0 10px 28px -10px rgb(var(--accent) / 0.6),
+      inset 0 1px 0 0 rgb(255 255 255 / 0.65),
+      inset 0 -3px 6px -2px rgb(0 0 0 / 0.18);
   }
   .btn-primary:hover {
-    box-shadow: 0 16px 40px -10px rgb(var(--accent) / 0.85),
-      inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.7);
+    background-color: rgb(var(--accent) / 0.94);
+    box-shadow: 0 16px 38px -10px rgb(var(--accent) / 0.75),
+      inset 0 1px 0 0 rgb(255 255 255 / 0.75),
+      inset 0 -3px 6px -2px rgb(0 0 0 / 0.18);
   }
 
-  /* Regular (neutral) glass action. */
+  /* Regular (neutral) glass action. Follows the glass slider like the panels,
+     with the same sheen + rim + thickness as the primary. */
   .btn-ghost {
     @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-medium text-text transition-all duration-200 hover:-translate-y-px active:translate-y-0;
-    background-color: rgb(var(--glass-fill) / var(--glass-fill-alpha));
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-    backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+    background-color: rgb(var(--glass-fill) / calc(var(--glass-fill-alpha) + 0.06));
+    background-image: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.22),
+      transparent 55%
+    );
+    -webkit-backdrop-filter: blur(max(var(--glass-blur), 10px)) saturate(180%);
+    backdrop-filter: blur(max(var(--glass-blur), 10px)) saturate(180%);
     border: 1px solid rgb(var(--glass-stroke) / var(--glass-stroke-alpha));
-    box-shadow: inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.5);
+    box-shadow: inset 0 1px 0 0 rgb(var(--glass-highlight) / 0.55),
+      inset 0 -2px 5px -2px rgb(0 0 0 / 0.12),
+      0 6px 18px -8px rgb(0 0 0 / 0.25);
   }
-  .btn-ghost:hover { border-color: rgb(var(--accent) / 0.5); }
+  .btn-ghost:hover { border-color: rgb(var(--accent) / 0.55); }
+
+  /* Small glass control (icon buttons, compact pills). A frosted chip with a
+     top sheen and inset highlight, so every control shares one material. */
+  .glass-control {
+    background-color: rgb(var(--glass-highlight) / 0.1);
+    background-image: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.18),
+      transparent 58%
+    );
+    -webkit-backdrop-filter: blur(8px) saturate(160%);
+    backdrop-filter: blur(8px) saturate(160%);
+    border: 1px solid rgb(255 255 255 / 0.28);
+    box-shadow: inset 0 1px 0 0 rgb(255 255 255 / 0.4);
+  }
 
   .num {
     @apply tabular-nums;

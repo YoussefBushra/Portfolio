@@ -71,8 +71,10 @@ export function Nav() {
                 <a
                   href={`#${n.id}`}
                   aria-current={isActive ? "true" : undefined}
-                  className={`focus-ring relative block rounded-full px-3 py-1.5 text-[13px] transition-colors duration-150 ${
-                    isActive ? "text-text" : "text-muted hover:text-text"
+                  className={`focus-ring relative block rounded-full px-3 py-1.5 text-[13px] transition-all duration-150 ${
+                    isActive
+                      ? "text-text"
+                      : "text-muted hover:bg-[rgb(255_255_255/0.08)] hover:text-text hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.3)]"
                   }`}
                 >
                   <AnimatePresence>
@@ -105,7 +107,7 @@ export function Nav() {
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
             aria-label="Open command menu"
-            className="focus-ring hidden h-8 items-center rounded-full border border-white/25 bg-white/10 px-2.5 font-mono text-[11px] text-muted backdrop-blur-sm transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
+            className="focus-ring glass-control hidden h-8 items-center rounded-full px-2.5 font-mono text-[11px] text-muted transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
           >
             ⌘K
           </button>

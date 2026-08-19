@@ -29,7 +29,7 @@ export function SocialIcons({ from, className = "" }: { from: string; className?
               rel="noreferrer noopener"
               aria-label={s.label}
               onClick={() => track("social_click", { label: s.label, from })}
-              className="focus-ring flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-white/10 text-muted backdrop-blur-sm transition-colors duration-200 hover:border-accent hover:text-text"
+              className="focus-ring glass-control flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:border-accent hover:text-text"
             >
               {glyph ? (
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

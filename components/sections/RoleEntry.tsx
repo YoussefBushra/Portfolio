@@ -67,7 +67,7 @@ export function RoleEntry({ role }: { role: Role }) {
           type="button"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="focus-ring mt-5 flex w-full items-center justify-between rounded-lg border border-white/15 bg-white/5 px-3.5 py-2.5 text-[13px] font-medium text-text"
+          className="focus-ring glass-control mt-5 flex w-full items-center justify-between rounded-lg px-3.5 py-2.5 text-[13px] font-medium text-text"
         >
           <span>
             {open ? "Hide details" : "Details"}
