@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { VisitTracker } from "@/components/system/VisitTracker";
+import { LiquidGlassFilter } from "@/components/system/LiquidGlassFilter";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -78,12 +79,13 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        // A liquid-glass app tile with a "Y" monogram. Written with real `#`
-        // colours and encoded once, so the data URI stays valid.
+        // A circular liquid-glass orb with a "Y" monogram: an indigo aurora
+        // refracted through glass — a top sheen, a bright rim, a soft edge.
+        // Real `#` colours, encoded once, so the data URI stays valid.
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#3a3496'/><stop offset='0.55' stop-color='#28368a'/><stop offset='1' stop-color='#204f86'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='#050610'/><rect x='2.5' y='2.5' width='27' height='27' rx='7.5' fill='url(#g)'/><rect x='2.5' y='2.5' width='27' height='12' rx='7.5' fill='#ffffff' opacity='0.13'/><path d='M9.5 9 L16 16.5 L22.5 9 M16 16.5 L16 23.5' fill='none' stroke='#eef1ff' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><radialGradient id='orb' cx='38%' cy='30%' r='85%'><stop offset='0' stop-color='#c7d2fe'/><stop offset='0.45' stop-color='#6366f1'/><stop offset='1' stop-color='#3730a3'/></radialGradient><linearGradient id='sheen' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#ffffff' stop-opacity='0.72'/><stop offset='0.55' stop-color='#ffffff' stop-opacity='0'/></linearGradient></defs><circle cx='16' cy='16' r='15' fill='#0b0a20'/><circle cx='16' cy='16' r='14' fill='url(#orb)'/><path d='M4 15 A12 12 0 0 1 28 15 A15 9 0 0 0 4 15 Z' fill='url(#sheen)'/><path d='M10 9.5 L16 16.5 L22 9.5 M16 16.5 L16 23' fill='none' stroke='#ffffff' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/><circle cx='16' cy='16' r='14' fill='none' stroke='#ffffff' stroke-opacity='0.55' stroke-width='1'/></svg>`
           ),
         type: "image/svg+xml",
       },
@@ -115,6 +117,7 @@ export default function RootLayout({
           {/* The living aurora the glass refracts. */}
           <div className="aurora" aria-hidden="true" />
           <div className="aurora-grain" aria-hidden="true" />
+          <LiquidGlassFilter />
           {children}
         </ThemeProvider>
 

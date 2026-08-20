@@ -21,7 +21,7 @@ export function ThemeToggle() {
         track("theme_toggle", { to: next });
         setTheme(next);
       }}
-      className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-muted backdrop-blur-sm transition-colors duration-200 hover:border-accent hover:text-text"
+      className="focus-ring glass-control inline-flex h-9 w-9 items-center justify-center rounded-full text-muted transition-colors duration-200 hover:border-accent hover:text-text"
     >
       {mounted ? (
         isDark ? (

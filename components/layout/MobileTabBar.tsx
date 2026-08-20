@@ -62,7 +62,7 @@ export function MobileTabBar({ active }: { active: string }) {
                 {isActive ? (
                   <motion.span
                     layoutId="tab-active"
-                    className="absolute inset-0 -z-10 rounded-xl border border-accent/40 bg-accent/15 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.2)]"
+                    className="absolute inset-0 -z-10 rounded-xl border border-white/40 bg-accent/18 bg-[linear-gradient(to_bottom,rgb(255_255_255/0.28),rgb(255_255_255/0.02)_60%)] shadow-[inset_0_1px_0_0_rgb(255_255_255/0.55),inset_0_-2px_5px_-2px_rgb(0_0_0/0.15),0_3px_10px_-4px_rgb(var(--accent)/0.45)] backdrop-blur-[2px]"
                     transition={{ type: "spring", stiffness: 380, damping: 30, mass: 0.7 }}
                   />
                 ) : null}

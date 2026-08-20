@@ -45,7 +45,7 @@ export function Nav() {
       }`}
     >
       <nav
-        className={`glass mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-6 rounded-full px-4 pl-5 transition-all duration-300 md:px-5 ${
+        className={`glass glass-liquid mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-6 rounded-full px-4 pl-5 transition-all duration-300 md:px-5 ${
           scrolled ? "shadow-lg" : ""
         }`}
       >
@@ -71,8 +71,10 @@ export function Nav() {
                 <a
                   href={`#${n.id}`}
                   aria-current={isActive ? "true" : undefined}
-                  className={`focus-ring relative block rounded-full px-3 py-1.5 text-[13px] transition-colors duration-150 ${
-                    isActive ? "text-text" : "text-muted hover:text-text"
+                  className={`focus-ring relative block rounded-full px-3 py-1.5 text-[13px] transition-all duration-150 ${
+                    isActive
+                      ? "text-text"
+                      : "text-muted hover:bg-[rgb(255_255_255/0.08)] hover:text-text hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.3)]"
                   }`}
                 >
                   <AnimatePresence>
@@ -82,7 +84,7 @@ export function Nav() {
                         initial={{ opacity: 0, scale: 0.4 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.4 }}
-                        className="absolute inset-0 -z-10 rounded-full border border-accent/50 bg-accent/20 shadow-[inset_0_1px_0_0_rgb(255_255_255/0.25)]"
+                        className="absolute inset-0 -z-10 rounded-full border border-white/45 bg-accent/20 bg-[linear-gradient(to_bottom,rgb(255_255_255/0.32),rgb(255_255_255/0.03)_58%)] shadow-[inset_0_1px_0_0_rgb(255_255_255/0.7),inset_0_-3px_6px_-2px_rgb(0_0_0/0.15),0_4px_14px_-5px_rgb(var(--accent)/0.5)] backdrop-blur-[2px]"
                         transition={{
                           type: "spring",
                           stiffness: 320,
@@ -105,7 +107,7 @@ export function Nav() {
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
             aria-label="Open command menu"
-            className="focus-ring hidden h-8 items-center rounded-full border border-white/25 bg-white/10 px-2.5 font-mono text-[11px] text-muted backdrop-blur-sm transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
+            className="focus-ring glass-control hidden h-8 items-center rounded-full px-2.5 font-mono text-[11px] text-muted transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
           >
             ⌘K
           </button>
