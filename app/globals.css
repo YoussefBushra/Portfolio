@@ -268,6 +268,15 @@ body {
   }
   .btn-ghost:hover { border-color: rgb(var(--accent) / 0.55); }
 
+  /* Nav-only liquid refraction. Layered on top of `.glass`, this swaps the
+     plain blur for an SVG displacement filter that bends the content scrolling
+     behind the bar. In Chromium `url()` is honoured; Safari/Firefox reject the
+     value and keep the `.glass` blur below — a safe progressive enhancement. */
+  .glass-liquid {
+    -webkit-backdrop-filter: url("#nav-liquid");
+    backdrop-filter: url("#nav-liquid");
+  }
+
   /* Small glass control (icon buttons, compact pills). A frosted chip with a
      top sheen and inset highlight, so every control shares one material. */
   .glass-control {

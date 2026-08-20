@@ -45,7 +45,7 @@ export function Nav() {
       }`}
     >
       <nav
-        className={`glass mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-6 rounded-full px-4 pl-5 transition-all duration-300 md:px-5 ${
+        className={`glass glass-liquid mx-auto flex h-14 max-w-[calc(theme(maxWidth.page)-1rem)] items-center justify-between gap-6 rounded-full px-4 pl-5 transition-all duration-300 md:px-5 ${
           scrolled ? "shadow-lg" : ""
         }`}
       >

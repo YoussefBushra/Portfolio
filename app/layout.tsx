@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { VisitTracker } from "@/components/system/VisitTracker";
+import { LiquidGlassFilter } from "@/components/system/LiquidGlassFilter";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -116,6 +117,7 @@ export default function RootLayout({
           {/* The living aurora the glass refracts. */}
           <div className="aurora" aria-hidden="true" />
           <div className="aurora-grain" aria-hidden="true" />
+          <LiquidGlassFilter />
           {children}
         </ThemeProvider>
 
