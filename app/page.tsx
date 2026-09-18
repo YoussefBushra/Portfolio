@@ -1,6 +1,5 @@
-import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/sections/Hero";
+import { Sidebar } from "@/components/layout/Sidebar";
 import { About } from "@/components/sections/About";
 import { Experience } from "@/components/sections/Experience";
 import { Projects } from "@/components/sections/Projects";
@@ -13,16 +12,19 @@ export default function Home() {
   return (
     <TechProvider>
       <CommandPalette />
-      <Nav />
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Projects />
-        <Skills />
-        <Contact />
-      </main>
-      <Footer />
+      <div className="lg:grid lg:grid-cols-[minmax(300px,340px)_minmax(0,1fr)]">
+        <Sidebar />
+        <main id="hero" className="min-w-0">
+          <div className="mx-auto max-w-3xl px-6 py-10 sm:px-8 lg:px-12 lg:py-16">
+            <About />
+            <Experience />
+            <Projects />
+            <Skills />
+            <Contact />
+          </div>
+          <Footer />
+        </main>
+      </div>
     </TechProvider>
   );
 }

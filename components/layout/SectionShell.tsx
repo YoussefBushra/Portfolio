@@ -34,9 +34,7 @@ export function SectionShell({ id, children, className }: SectionShellProps) {
     <section
       ref={ref}
       id={id}
-      className={`relative mx-auto w-full max-w-6xl scroll-mt-24 px-5 py-20 sm:px-8 md:py-28 ${
-        className ?? ""
-      }`}
+      className={`relative scroll-mt-8 py-12 first:pt-0 ${className ?? ""}`}
     >
       {children}
     </section>

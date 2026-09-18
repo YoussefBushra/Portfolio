@@ -90,7 +90,7 @@ export function Projects() {
               clear ✕
             </button>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {matches.map((p) => (
               <ProjectCard key={p.name} project={p} />
             ))}
@@ -104,7 +104,7 @@ export function Projects() {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.1 }}
-            className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2"
           >
             {featured.map((p) => (
               <motion.div key={p.name} variants={fadeUp}>
@@ -122,7 +122,7 @@ export function Projects() {
                 transition={{ duration: 0.4 }}
                 className="overflow-hidden"
               >
-                <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
                   {rest.map((p) => (
                     <ProjectCard key={p.name} project={p} />
                   ))}
