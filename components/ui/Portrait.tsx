@@ -19,9 +19,9 @@ export function Portrait({
 
   return (
     <div
-      className={`relative aspect-square w-full overflow-hidden rounded-2xl border border-border bg-surface-2 ${className}`}
+      className={`relative aspect-square overflow-hidden rounded-2xl border border-border bg-surface-2 ${className}`}
     >
-      <div className="absolute inset-0 grid place-items-center">
+      <div className="absolute inset-0 grid place-items-center [&_svg]:h-3/4 [&_svg]:w-3/4">
         <MonogramAvatar size={150} />
       </div>
       {/* eslint-disable-next-line @next/next/no-img-element */}
