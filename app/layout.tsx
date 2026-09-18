@@ -86,7 +86,7 @@ export default function RootLayout({
       <body className={`${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >

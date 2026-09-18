@@ -66,9 +66,9 @@ export function Projects() {
     <SectionShell id="projects">
       <SectionHeading
         index="03"
-        service="svc/projects"
-        title="Repositories & systems"
-        description="A curated set of things I've designed and built — from graduation research to production integrations. Click any tech to filter."
+        
+        title="Projects"
+        description="A selection of things I've designed and built. Click a tech to filter."
       />
 
       {filter ? (

@@ -1,193 +1,121 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import {
-  motion,
-  useMotionValue,
-  useMotionTemplate,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion } from "framer-motion";
 import { profile } from "@/content/profile";
-import { NodeGraphBackground } from "@/components/system/NodeGraphBackground";
-import { MonogramAvatar } from "@/components/ui/MonogramAvatar";
-import { StatusTicker } from "@/components/system/StatusTicker";
 import { CVButton } from "@/components/ui/CVButton";
 import { track } from "@/lib/analytics";
 import { fadeUp, stagger } from "@/lib/motion";
 
+const KEY_SKILLS = [
+  "NestJS",
+  "Node.js",
+  "TypeScript",
+  "PostgreSQL",
+  "MongoDB",
+  "Microservices",
+  "RabbitMQ",
+  "Redis",
+  "Elasticsearch",
+  "React",
+  "Next.js",
+];
+
+const HIGHLIGHTS = [
+  { v: "2+ yrs", k: "building production systems" },
+  { v: "10M+ @ 600ms", k: "records searched (Elasticsearch)" },
+  { v: "Event-driven", k: "microservices & integrations" },
+];
+
 export function Hero() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [motionOk, setMotionOk] = useState(true);
-
-  // normalized pointer position within the hero (0..1)
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const sx = useSpring(mx, { stiffness: 120, damping: 20, mass: 0.4 });
-  const sy = useSpring(my, { stiffness: 120, damping: 20, mass: 0.4 });
-
-  // cursor-following glow position
-  const glowX = useTransform(sx, (v) => `${v * 100}%`);
-  const glowY = useTransform(sy, (v) => `${v * 100}%`);
-  const glowTransform = useMotionTemplate`translate(-50%, -50%)`;
-
-  // avatar parallax tilt
-  const rotateY = useTransform(sx, [0, 1], [14, -14]);
-  const rotateX = useTransform(sy, [0, 1], [-14, 14]);
-  const shiftX = useTransform(sx, [0, 1], [12, -12]);
-  const shiftY = useTransform(sy, [0, 1], [10, -10]);
-
-  useEffect(() => {
-    setMotionOk(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  }, []);
-
-  const onMove = (e: React.MouseEvent) => {
-    if (!motionOk) return;
-    const rect = sectionRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    mx.set((e.clientX - rect.left) / rect.width);
-    my.set((e.clientY - rect.top) / rect.height);
-  };
-
   return (
     <section
       id="hero"
-      ref={sectionRef}
-      onMouseMove={onMove}
-      className="relative flex min-h-[100svh] items-center overflow-hidden pt-24"
+      className="relative flex min-h-[92svh] items-center border-b border-border/60 pt-24"
     >
-      {/* animated system backdrop */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bp-grid opacity-70" />
-        <NodeGraphBackground
-          className="absolute inset-0 h-full w-full"
-          interactive
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-bg/10 via-bg/40 to-bg" />
-      </div>
-
-      {/* cursor-following glow (purely decorative) */}
-      <motion.div
-        aria-hidden="true"
-        style={{
-          left: glowX,
-          top: glowY,
-          transform: glowTransform,
-        }}
-        className="pointer-events-none absolute -z-10 h-[32rem] w-[32rem] rounded-full bg-accent/10 blur-[120px]"
-      />
-
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.4fr_1fr]">
+      <div className="mx-auto w-full max-w-3xl px-5 sm:px-6">
         <motion.div variants={stagger} initial="hidden" animate="show">
-          <motion.div
+          <motion.p
             variants={fadeUp}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 font-mono text-xs text-muted backdrop-blur-sm"
+            className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-muted"
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-ok animate-blink" />
-            <span className="text-ok">ONLINE</span>
+            <span className="inline-flex items-center gap-1.5 text-ok">
+              <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+              Available for opportunities
+            </span>
             <span className="text-faint">·</span>
             <span>{profile.location}</span>
-          </motion.div>
+          </motion.p>
 
           <motion.h1
             variants={fadeUp}
-            className="mt-6 text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl"
+            className="mt-5 text-4xl font-bold tracking-tight text-text sm:text-5xl"
           >
-            {profile.name.split(" ").slice(0, 2).join(" ")}
-            <br />
-            <span className="text-gradient">
-              {profile.name.split(" ").slice(2).join(" ")}
-            </span>
+            {profile.name}
           </motion.h1>
 
           <motion.p
             variants={fadeUp}
-            className="mt-4 font-mono text-sm text-accent-2 sm:text-base"
+            className="mt-2 text-lg font-medium text-accent"
           >
             {profile.role}
           </motion.p>
 
           <motion.p
             variants={fadeUp}
-            className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
+            className="mt-5 max-w-2xl text-base leading-relaxed text-muted sm:text-lg"
           >
-            {profile.tagline}
+            {profile.summary[0]}
           </motion.p>
 
-          <motion.div variants={fadeUp} className="mt-6">
-            <StatusTicker />
-          </motion.div>
-
-          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#projects"
-              onClick={() => track("cta_click", { cta: "explore", from: "hero" })}
-              className="focus-ring group inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-medium text-white shadow-glow transition-transform hover:-translate-y-0.5"
-            >
-              Explore the system
-              <span className="transition-transform group-hover:translate-x-0.5">
-                →
-              </span>
-            </a>
-            <a
-              href="#contact"
-              onClick={() => track("cta_click", { cta: "contact", from: "hero" })}
-              className="focus-ring inline-flex items-center gap-2 rounded-xl border border-border bg-surface/60 px-5 py-3 text-sm font-medium text-text backdrop-blur-sm transition-colors hover:border-accent/50 hover:text-accent"
-            >
-              Open a connection
-            </a>
-            <CVButton from="hero" variant="ghost" />
-          </motion.div>
-
-          {/* status metrics */}
+          {/* highlights */}
           <motion.dl
             variants={fadeUp}
-            className="mt-12 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4"
+            className="mt-8 grid grid-cols-1 gap-4 border-y border-border/60 py-6 sm:grid-cols-3"
           >
-            {profile.stats.map((s) => (
-              <div
-                key={s.label}
-                className="group flex flex-col border-l-2 border-accent/30 pl-3 transition-colors hover:border-accent"
-              >
-                <dt className="mono-label flex min-h-[2.5em] items-start leading-tight">
-                  {s.label}
+            {HIGHLIGHTS.map((h) => (
+              <div key={h.k}>
+                <dt className="text-xl font-bold tracking-tight text-text">
+                  {h.v}
                 </dt>
-                <dd className="mt-1 text-2xl font-bold tracking-tight text-text transition-colors group-hover:text-accent">
-                  {s.value}
-                </dd>
-                <dd className="mt-0.5 font-mono text-[11px] text-faint">{s.hint}</dd>
+                <dd className="mt-1 text-sm text-muted">{h.k}</dd>
               </div>
             ))}
           </motion.dl>
 
-          <motion.p
-            variants={fadeUp}
-            className="mt-8 hidden font-mono text-[11px] text-faint lg:block"
-          >
-            <span className="text-accent-2">tip</span> · move &amp; click the
-            background to ping the graph
-          </motion.p>
-        </motion.div>
+          {/* key skills */}
+          <motion.div variants={fadeUp} className="mt-6">
+            <div className="text-xs font-semibold uppercase tracking-wide text-faint">
+              Core stack
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {KEY_SKILLS.map((s) => (
+                <span
+                  key={s}
+                  className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs text-muted"
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+          </motion.div>
 
-        {/* interactive avatar node */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="mx-auto hidden lg:block"
-          style={{ perspective: 900 }}
-        >
-          <motion.div
-            style={{
-              rotateX,
-              rotateY,
-              x: shiftX,
-              y: shiftY,
-              transformStyle: "preserve-3d",
-            }}
-            className="relative"
-          >
-            <MonogramAvatar size={300} />
+          {/* CTAs */}
+          <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-3">
+            <a
+              href="#experience"
+              onClick={() => track("cta_click", { cta: "experience", from: "hero" })}
+              className="focus-ring inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:opacity-90"
+            >
+              View experience
+            </a>
+            <CVButton from="hero" variant="ghost" />
+            <a
+              href={`mailto:${profile.email}`}
+              onClick={() => track("social_click", { label: "Email", from: "hero" })}
+              className="focus-ring inline-flex items-center gap-2 rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-text transition-colors hover:border-accent/50 hover:text-accent"
+            >
+              Get in touch
+            </a>
           </motion.div>
         </motion.div>
       </div>

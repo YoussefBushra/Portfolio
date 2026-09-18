@@ -53,10 +53,9 @@ export function Nav() {
         >
           <span className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-accent/40 bg-accent/10 font-mono text-sm font-bold text-accent">
             YB
-            <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-ok animate-blink" />
           </span>
-          <span className="hidden font-mono text-xs text-muted sm:inline">
-            youssef<span className="text-faint">.systems</span>
+          <span className="hidden text-sm font-semibold text-text sm:inline">
+            Youssef Bushra
           </span>
         </a>
 

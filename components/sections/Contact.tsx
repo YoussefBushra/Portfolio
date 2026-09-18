@@ -72,8 +72,8 @@ export function Contact() {
     <SectionShell id="contact">
       <SectionHeading
         index="05"
-        service="svc/contact"
-        title="Open a connection"
+        
+        title="Get in touch"
         description="Have a role, a system to build, or an integration to untangle? Send a message — I read every one."
       />
 
@@ -81,7 +81,7 @@ export function Contact() {
         {/* left: endpoints */}
         <RevealOnScroll className="space-y-4">
           <div className="card p-6">
-            <div className="mono-label mb-4">endpoints</div>
+            <div className="mono-label mb-4">Reach me</div>
             <ul className="space-y-4">
               {profile.socials.map((s) => (
                 <li key={s.label}>
@@ -114,7 +114,7 @@ export function Contact() {
             </ul>
 
             <div className="mt-6 border-t border-border/60 pt-4">
-              <div className="mono-label mb-2">currently accepting</div>
+              <div className="mono-label mb-2">Currently accepting</div>
               <p className="text-sm leading-relaxed text-muted">
                 Backend &amp; full-stack roles building scalable services and
                 integrations — plus interesting freelance systems work. Remote or
@@ -152,7 +152,7 @@ export function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate className="card p-6 sm:p-7">
-              <div className="mono-label mb-5">POST /message</div>
+              <div className="mono-label mb-5">Send a message</div>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>

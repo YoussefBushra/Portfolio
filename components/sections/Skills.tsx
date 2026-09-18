@@ -11,9 +11,9 @@ export function Skills() {
     <SectionShell id="skills">
       <SectionHeading
         index="04"
-        service="svc/skills"
-        title="Capability matrix"
-        description="The stack I reach for, grouped by the part of the system it serves."
+        
+        title="Skills"
+        description="Technologies I work with, grouped by area."
       />
 
       <motion.div
@@ -31,9 +31,6 @@ export function Skills() {
           >
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-text">{group.name}</h3>
-              <span className="font-mono text-[11px] text-faint">
-                {group.service}
-              </span>
             </div>
             <div className="mt-4 flex flex-wrap gap-1.5">
               {group.items.map((item) => (
@@ -50,7 +47,7 @@ export function Skills() {
       </motion.div>
 
       <p className="mt-8 text-center font-mono text-xs text-faint">
-        Also fluent in the human layer — Arabic (native), English (C1), German (A1).
+        Languages — Arabic (native), English (C1), German (A1).
       </p>
     </SectionShell>
   );

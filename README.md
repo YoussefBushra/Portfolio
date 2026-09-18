@@ -9,6 +9,13 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 **Framer Motion**. Dark/light themed, fully responsive, accessible, and static —
 deployable to Vercel in one click.
 
+> ### 📄 "Minimal" theme (this branch)
+> A basic, clean, content-first design that puts the professional skills and
+> experience front and center — no 3D, node-graph, boot intro or "systems"
+> chrome. Light-first (dark toggle kept), plain section headings, a simple hero
+> with a summary, key stats, core stack and clear CTAs. Subtle fade-in motion
+> only. Best when you want the content to lead, not the UI.
+
 ## ✨ Highlights
 
 - **Animated node-graph backdrop** (`<canvas>`) with proximity edges and flowing

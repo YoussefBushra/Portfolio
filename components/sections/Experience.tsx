@@ -53,7 +53,7 @@ function RoleCard({ role }: { role: ExperienceType }) {
       ) : null}
 
       <div className="mt-5">
-        <div className="mono-label mb-2">dependencies</div>
+        <div className="mono-label mb-2">Stack</div>
         <div className="flex flex-wrap gap-2">
           {role.stack.map((s) => (
             <TechChip key={s} label={s} />
@@ -62,7 +62,7 @@ function RoleCard({ role }: { role: ExperienceType }) {
       </div>
 
       <div className="mt-5">
-        <div className="mono-label mb-3">logs · impact</div>
+        <div className="mono-label mb-3">Highlights</div>
         <ul className="space-y-2.5">
           {shown.map((h, hi) => (
             <li
@@ -101,9 +101,9 @@ export function Experience() {
     <SectionShell id="experience">
       <SectionHeading
         index="02"
-        service="svc/experience"
-        title="Deployed services"
-        description="Each role is a service I've helped design, ship and keep running in production. Hover a tech to trace it across projects below."
+        
+        title="Experience"
+        description="Roles I've held and the impact I delivered."
       />
 
       <div className="relative">
