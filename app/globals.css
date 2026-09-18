@@ -8,33 +8,35 @@
    dark overrides under .dark (next-themes class strategy).
    ============================================================ */
 :root {
-  --bg: 246 247 251;
+  /* warm near-monochrome (stone) + one confident accent (emerald) */
+  --bg: 250 250 249;
   --surface: 255 255 255;
-  --surface-2: 240 242 248;
-  --border: 210 215 226;
-  --text: 22 27 39;
-  --muted: 88 96 112;
-  --faint: 138 146 162;
-  --accent: 79 70 229; /* indigo/violet */
-  --accent-2: 8 145 178; /* cyan */
-  --grid: 20 26 40;
-  --ok: 22 163 74;
+  --surface-2: 245 245 244;
+  --border: 231 229 228;
+  --text: 28 25 23;
+  --muted: 87 83 78;
+  --faint: 168 162 158;
+  --accent: 4 120 87; /* emerald-700 (AA on white) */
+  --accent-2: 87 83 78; /* muted stone, no rainbow */
+  --grid: 28 25 23;
+  --ok: 4 120 87;
 
-  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 .dark {
-  --bg: 7 9 16;
-  --surface: 14 18 30;
-  --surface-2: 20 26 42;
-  --border: 38 46 66;
-  --text: 231 237 248;
-  --muted: 148 160 184;
-  --faint: 92 104 128;
-  --accent: 124 122 255; /* electric violet */
-  --accent-2: 45 212 191; /* teal/cyan */
-  --grid: 130 150 200;
+  --bg: 12 10 9;
+  --surface: 28 25 23;
+  --surface-2: 41 37 36;
+  --border: 68 64 60;
+  --text: 245 245 244;
+  --muted: 168 162 158;
+  --faint: 120 113 108;
+  --accent: 52 211 153; /* emerald-400 */
+  --accent-2: 168 162 158;
+  --grid: 168 162 158;
   --ok: 52 211 153;
 }
 
@@ -103,7 +105,7 @@ body {
   }
 
   .text-gradient {
-    @apply bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent;
+    @apply text-accent;
   }
 }
 

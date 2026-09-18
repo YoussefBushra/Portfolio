@@ -48,7 +48,7 @@ export function Hero() {
 
           <motion.h1
             variants={fadeUp}
-            className="mt-5 text-4xl font-bold tracking-tight text-text sm:text-5xl"
+            className="mt-5 font-display text-4xl font-bold tracking-tight text-text sm:text-5xl"
           >
             {profile.name}
           </motion.h1>
@@ -57,7 +57,7 @@ export function Hero() {
             variants={fadeUp}
             className="mt-2 text-lg font-medium text-accent"
           >
-            {profile.role}
+            Backend &amp; Full-Stack Engineer
           </motion.p>
 
           <motion.p
@@ -67,6 +67,13 @@ export function Hero() {
             {profile.summary[0]}
           </motion.p>
 
+          <motion.p
+            variants={fadeUp}
+            className="mt-3 font-mono text-xs text-faint"
+          >
+            APIs · microservices · event-driven pipelines · caching · observability
+          </motion.p>
+
           {/* highlights */}
           <motion.dl
             variants={fadeUp}
@@ -74,7 +81,7 @@ export function Hero() {
           >
             {HIGHLIGHTS.map((h) => (
               <div key={h.k}>
-                <dt className="text-xl font-bold tracking-tight text-text">
+                <dt className="font-display text-xl font-bold tracking-tight text-text">
                   {h.v}
                 </dt>
                 <dd className="mt-1 text-sm text-muted">{h.k}</dd>

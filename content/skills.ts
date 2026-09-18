@@ -2,14 +2,9 @@ import type { SkillGroup } from "@/lib/types";
 
 export const skillGroups: SkillGroup[] = [
   {
-    name: "Frontend",
-    service: "svc/frontend",
-    items: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Redux"],
-  },
-  {
     name: "Backend",
     service: "svc/backend",
-    items: ["Node.js", "NestJS", "Express.js", "TypeORM", "Mongoose", "Django"],
+    items: ["Node.js", "NestJS", "Express.js", "TypeORM", "Mongoose"],
   },
   {
     name: "Distributed Systems",
@@ -18,7 +13,6 @@ export const skillGroups: SkillGroup[] = [
       "Microservices",
       "Event-driven architecture",
       "RabbitMQ",
-      "RMI",
       "Service design",
     ],
   },
@@ -40,12 +34,12 @@ export const skillGroups: SkillGroup[] = [
   {
     name: "Languages",
     service: "svc/languages",
-    items: ["TypeScript", "JavaScript", "Python", "Java", "C#", "C++", "X++"],
+    items: ["TypeScript", "JavaScript", "Python", "Java", "C#", "C++"],
   },
   {
-    name: "ML & Data",
-    service: "svc/ml",
-    items: ["PyTorch", "Google Cloud AI", "Pandas", "NumPy", "Matplotlib", "Seaborn"],
+    name: "Frontend",
+    service: "svc/frontend",
+    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Redux"],
   },
   {
     name: "Testing & Tooling",

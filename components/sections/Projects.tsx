@@ -22,7 +22,7 @@ function ProjectCard({ project }: { project: Project }) {
         <span className="font-mono text-xs text-faint">{project.year}</span>
       </div>
 
-      <h3 className="mt-3 text-lg font-bold tracking-tight text-text">
+      <h3 className="mt-3 font-display text-lg font-bold tracking-tight text-text">
         {project.name}
       </h3>
 

@@ -10,11 +10,18 @@ Built with **Next.js (App Router)**, **TypeScript**, **Tailwind CSS** and
 deployable to Vercel in one click.
 
 > ### 📄 "Minimal" theme (this branch)
-> A basic, clean, content-first design that puts the professional skills and
-> experience front and center — no 3D, node-graph, boot intro or "systems"
-> chrome. Light-first (dark toggle kept), plain section headings, a simple hero
-> with a summary, key stats, core stack and clear CTAs. Subtle fade-in motion
-> only. Best when you want the content to lead, not the UI.
+> A basic, clean, content-first design that puts the professional (backend)
+> skills and experience front and center — no 3D, node-graph, boot intro or
+> "systems" chrome. Applies minimal-UI/UX design guidance:
+> - **Near-monochrome warm stone palette + one confident emerald accent** (no
+>   multi-hue "AI" gradients)
+> - **Distinctive type**: Space Grotesk display + IBM Plex Sans body + JetBrains
+>   Mono labels (not generic Inter/Roboto), with strong heading/body weight
+>   contrast
+> - **Backend-forward** copy and skills ordered backend-first
+> - Plain section headings, generous whitespace, subtle fade-in only; WCAG-AA
+>   contrast, visible focus, reduced-motion, responsive at 375/768/1024/1440
+> - Light-first with a dark toggle. Best when you want the content to lead.
 
 ## ✨ Highlights
 

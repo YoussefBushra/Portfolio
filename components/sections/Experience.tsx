@@ -19,7 +19,7 @@ function RoleCard({ role }: { role: ExperienceType }) {
     <article className="card overflow-hidden p-6 transition-colors hover:border-accent/40 sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div>
-          <h3 className="text-xl font-bold tracking-tight text-text">
+          <h3 className="font-display text-xl font-bold tracking-tight text-text">
             {role.role}
           </h3>
           <p className="mt-0.5 font-mono text-sm text-accent">
