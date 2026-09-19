@@ -3,25 +3,29 @@
 @tailwind utilities;
 
 /* ============================================================
-   Premium engineering portfolio — deep navy + cyan, dark only.
+   AWS Cloudscape-inspired console theme — light, dense, functional.
    Tokens are RGB triplets used via rgb(var(--token) / <alpha>).
    ============================================================ */
 :root,
-.dark {
-  --bg: 7 10 18; /* #070A12 near-black navy */
-  --surface: 13 18 30; /* #0D121E */
-  --surface-2: 18 25 41; /* #121929 */
-  --border: 34 44 66; /* cool blue-gray */
-  --text: 228 233 242; /* off-white */
-  --muted: 148 163 189; /* cool gray */
-  --faint: 96 110 138;
-  --accent: 56 189 248; /* cyan / electric blue */
-  --accent-2: 59 130 246; /* blue */
-  --grid: 90 130 200;
-  --ok: 52 211 153;
+.light {
+  --bg: 242 243 243; /* #F2F3F3 page */
+  --surface: 255 255 255; /* container */
+  --surface-2: 250 250 250; /* subtle fill */
+  --ink: 35 47 62; /* #232F3E squid ink (top bar, headings accents) */
+  --ink-2: 15 27 40; /* darker ink */
+  --border: 200 205 208; /* #C8CDD0 */
+  --border-2: 233 235 237; /* #E9EBED light divider */
+  --text: 22 25 31; /* #16191F */
+  --muted: 84 96 111; /* #54606F secondary */
+  --faint: 111 123 138; /* tertiary */
+  --accent: 9 114 211; /* #0972D3 Cloudscape blue (links/actions) */
+  --accent-2: 3 49 96; /* #033160 hover */
+  --orange: 236 114 17; /* #EC7211 AWS action orange */
+  --ok: 3 127 12; /* #037F0C status green */
+  --grid: 120 140 165;
 
-  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Open Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
 * {
@@ -30,21 +34,23 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5.5rem;
-  color-scheme: dark;
+  scroll-padding-top: 4.5rem;
+  color-scheme: light;
 }
 
 body {
   background-color: rgb(var(--bg));
   color: rgb(var(--text));
   font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: rgb(var(--accent) / 0.25);
+  background: rgb(var(--accent) / 0.18);
   color: rgb(var(--text));
 }
 
@@ -62,81 +68,78 @@ body {
 }
 
 @layer components {
-  .mono-label {
-    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-faint;
+  /* Cloudscape container: white panel, hairline border, subtle shadow */
+  .cs-container {
+    @apply rounded-lg border border-border bg-surface shadow-card;
   }
 
-  /* Bento / product surface — subtle, not a giant rounded card */
-  .surface {
-    @apply rounded-xl border border-border/80;
-    background:
-      linear-gradient(180deg, rgb(var(--surface) / 0.9), rgb(var(--surface) / 0.6));
+  /* Container header row with a divider under it */
+  .cs-header {
+    @apply flex flex-wrap items-start justify-between gap-3 border-b border-border-2 px-4 py-3 sm:px-5;
   }
 
-  .surface-hover {
-    @apply transition-colors duration-200;
-  }
-  .surface-hover:hover {
-    border-color: rgb(var(--border) / 1);
-    background: rgb(var(--surface-2) / 0.5);
+  .cs-title {
+    @apply text-[17px] font-bold leading-tight text-text;
   }
 
+  .cs-desc {
+    @apply mt-0.5 text-[13px] leading-snug text-muted;
+  }
+
+  /* Buttons — compact, 8px radius */
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-[#04121f] transition-colors;
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-1.5 text-[13px] font-bold text-white transition-colors;
     background: rgb(var(--accent));
   }
   .btn-primary:hover {
-    background: rgb(var(--accent) / 0.9);
+    background: rgb(var(--accent-2));
   }
 
-  .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-lg border border-border px-5 py-3 text-sm font-medium text-text transition-colors;
-  }
-  .btn-ghost:hover {
-    border-color: rgb(var(--accent) / 0.5);
+  .btn-normal {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-1.5 text-[13px] font-bold transition-colors;
+    border-color: rgb(var(--accent));
     color: rgb(var(--accent));
+    background: rgb(var(--surface));
+  }
+  .btn-normal:hover {
+    background: rgb(var(--accent) / 0.06);
+  }
+
+  .cs-link {
+    @apply font-semibold text-accent underline-offset-2 transition-colors hover:text-accent-2 hover:underline;
+  }
+
+  /* Form input */
+  .cs-input {
+    @apply w-full rounded-lg border border-border bg-surface px-3 py-2 text-[13px] text-text placeholder:text-faint transition-colors;
+  }
+  .cs-input:focus {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 0;
+    border-color: rgb(var(--accent));
+  }
+
+  /* Key/value property list item */
+  .kv-label {
+    @apply text-[12px] font-semibold text-muted;
+  }
+  .kv-value {
+    @apply mt-0.5 text-[13px] text-text;
+  }
+
+  .mono {
+    @apply font-mono;
   }
 
   .focus-ring {
-    @apply outline-none ring-offset-2 ring-offset-bg focus-visible:ring-2 focus-visible:ring-accent;
-  }
-
-  .text-gradient {
-    background: linear-gradient(180deg, rgb(var(--text)), rgb(var(--muted)));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .text-accent-gradient {
-    background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent-2)));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  /* Fine technical grid, very low opacity */
-  .grid-bg {
-    background-image:
-      linear-gradient(rgb(var(--grid) / 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(var(--grid) / 0.05) 1px, transparent 1px);
-    background-size: 56px 56px;
-  }
-
-  .dot-bg {
-    background-image: radial-gradient(rgb(var(--grid) / 0.14) 1px, transparent 1px);
-    background-size: 26px 26px;
-  }
-
-  .hairline {
-    @apply h-px w-full border-0 bg-gradient-to-r from-transparent via-border to-transparent;
+    @apply outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent;
   }
 }
 
-/* Scrollbar */
+/* Scrollbar — quiet, light */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
 }
 ::-webkit-scrollbar-track {
   background: rgb(var(--bg));
@@ -144,7 +147,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background: rgb(var(--border));
   border-radius: 999px;
-  border: 2px solid rgb(var(--bg));
+  border: 3px solid rgb(var(--bg));
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(var(--faint));

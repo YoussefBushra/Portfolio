@@ -22,15 +22,20 @@ const config: Config = {
         "accent-2": "rgb(var(--accent-2) / <alpha-value>)",
         grid: "rgb(var(--grid) / <alpha-value>)",
         ok: "rgb(var(--ok) / <alpha-value>)",
+        // Cloudscape (AWS) tokens
+        ink: "rgb(var(--ink) / <alpha-value>)",
+        "ink-2": "rgb(var(--ink-2) / <alpha-value>)",
+        "border-2": "rgb(var(--border-2) / <alpha-value>)",
+        orange: "rgb(var(--orange) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       boxShadow: {
-        glow: "0 0 0 1px rgb(var(--accent) / 0.25), 0 0 40px -8px rgb(var(--accent) / 0.45)",
-        "glow-sm": "0 0 20px -6px rgb(var(--accent) / 0.5)",
-        node: "0 8px 30px -12px rgb(0 0 0 / 0.5)",
+        // Cloudscape container shadow — subtle, functional
+        card: "0 1px 1px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.07)",
+        popover: "0 4px 12px 0 rgb(0 0 0 / 0.12)",
       },
       keyframes: {
         "pulse-flow": {

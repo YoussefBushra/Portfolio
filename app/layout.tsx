@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Open_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -10,15 +10,16 @@ import "./globals.css";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-const sans = Plus_Jakarta_Sans({
+const sans = Open_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700", "800"],
   variable: "--font-sans",
   display: "swap",
 });
 
-const mono = JetBrains_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["400", "500", "600"],
   variable: "--font-mono",
   display: "swap",
 });
@@ -62,7 +63,7 @@ export const metadata: Metadata = {
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='#0b0e18'/><circle cx='16' cy='16' r='4' fill='#7c7aff'/><circle cx='7' cy='8' r='2.2' fill='#2dd4bf'/><circle cx='25' cy='9' r='2.2' fill='#2dd4bf'/><circle cx='8' cy='24' r='2.2' fill='#2dd4bf'/><circle cx='24' cy='24' r='2.2' fill='#2dd4bf'/><g stroke='#7c7aff' stroke-width='1.2' opacity='0.6'><line x1='16' y1='16' x2='7' y2='8'/><line x1='16' y1='16' x2='25' y2='9'/><line x1='16' y1='16' x2='8' y2='24'/><line x1='16' y1='16' x2='24' y2='24'/></g></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='#232F3E'/><path d='M16 6l8 4.5v11L16 26l-8-4.5v-11z' fill='none' stroke='#EC7211' stroke-width='2' stroke-linejoin='round'/><path d='M8 10.5l8 4.5 8-4.5M16 15v11' fill='none' stroke='#EC7211' stroke-width='2' stroke-linejoin='round'/></svg>`
           ),
         type: "image/svg+xml",
       },
@@ -71,10 +72,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f6f7fb" },
-    { media: "(prefers-color-scheme: dark)", color: "#070910" },
-  ],
+  themeColor: "#232F3E",
 };
 
 export default function RootLayout({
@@ -87,7 +85,7 @@ export default function RootLayout({
       <body className={`${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
-          forcedTheme="dark"
+          forcedTheme="light"
           disableTransitionOnChange
         >
           {children}

@@ -7,15 +7,6 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpengraphImage() {
-  const nodes = [
-    { x: 150, y: 120 },
-    { x: 1040, y: 150 },
-    { x: 1080, y: 470 },
-    { x: 180, y: 500 },
-    { x: 620, y: 70 },
-    { x: 600, y: 560 },
-  ];
-
   return new ImageResponse(
     (
       <div
@@ -24,92 +15,100 @@ export default function OpengraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
-          background: "linear-gradient(135deg, #0d1030 0%, #070910 55%)",
-          color: "#e7edf8",
-          padding: "80px",
+          background: "#f2f3f3",
           fontFamily: "sans-serif",
-          position: "relative",
         }}
       >
-        {/* node dots */}
-        {nodes.map((n, i) => (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              left: n.x,
-              top: n.y,
-              width: 14,
-              height: 14,
-              borderRadius: 999,
-              background: i % 2 ? "#2dd4bf" : "#7c7aff",
-              boxShadow: "0 0 24px #7c7aff",
-            }}
-          />
-        ))}
-
+        {/* squid-ink service bar */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 14,
-            fontSize: 26,
-            fontFamily: "monospace",
-            color: "#94a0b8",
+            gap: 16,
+            background: "#232f3e",
+            padding: "0 64px",
+            height: 96,
+            color: "#ffffff",
+          }}
+        >
+          <div style={{ display: "flex", fontSize: 30 }}>
+            <span style={{ color: "#ec7211", fontWeight: 700 }}>▣</span>
+          </div>
+          <div style={{ display: "flex", fontSize: 30, fontWeight: 700 }}>
+            {profile.name.split(" ").slice(0, 2).join(" ")}
+          </div>
+          <div style={{ display: "flex", fontSize: 22, color: "#9aa5b1" }}>
+            / {profile.role}
+          </div>
+        </div>
+
+        {/* content */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            flex: 1,
+            padding: "0 64px",
           }}
         >
           <div
             style={{
-              width: 12,
-              height: 12,
-              borderRadius: 999,
-              background: "#34d399",
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              fontSize: 24,
+              color: "#037f0c",
             }}
-          />
-          ONLINE · youssef.systems
-        </div>
+          >
+            <div
+              style={{
+                width: 14,
+                height: 14,
+                borderRadius: 999,
+                background: "#037f0c",
+              }}
+            />
+            Available — open to backend / software engineer roles
+          </div>
 
-        <div
-          style={{
-            display: "flex",
-            fontSize: 92,
-            fontWeight: 700,
-            lineHeight: 1.05,
-            marginTop: 28,
-            letterSpacing: -2,
-          }}
-        >
-          Youssef Bushra Fouad
-        </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 60,
+              fontWeight: 700,
+              lineHeight: 1.1,
+              marginTop: 24,
+              color: "#16191f",
+              maxWidth: 980,
+            }}
+          >
+            {profile.thesis}
+          </div>
 
-        <div
-          style={{
-            display: "flex",
-            fontSize: 40,
-            marginTop: 18,
-            color: "#7c7aff",
-            fontFamily: "monospace",
-          }}
-        >
-          {profile.role}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            gap: 28,
-            marginTop: 44,
-            fontSize: 26,
-            color: "#94a0b8",
-            fontFamily: "monospace",
-          }}
-        >
-          <span>10M+ records</span>
-          <span style={{ color: "#3a4258" }}>·</span>
-          <span>600ms p95</span>
-          <span style={{ color: "#3a4258" }}>·</span>
-          <span>microservices</span>
+          <div style={{ display: "flex", gap: 12, marginTop: 40 }}>
+            {[
+              "~40 services",
+              "10M+ records",
+              "600ms p95",
+              "event-driven",
+            ].map((t) => (
+              <div
+                key={t}
+                style={{
+                  display: "flex",
+                  border: "1px solid #c8cdd0",
+                  background: "#ffffff",
+                  borderRadius: 8,
+                  padding: "10px 16px",
+                  fontSize: 22,
+                  color: "#16191f",
+                }}
+              >
+                {t}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     ),

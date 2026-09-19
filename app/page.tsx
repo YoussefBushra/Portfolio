@@ -1,25 +1,23 @@
-import { GridBackground } from "@/components/premium/GridBackground";
-import { Nav } from "@/components/premium/Nav";
-import { Hero } from "@/components/premium/Hero";
-import { Metrics } from "@/components/premium/Metrics";
-import { About } from "@/components/premium/About";
-import { Experience } from "@/components/premium/Experience";
-import { Skills } from "@/components/premium/Skills";
-import { Contact } from "@/components/premium/Contact";
-import { Footer } from "@/components/premium/Footer";
+import { TopNav } from "@/components/aws/TopNav";
+import { Overview } from "@/components/aws/Overview";
+import { About } from "@/components/aws/About";
+import { Experience } from "@/components/aws/Experience";
+import { Stack } from "@/components/aws/Stack";
+import { Contact } from "@/components/aws/Contact";
+import { Footer } from "@/components/aws/Footer";
 
 export default function Home() {
   return (
     <>
-      <GridBackground />
-      <Nav />
+      <TopNav />
       <main>
-        <Hero />
-        <Metrics />
-        <About />
-        <Experience />
-        <Skills />
-        <Contact />
+        <Overview />
+        <div className="mx-auto max-w-[1240px] space-y-4 px-4 pb-8 pt-4 sm:px-6">
+          <About />
+          <Experience />
+          <Stack />
+          <Contact />
+        </div>
       </main>
       <Footer />
     </>
