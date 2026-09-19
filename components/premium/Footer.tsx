@@ -6,8 +6,7 @@ import { track } from "@/lib/analytics";
 const LINKS = [
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
-  { id: "projects", label: "Work" },
-  { id: "skills", label: "Skills" },
+  { id: "skills", label: "Stack" },
   { id: "contact", label: "Contact" },
 ];
 

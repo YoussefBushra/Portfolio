@@ -2,17 +2,16 @@ import type { NavNode, Profile } from "@/lib/types";
 
 export const profile: Profile = {
   name: "Youssef Bushra Fouad",
-  role: "Full-Stack Systems Engineer",
+  role: "Backend-Focused Full Stack Engineer",
+  thesis: "I build the services other systems depend on.",
   tagline:
-    "I build and connect the services behind reliable web platforms — from event-driven backends to responsive interfaces.",
+    "Backend and distributed systems: message-driven microservices on a multi-tenant SaaS platform, search at scale, and enterprise integrations.",
   location: "Cairo, Egypt",
-  email: "Youssefbushra16.4@gmail.com",
-  phone: "+20 120 149 3395",
   metaDescription:
-    "Youssef Bushra Fouad — full-stack software engineer specializing in backend systems, microservices and distributed architecture with NestJS, Node.js, TypeScript and PostgreSQL. Experienced integrating enterprise platforms and optimizing high-volume data operations.",
+    "Youssef Bushra Fouad, backend-focused full stack engineer building microservices for a multi-tenant SaaS platform with NestJS, Node.js, TypeScript, RabbitMQ, PostgreSQL and MongoDB. Experienced in event-driven architecture, enterprise integrations and high-volume search.",
   summary: [
-    "Full-stack software engineer with a backend and distributed-systems focus. I design and ship scalable microservices with NestJS, Node.js, TypeScript, PostgreSQL and MongoDB — wiring them together with event-driven patterns, caching and observability so they stay reliable under load.",
-    "I've integrated enterprise platforms like Microsoft Dynamics 365 Finance and Odoo, optimized high-volume data operations across 10M+ records with Elasticsearch, and built the responsive Next.js interfaces that sit on top. I care about clean service boundaries, measurable performance, and interfaces that feel effortless.",
+    "I build backend services for a production multi-tenant SaaS platform. Services are decomposed by business domain, own their data, and communicate asynchronously through a message broker, behind a single API gateway that resolves authentication and authorization centrally.",
+    "Most of my work sits between services: boundaries and message contracts, tenant isolation enforced at the data-access layer, idempotent consumers, and the asynchronous flows that keep independently deployed services consistent under load. I build the interfaces on top of them too, and I care about clean boundaries, measurable performance, and systems that stay legible as they grow.",
   ],
   socials: [
     {
@@ -25,24 +24,37 @@ export const profile: Profile = {
       href: "https://linkedin.com/in/youssefbushra",
       handle: "in/youssefbushra",
     },
-    {
-      label: "Email",
-      href: "mailto:Youssefbushra16.4@gmail.com",
-      handle: "Youssefbushra16.4@gmail.com",
-    },
   ],
-  stats: [
-    { label: "Records indexed", value: "10M+", hint: "Elasticsearch geo-search" },
-    { label: "Query p95", value: "600ms", hint: "target < 1s" },
-    { label: "Cumulative GPA", value: "4.00", hint: "Distinction w/ Honors" },
-    { label: "Services shipped", value: "2+ yrs", hint: "production systems" },
+  availability: "Open to Backend / Software Engineer roles",
+  /* Facts, all taken from work described elsewhere on this page. Years of
+     experience is computed from the roles, so it never goes stale. */
+  facts: [
+    {
+      value: "~40",
+      label: "services and frontends",
+      hint: "multi-tenant SaaS platform",
+    },
+    {
+      value: "3+",
+      label: "financial systems integrated",
+      hint: "enterprise platforms, event-driven",
+    },
+    {
+      value: "10M+",
+      label: "records under geo-search",
+      hint: "Elasticsearch",
+    },
+    {
+      value: "600ms",
+      label: "geo-query response",
+      hint: "target under 1s",
+    },
   ],
 };
 
 export const navNodes: NavNode[] = [
-  { id: "about", label: "About", service: "svc/about" },
-  { id: "experience", label: "Experience", service: "svc/experience" },
-  { id: "projects", label: "Projects", service: "svc/projects" },
-  { id: "skills", label: "Skills", service: "svc/skills" },
-  { id: "contact", label: "Contact", service: "svc/contact" },
+  { id: "about", label: "About" },
+  { id: "experience", label: "Experience" },
+  { id: "skills", label: "Stack" },
+  { id: "contact", label: "Contact" },
 ];

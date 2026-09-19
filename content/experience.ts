@@ -3,44 +3,67 @@ import type { Experience } from "@/lib/types";
 export const experience: Experience[] = [
   {
     company: "Skil-Dev",
-    role: "Web Full Stack Developer",
+    role: "Full Stack Software Engineer",
     location: "Cairo, Egypt",
-    period: "Aug 2024 — Present",
+    period: "Aug 2024 - Present",
+    start: "2024-08",
     current: true,
+    summary:
+      "Backend services for a production multi-tenant SaaS platform, where domain services communicate asynchronously over RabbitMQ message patterns behind a single API gateway.",
     stack: [
       "TypeScript",
       "NestJS",
       "Node.js",
-      "MongoDB",
       "PostgreSQL",
+      "MongoDB",
       "TypeORM",
       "RabbitMQ",
       "Redis",
       "React",
       "Next.js",
+      "OpenTelemetry",
       "Grafana",
+      "Docker",
+      "GitHub Actions",
       "Jest",
     ],
     metrics: [
-      { label: "enterprise systems integrated", value: "D365 + Odoo" },
+      { label: "services and frontends", value: "~40" },
       { label: "service messaging", value: "Event-driven" },
+      { label: "platforms integrated", value: "D365 + Odoo" },
     ],
     highlights: [
-      "Designed and developed full-stack features across backend and frontend, delivering end-to-end functionality for production systems.",
-      "Contributed to the design and implementation of scalable microservices-based backend systems using TypeScript, NestJS, Node.js, MongoDB and PostgreSQL, improving maintainability and performance.",
-      "Designed and implemented integrations between Microsoft Dynamics 365 Finance, Odoo and custom third-party financial systems, enabling seamless data synchronization and improving financial workflows.",
-      "Implemented event-driven communication patterns using RabbitMQ, improving system decoupling and enabling reliable asynchronous processing across services.",
-      "Used Redis for caching and performance optimization, reducing response times and improving efficiency under high load.",
-      "Managed database schema evolution and migrations with TypeORM, ensuring data consistency and smooth deployments.",
-      "Improved observability by integrating monitoring and visualization tools such as Grafana, enabling faster issue diagnosis.",
-      "Built dynamic, reusable frontend components, forms and business logic with React and Next.js, and increased test coverage with Jest.",
+      {
+        lead: "Platform",
+        text: "backend services for a production multi-tenant SaaS platform spanning roughly 40 service and frontend applications, across logistics and financial-operations domains.",
+      },
+      {
+        lead: "Microservices",
+        text: "service boundaries, message contracts, tenant isolation, and event-driven communication over RabbitMQ with idempotent consumers, in TypeScript and NestJS.",
+      },
+      {
+        lead: "Integrations",
+        text: "Microsoft Dynamics 365 Finance, Odoo and custom third-party financial systems, synchronized through asynchronous, message-based flows.",
+      },
+      {
+        lead: "Data & observability",
+        text: "PostgreSQL, MongoDB and Redis, with OpenTelemetry tracing and Grafana dashboards, to keep production systems reliable and observable under load.",
+      },
+      {
+        lead: "Delivery",
+        text: "features across independently deployed Next.js applications behind a shared shell, shipped as Docker images through GitHub Actions CI.",
+      },
     ],
   },
   {
     company: "Block Gemini",
     role: "Full Stack Software Engineer",
     location: "Dubai, UAE",
-    period: "Jan 2024 — Aug 2024",
+    period: "Jan 2024 - Aug 2024",
+    start: "2024-01",
+    end: "2024-08",
+    summary:
+      "Led geo-search optimization over a 10M-record dataset and built the logging pipeline the team monitored it with.",
     stack: [
       "NestJS",
       "TypeORM",
@@ -57,17 +80,29 @@ export const experience: Experience[] = [
     ],
     metrics: [
       { label: "records searched", value: "10M+" },
-      { label: "geo-query p95 (target < 1s)", value: "600ms" },
+      { label: "geo-query p95, target under 1s", value: "600ms" },
     ],
     highlights: [
-      "Led the optimization of geo-location search queries over large datasets using Elasticsearch, achieving an average query response of 600ms (target < 1s) while processing 10 million records.",
-      "Designed RESTful APIs with NestJS, TypeORM and PostgreSQL, improving performance of complex data-retrieval operations.",
-      "Used GraphQL to streamline data querying and improve client-side performance, with Redis as a caching layer.",
-      "Integrated JWT authentication and role-based authorization across microservices, enhancing security while keeping the system scalable.",
-      "Built and maintained a comprehensive logging system with Filebeat, Kibana and Elasticsearch for real-time log collection, monitoring and visualization, collaborating with DevOps to integrate it into backend systems.",
-      "Documented APIs with Swagger, improving developer experience and reducing integration time.",
-      "Contributed to frontend work with Next.js 14 and Tailwind CSS, integrating NestJS APIs with React/Next.js frontends.",
-      "Collaborated with a multi-national team across Dubai, India, Romania and Egypt in a fast-paced environment.",
+      {
+        lead: "Geo-search",
+        text: "optimized geo-location search over a 10-million-record Elasticsearch dataset to a 600 ms average, against a sub-1-second target.",
+      },
+      {
+        lead: "APIs",
+        text: "RESTful APIs with NestJS, TypeORM and PostgreSQL, plus GraphQL over a Redis cache to streamline client-side querying.",
+      },
+      {
+        lead: "Access control",
+        text: "JWT authentication and role-based authorization across microservices, kept consistent between services without sacrificing scalability.",
+      },
+      {
+        lead: "Logging pipeline",
+        text: "Filebeat, Elasticsearch and Kibana for real-time log collection, monitoring and visualization, integrated with DevOps into backend services.",
+      },
+      {
+        lead: "Frontend",
+        text: "Next.js 14 and Tailwind features integrated with the NestJS APIs, with a multi-national team across Dubai, India, Romania and Egypt.",
+      },
     ],
   },
 ];

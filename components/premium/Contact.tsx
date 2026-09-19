@@ -8,7 +8,9 @@ import { track } from "@/lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
-const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID;
+// Real Formspree endpoint (overridable via env); in-page submit works out of the box.
+const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID ?? "xnpabgrq";
+const EMAIL = "youssefbushra16.4@gmail.com";
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
@@ -31,7 +33,7 @@ export function Contact() {
     if (!FORMSPREE_ID) {
       const subject = encodeURIComponent(`Portfolio contact — ${name}`);
       const body = encodeURIComponent(`${message}\n\n— ${name}\n${email}`);
-      window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+      window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
       track("contact_submit", { method: "mailto" });
       setStatus("success");
       return;
@@ -69,7 +71,7 @@ export function Contact() {
   return (
     <Section id="contact" className="py-24 md:py-32">
       <SectionHeader
-        index="05"
+        index="04"
         label="contact"
         title="Let's build something reliable"
         description="Have a role, a system to design, or an integration to untangle? Send a message — I read every one."

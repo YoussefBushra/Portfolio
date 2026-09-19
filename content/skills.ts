@@ -1,55 +1,43 @@
 import type { SkillGroup } from "@/lib/types";
 
-export const skillGroups: SkillGroup[] = [
+/**
+ * The stack, as a capability index: each group is an eyebrow with its members
+ * set as type. Order runs from what the work is built on outward to how it is
+ * shaped and shipped.
+ */
+export const stackGroups: SkillGroup[] = [
   {
-    name: "Frontend",
-    service: "svc/frontend",
-    items: ["React", "Next.js", "TypeScript", "JavaScript", "Tailwind CSS", "Redux"],
-  },
-  {
-    name: "Backend",
-    service: "svc/backend",
-    items: ["Node.js", "NestJS", "Express.js", "TypeORM", "Mongoose", "Django"],
-  },
-  {
-    name: "Distributed Systems",
-    service: "svc/systems",
+    name: "Core",
     items: [
-      "Microservices",
-      "Event-driven architecture",
+      "Node.js",
+      "NestJS",
+      "TypeScript",
+      "PostgreSQL",
+      "MongoDB",
+      "Redis",
       "RabbitMQ",
-      "RMI",
-      "Service design",
+      "React",
+      "Next.js",
     ],
   },
   {
-    name: "Data & Storage",
-    service: "svc/data",
-    items: ["PostgreSQL", "MongoDB", "MS SQL Server", "PL/SQL", "SQLite", "Redis"],
+    name: "Observability & infrastructure",
+    items: ["Elasticsearch", "OpenTelemetry", "Grafana", "Docker", "GitHub Actions"],
   },
   {
-    name: "APIs",
-    service: "svc/apis",
-    items: ["REST", "GraphQL", "Swagger", "JWT / Auth"],
+    name: "APIs & testing",
+    items: ["REST", "GraphQL", "Swagger", "Jest"],
   },
   {
-    name: "Search & Observability",
-    service: "svc/observability",
-    items: ["Elasticsearch", "Kibana", "Filebeat", "Logstash", "Grafana"],
-  },
-  {
-    name: "Languages",
-    service: "svc/languages",
-    items: ["TypeScript", "JavaScript", "Python", "Java", "C#", "C++", "X++"],
-  },
-  {
-    name: "ML & Data",
-    service: "svc/ml",
-    items: ["PyTorch", "Google Cloud AI", "Pandas", "NumPy", "Matplotlib", "Seaborn"],
-  },
-  {
-    name: "Testing & Tooling",
-    service: "svc/quality",
-    items: ["Jest", "Selenium", "Git", "GitHub", "Bitbucket", "Postman"],
+    name: "Architecture",
+    items: [
+      "Microservices",
+      "Event-driven architecture",
+      "Multi-tenant SaaS",
+      "API gateway",
+      "Micro-frontends",
+    ],
   },
 ];
+
+export const spokenLanguages = "Arabic (native), English (C1), German (A1)";

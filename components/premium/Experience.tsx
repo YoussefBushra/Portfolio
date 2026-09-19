@@ -87,8 +87,12 @@ export function Experience() {
                   </div>
                 ) : null}
 
+                <p className="mt-4 text-sm leading-relaxed text-muted">
+                  {job.summary}
+                </p>
+
                 <ul className="mt-5 space-y-2.5">
-                  {job.highlights.slice(0, 5).map((h, i) => (
+                  {job.highlights.map((h, i) => (
                     <li
                       key={i}
                       className="flex gap-3 text-sm leading-relaxed text-muted"
@@ -97,7 +101,11 @@ export function Experience() {
                         aria-hidden
                         className="mt-2 h-1 w-1 flex-none rounded-full bg-accent/70"
                       />
-                      {h}
+                      <span>
+                        <span className="font-medium text-text">{h.lead}</span>
+                        <span className="text-faint"> — </span>
+                        {h.text}
+                      </span>
                     </li>
                   ))}
                 </ul>
