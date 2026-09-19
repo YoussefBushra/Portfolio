@@ -20,7 +20,7 @@ export function Experience() {
   const height = useTransform(fill, (v) => `${v * 100}%`);
 
   return (
-    <Section id="experience" className="py-24 md:py-32">
+    <Section id="experience" className="py-20 md:py-28">
       <SectionHeader
         index="02"
         label="experience"
@@ -34,7 +34,7 @@ export function Experience() {
         {/* illuminated progress */}
         <motion.div
           style={{ height }}
-          className="absolute left-[7px] top-2 w-px bg-gradient-to-b from-accent to-accent-2 sm:left-[9px]"
+          className="absolute left-[7px] top-2 w-px bg-accent sm:left-[9px]"
         />
 
         <div className="space-y-12">
@@ -61,7 +61,7 @@ export function Experience() {
                   </div>
                   <div className="flex items-center gap-2 font-mono text-xs text-muted">
                     {job.current ? (
-                      <span className="rounded-full border border-ok/40 bg-ok/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-ok">
+                      <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[10px] uppercase tracking-wider text-accent">
                         current
                       </span>
                     ) : null}

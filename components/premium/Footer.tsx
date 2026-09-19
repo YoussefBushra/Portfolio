@@ -21,8 +21,8 @@ export function Footer() {
           <div>
             <div className="mono-label mb-5">let&apos;s work together</div>
             <h2 className="text-balance text-3xl font-extrabold leading-[1.1] tracking-tight text-text sm:text-4xl lg:text-5xl">
-              Building the <span className="text-accent-gradient">reliable</span>{" "}
-              systems your product runs on.
+              Building the <span className="text-accent">reliable</span> systems
+              your product runs on.
             </h2>
             <a
               href="#contact"
@@ -87,7 +87,7 @@ export function Footer() {
             </span>
           </div>
           <div className="flex items-center gap-2 font-mono text-xs text-faint">
-            <span className="h-1.5 w-1.5 rounded-full bg-ok" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent/70" />
             Built with Next.js · Deployed on Vercel
           </div>
         </div>

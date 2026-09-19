@@ -69,7 +69,7 @@ export function Contact() {
     "focus-ring w-full rounded-lg border border-border bg-surface-2/50 px-4 py-3 text-sm text-text placeholder:text-faint transition-colors focus:border-accent/60";
 
   return (
-    <Section id="contact" className="py-24 md:py-32">
+    <Section id="contact" className="py-20 md:py-28">
       <SectionHeader
         index="04"
         label="contact"
@@ -124,7 +124,7 @@ export function Contact() {
               Cairo-based.
             </p>
             <div className="mt-3 flex items-center gap-2 font-mono text-xs text-muted">
-              <span className="h-1.5 w-1.5 rounded-full bg-ok animate-blink" />
+              <span className="h-1.5 w-1.5 rounded-full bg-accent" />
               {profile.location} · open to opportunities
             </div>
           </div>
@@ -152,12 +152,17 @@ export function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} noValidate className="surface p-6 sm:p-7">
-              <div className="mono-label mb-5">POST /message</div>
+              <h3 className="mb-5 text-base font-semibold text-text">
+                Send a message
+              </h3>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div>
-                    <label htmlFor="name" className="mono-label mb-1.5 block">
-                      name
+                    <label
+                      htmlFor="name"
+                      className="mb-1.5 block text-sm font-medium text-muted"
+                    >
+                      Name
                     </label>
                     <input
                       id="name"
@@ -170,8 +175,11 @@ export function Contact() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="mono-label mb-1.5 block">
-                      email
+                    <label
+                      htmlFor="email"
+                      className="mb-1.5 block text-sm font-medium text-muted"
+                    >
+                      Email
                     </label>
                     <input
                       id="email"
@@ -185,8 +193,11 @@ export function Contact() {
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="message" className="mono-label mb-1.5 block">
-                    message
+                  <label
+                    htmlFor="message"
+                    className="mb-1.5 block text-sm font-medium text-muted"
+                  >
+                    Message
                   </label>
                   <textarea
                     id="message"

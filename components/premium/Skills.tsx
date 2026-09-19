@@ -6,12 +6,12 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 export function Skills() {
   return (
-    <Section id="skills" className="py-24 md:py-32">
+    <Section id="skills" className="py-20 md:py-28">
       <SectionHeader
         index="03"
         label="stack"
-        title="The toolkit, from core outward"
-        description="What the work is built on, how it's shaped, and how it's shipped — depth in backend and distributed systems, with the full-stack range to carry a feature end to end."
+        title="What the work is built on"
+        description="From core services outward — depth in backend and distributed systems, with the full-stack range to carry a feature end to end."
       />
 
       <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -33,7 +33,7 @@ export function Skills() {
               {group.items.map((item) => (
                 <li
                   key={item}
-                  className="rounded-lg border border-border/70 bg-surface-2/40 px-2.5 py-1 text-[13px] text-muted transition-colors hover:border-accent/40 hover:text-text"
+                  className="rounded-md border border-border/70 bg-surface-2/40 px-2.5 py-1 text-[13px] text-muted transition-colors hover:border-accent/40 hover:text-text"
                 >
                   {item}
                 </li>

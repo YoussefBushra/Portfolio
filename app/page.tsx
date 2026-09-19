@@ -1,5 +1,4 @@
 import { GridBackground } from "@/components/premium/GridBackground";
-import { CursorGlow } from "@/components/premium/CursorGlow";
 import { Nav } from "@/components/premium/Nav";
 import { Hero } from "@/components/premium/Hero";
 import { Metrics } from "@/components/premium/Metrics";
@@ -13,7 +12,6 @@ export default function Home() {
   return (
     <>
       <GridBackground />
-      <CursorGlow />
       <Nav />
       <main>
         <Hero />

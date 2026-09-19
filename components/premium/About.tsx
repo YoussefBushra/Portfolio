@@ -9,7 +9,7 @@ import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 
 export function About() {
   return (
-    <Section id="about" className="py-24 md:py-32">
+    <Section id="about" className="py-20 md:py-28">
       <SectionHeader
         index="01"
         label="about"

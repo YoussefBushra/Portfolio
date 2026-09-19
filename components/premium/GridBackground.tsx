@@ -12,21 +12,13 @@ export function GridBackground() {
       className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
     >
       {/* fine grid */}
-      <div className="absolute inset-0 grid-bg opacity-70" />
-      {/* radial glow, upper area */}
+      <div className="absolute inset-0 grid-bg opacity-60" />
+      {/* one faint glow at the top, very restrained */}
       <div
-        className="absolute -top-40 left-1/2 h-[520px] w-[900px] -translate-x-1/2 rounded-full opacity-60 blur-3xl"
+        className="absolute -top-56 left-1/2 h-[480px] w-[820px] -translate-x-1/2 rounded-full opacity-40 blur-3xl"
         style={{
           background:
-            "radial-gradient(closest-side, rgb(var(--accent) / 0.10), transparent 70%)",
-        }}
-      />
-      {/* second, cooler glow lower-left */}
-      <div
-        className="absolute bottom-0 left-0 h-[420px] w-[520px] opacity-50 blur-3xl"
-        style={{
-          background:
-            "radial-gradient(closest-side, rgb(var(--accent-2) / 0.08), transparent 70%)",
+            "radial-gradient(closest-side, rgb(var(--accent) / 0.05), transparent 70%)",
         }}
       />
       {/* top + bottom fade to background */}

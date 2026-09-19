@@ -74,23 +74,19 @@ body {
   }
 
   .surface-hover {
-    @apply transition-all duration-300;
+    @apply transition-colors duration-200;
   }
   .surface-hover:hover {
-    border-color: rgb(var(--accent) / 0.45);
-    box-shadow:
-      0 0 0 1px rgb(var(--accent) / 0.15),
-      0 18px 50px -30px rgb(var(--accent) / 0.35);
+    border-color: rgb(var(--border) / 1);
+    background: rgb(var(--surface-2) / 0.5);
   }
 
   .btn-primary {
-    @apply inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-[#04121f] transition-all;
-    background: linear-gradient(180deg, rgb(var(--accent)), rgb(var(--accent-2)));
-    box-shadow: 0 10px 30px -12px rgb(var(--accent) / 0.6);
+    @apply inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-[#04121f] transition-colors;
+    background: rgb(var(--accent));
   }
   .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 36px -12px rgb(var(--accent) / 0.7);
+    background: rgb(var(--accent) / 0.9);
   }
 
   .btn-ghost {
