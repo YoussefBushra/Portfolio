@@ -8,23 +8,22 @@
    ============================================================ */
 :root,
 .light {
-  --bg: 242 243 243; /* #F2F3F3 page */
+  --bg: 244 243 240; /* warm paper gray */
   --surface: 255 255 255; /* container */
-  --surface-2: 250 250 250; /* subtle fill */
-  --ink: 35 47 62; /* #232F3E squid ink (top bar, headings accents) */
-  --ink-2: 15 27 40; /* darker ink */
-  --border: 200 205 208; /* #C8CDD0 */
-  --border-2: 233 235 237; /* #E9EBED light divider */
-  --text: 22 25 31; /* #16191F */
-  --muted: 84 96 111; /* #54606F secondary */
-  --faint: 111 123 138; /* tertiary */
-  --accent: 9 114 211; /* #0972D3 Cloudscape blue (links/actions) */
-  --accent-2: 3 49 96; /* #033160 hover */
-  --orange: 236 114 17; /* #EC7211 AWS action orange */
-  --ok: 3 127 12; /* #037F0C status green */
+  --surface-2: 248 247 244; /* subtle fill */
+  --ink: 26 29 33; /* #1A1D21 near-black slate (nav, footer) */
+  --ink-2: 16 18 21; /* darker */
+  --border: 224 222 216; /* warm hairline */
+  --border-2: 236 234 228; /* lighter divider */
+  --text: 26 29 33; /* #1A1D21 */
+  --muted: 92 99 110; /* secondary */
+  --faint: 138 144 154; /* tertiary */
+  --accent: 15 118 110; /* #0F766E deep teal — the single accent */
+  --accent-2: 11 90 84; /* darker teal, hover */
+  --ok: 22 101 52; /* deep green, transient success only */
   --grid: 120 140 165;
 
-  --font-sans: "Open Sans", system-ui, -apple-system, sans-serif;
+  --font-sans: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 
@@ -68,9 +67,9 @@ body {
 }
 
 @layer components {
-  /* Cloudscape container: white panel, hairline border, subtle shadow */
+  /* Container: white panel, hairline border, subtle shadow, tight radius */
   .cs-container {
-    @apply rounded-lg border border-border bg-surface shadow-card;
+    @apply rounded-md border border-border bg-surface shadow-card;
   }
 
   /* Container header row with a divider under it */
@@ -79,16 +78,21 @@ body {
   }
 
   .cs-title {
-    @apply text-[17px] font-bold leading-tight text-text;
+    @apply text-[16px] font-semibold leading-tight tracking-tight text-text;
   }
 
   .cs-desc {
     @apply mt-0.5 text-[13px] leading-snug text-muted;
   }
 
-  /* Buttons — compact, 8px radius */
+  /* Editorial section head — a heading over a full-width rule (no card) */
+  .rule-head {
+    @apply flex items-baseline justify-between border-b border-border pb-2 text-[13px] font-semibold uppercase tracking-[0.08em] text-muted;
+  }
+
+  /* Buttons — compact, precise radius */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-1.5 text-[13px] font-bold text-white transition-colors;
+    @apply inline-flex items-center justify-center gap-2 rounded px-4 py-1.5 text-[13px] font-semibold text-white transition-colors;
     background: rgb(var(--accent));
   }
   .btn-primary:hover {
@@ -96,13 +100,14 @@ body {
   }
 
   .btn-normal {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border px-4 py-1.5 text-[13px] font-bold transition-colors;
-    border-color: rgb(var(--accent));
-    color: rgb(var(--accent));
+    @apply inline-flex items-center justify-center gap-2 rounded border px-4 py-1.5 text-[13px] font-semibold transition-colors;
+    border-color: rgb(var(--border));
+    color: rgb(var(--text));
     background: rgb(var(--surface));
   }
   .btn-normal:hover {
-    background: rgb(var(--accent) / 0.06);
+    border-color: rgb(var(--accent));
+    color: rgb(var(--accent));
   }
 
   .cs-link {
@@ -111,7 +116,7 @@ body {
 
   /* Form input */
   .cs-input {
-    @apply w-full rounded-lg border border-border bg-surface px-3 py-2 text-[13px] text-text placeholder:text-faint transition-colors;
+    @apply w-full rounded border border-border bg-surface px-3 py-2 text-[13px] text-text placeholder:text-faint transition-colors;
   }
   .cs-input:focus {
     outline: 2px solid rgb(var(--accent));

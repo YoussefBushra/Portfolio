@@ -12,25 +12,15 @@ const LINKS = [
   { id: "contact", label: "Contact" },
 ];
 
-/** AWS-style cube mark in brand orange. */
-function CubeMark() {
+/** Personal monogram — initials, set in the brand type. */
+function Monogram() {
   return (
-    <svg width="22" height="22" viewBox="0 0 32 32" aria-hidden="true">
-      <path
-        d="M16 5l9 5v12l-9 5-9-5V10z"
-        fill="none"
-        stroke="rgb(var(--orange))"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M7 10l9 5 9-5M16 15v12"
-        fill="none"
-        stroke="rgb(var(--orange))"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <span
+      aria-hidden
+      className="flex h-6 w-6 items-center justify-center rounded-[4px] bg-accent text-[12px] font-semibold tracking-tight text-white"
+    >
+      YB
+    </span>
   );
 }
 
@@ -68,19 +58,19 @@ export function TopNav() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-ink-2 bg-ink text-white">
-      <nav className="mx-auto flex h-12 w-full max-w-[1240px] items-center gap-3 px-3 sm:px-4">
+      <nav className="mx-auto flex h-12 w-full max-w-[1100px] items-center gap-3 px-3 sm:px-4">
         {/* brand / service identity */}
         <a
           href="#overview"
           className="focus-ring flex items-center gap-2.5 rounded"
           aria-label="Overview"
         >
-          <CubeMark />
+          <Monogram />
           <span className="flex items-baseline gap-2">
-            <span className="text-[15px] font-bold tracking-tight text-white">
+            <span className="text-[15px] font-semibold tracking-tight text-white">
               {shortName}
             </span>
-            <span className="hidden text-[12px] font-normal text-white/55 sm:inline">
+            <span className="hidden text-[12px] font-normal text-white/45 sm:inline">
               {profile.role}
             </span>
           </span>
@@ -99,7 +89,7 @@ export function TopNav() {
             >
               {l.label}
               {active === l.id ? (
-                <span className="mt-1 block h-0.5 rounded-full bg-orange" />
+                <span className="mt-1 block h-0.5 rounded-full bg-accent" />
               ) : (
                 <span className="mt-1 block h-0.5" />
               )}
@@ -135,7 +125,7 @@ export function TopNav() {
       {/* mobile panel */}
       {open ? (
         <div id="cs-mobile" className="border-t border-ink-2 bg-ink md:hidden">
-          <div className="mx-auto flex max-w-[1240px] flex-col px-3 py-2">
+          <div className="mx-auto flex max-w-[1100px] flex-col px-3 py-2">
             {LINKS.map((l) => (
               <a
                 key={l.id}
@@ -143,7 +133,7 @@ export function TopNav() {
                 onClick={() => setOpen(false)}
                 className={`rounded px-2 py-2.5 text-[14px] ${
                   active === l.id
-                    ? "font-semibold text-orange"
+                    ? "font-semibold text-accent"
                     : "text-white/80"
                 }`}
               >

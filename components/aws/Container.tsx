@@ -59,30 +59,3 @@ export function Tag({ children }: { children: ReactNode }) {
   );
 }
 
-/** Cloudscape status indicator: colored dot + label. */
-export function Status({
-  kind = "success",
-  children,
-}: {
-  kind?: "success" | "info" | "pending";
-  children: ReactNode;
-}) {
-  const color =
-    kind === "success"
-      ? "bg-ok"
-      : kind === "info"
-        ? "bg-accent"
-        : "bg-orange";
-  const text =
-    kind === "success"
-      ? "text-ok"
-      : kind === "info"
-        ? "text-accent"
-        : "text-orange";
-  return (
-    <span className={`inline-flex items-center gap-1.5 text-[13px] ${text}`}>
-      <span className={`h-2 w-2 rounded-full ${color}`} />
-      {children}
-    </span>
-  );
-}

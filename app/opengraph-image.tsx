@@ -19,26 +19,39 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        {/* squid-ink service bar */}
+        {/* ink header bar with monogram */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             gap: 16,
-            background: "#232f3e",
+            background: "#1a1d21",
             padding: "0 64px",
             height: 96,
             color: "#ffffff",
           }}
         >
-          <div style={{ display: "flex", fontSize: 30 }}>
-            <span style={{ color: "#ec7211", fontWeight: 700 }}>▣</span>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 40,
+              height: 40,
+              borderRadius: 6,
+              background: "#0f766e",
+              color: "#ffffff",
+              fontSize: 20,
+              fontWeight: 600,
+            }}
+          >
+            YB
           </div>
-          <div style={{ display: "flex", fontSize: 30, fontWeight: 700 }}>
+          <div style={{ display: "flex", fontSize: 28, fontWeight: 600 }}>
             {profile.name.split(" ").slice(0, 2).join(" ")}
           </div>
           <div style={{ display: "flex", fontSize: 22, color: "#9aa5b1" }}>
-            / {profile.role}
+            {profile.role}
           </div>
         </div>
 
@@ -55,59 +68,38 @@ export default function OpengraphImage() {
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              gap: 12,
-              fontSize: 24,
-              color: "#037f0c",
-            }}
-          >
-            <div
-              style={{
-                width: 14,
-                height: 14,
-                borderRadius: 999,
-                background: "#037f0c",
-              }}
-            />
-            Available — open to backend / software engineer roles
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              fontSize: 60,
-              fontWeight: 700,
+              fontSize: 56,
+              fontWeight: 600,
               lineHeight: 1.1,
-              marginTop: 24,
-              color: "#16191f",
-              maxWidth: 980,
+              letterSpacing: "-0.02em",
+              color: "#1a1d21",
+              maxWidth: 900,
             }}
           >
             {profile.thesis}
           </div>
 
-          <div style={{ display: "flex", gap: 12, marginTop: 40 }}>
-            {[
-              "~40 services",
-              "10M+ records",
-              "600ms p95",
-              "event-driven",
-            ].map((t) => (
-              <div
-                key={t}
-                style={{
-                  display: "flex",
-                  border: "1px solid #c8cdd0",
-                  background: "#ffffff",
-                  borderRadius: 8,
-                  padding: "10px 16px",
-                  fontSize: 22,
-                  color: "#16191f",
-                }}
-              >
-                {t}
-              </div>
-            ))}
+          <div
+            style={{
+              display: "flex",
+              gap: 40,
+              marginTop: 40,
+              fontSize: 24,
+              color: "#5c636e",
+            }}
+          >
+            <div style={{ display: "flex", gap: 8 }}>
+              <span style={{ color: "#1a1d21", fontWeight: 600 }}>10M+</span>
+              records under geo-search
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <span style={{ color: "#1a1d21", fontWeight: 600 }}>600ms</span>
+              geo-query p95
+            </div>
+          </div>
+
+          <div style={{ display: "flex", marginTop: 28, fontSize: 20, color: "#8a909c" }}>
+            Available for backend / software engineer roles
           </div>
         </div>
       </div>

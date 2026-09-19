@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
-import { Open_Sans, IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
@@ -10,9 +10,9 @@ import "./globals.css";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
-const sans = Open_Sans({
+const sans = IBM_Plex_Sans({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='#232F3E'/><path d='M16 6l8 4.5v11L16 26l-8-4.5v-11z' fill='none' stroke='#EC7211' stroke-width='2' stroke-linejoin='round'/><path d='M8 10.5l8 4.5 8-4.5M16 15v11' fill='none' stroke='#EC7211' stroke-width='2' stroke-linejoin='round'/></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='5' fill='#1A1D21'/><text x='16' y='22' font-family='IBM Plex Sans, sans-serif' font-size='15' font-weight='600' fill='#0F766E' text-anchor='middle' letter-spacing='-0.5'>YB</text></svg>`
           ),
         type: "image/svg+xml",
       },
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#232F3E",
+  themeColor: "#1A1D21",
 };
 
 export default function RootLayout({

@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { profile } from "@/content/profile";
-import { Container, Status } from "@/components/aws/Container";
+import { Container } from "@/components/aws/Container";
 import { track } from "@/lib/analytics";
 
 type State = "idle" | "submitting" | "success" | "error";
@@ -65,22 +65,19 @@ export function Contact() {
 
   return (
     <section id="contact" className="scroll-mt-16">
-      <Container
-        title="Contact"
-        description="Have a role, a system to design, or an integration to untangle?"
-      >
+      <Container title="Contact">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_260px] lg:gap-8">
           {/* form */}
           {state === "success" ? (
-            <div className="flex flex-col items-start gap-2 rounded-lg border border-ok/30 bg-ok/5 px-4 py-5">
-              <Status kind="success">Message sent</Status>
-              <p className="text-[13px] text-text">
+            <div className="rounded border border-border bg-surface-2 px-4 py-5">
+              <p className="text-[14px] font-semibold text-text">Message sent</p>
+              <p className="mt-1 text-[13px] text-muted">
                 Thanks for reaching out — I&apos;ll get back to you soon.
               </p>
               <button
                 type="button"
                 onClick={() => setState("idle")}
-                className="cs-link text-[13px]"
+                className="cs-link mt-3 inline-block text-[13px]"
               >
                 Send another
               </button>
@@ -143,7 +140,7 @@ export function Contact() {
               {state === "error" ? (
                 <p
                   role="alert"
-                  className="rounded border border-orange/40 bg-orange/10 px-3 py-2 text-[12px] text-orange"
+                  className="rounded border border-red-300 bg-red-50 px-3 py-2 text-[12px] text-red-700"
                 >
                   {error}
                 </p>
@@ -188,10 +185,9 @@ export function Contact() {
             </div>
             <div>
               <div className="kv-label mb-1.5">Availability</div>
-              <Status kind="success">Open to opportunities</Status>
-              <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
-                Backend &amp; full-stack roles and freelance systems work. Remote
-                or {profile.location}.
+              <p className="text-[12.5px] leading-relaxed text-muted">
+                Open to backend &amp; full-stack roles and freelance systems
+                work. Remote or {profile.location}.
               </p>
             </div>
           </div>

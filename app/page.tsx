@@ -12,7 +12,7 @@ export default function Home() {
       <TopNav />
       <main>
         <Overview />
-        <div className="mx-auto max-w-[1240px] space-y-4 px-4 pb-8 pt-4 sm:px-6">
+        <div className="mx-auto max-w-[1100px] space-y-14 px-4 pb-16 pt-12 sm:px-6">
           <About />
           <Experience />
           <Stack />
