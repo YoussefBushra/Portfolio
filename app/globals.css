@@ -3,39 +3,25 @@
 @tailwind utilities;
 
 /* ============================================================
-   Theme tokens — RGB triplets consumed by Tailwind via
-   rgb(var(--token) / <alpha-value>). Light is the base :root;
-   dark overrides under .dark (next-themes class strategy).
+   Premium engineering portfolio — deep navy + cyan, dark only.
+   Tokens are RGB triplets used via rgb(var(--token) / <alpha>).
    ============================================================ */
-:root {
-  --bg: 246 247 251;
-  --surface: 255 255 255;
-  --surface-2: 240 242 248;
-  --border: 210 215 226;
-  --text: 22 27 39;
-  --muted: 88 96 112;
-  --faint: 138 146 162;
-  --accent: 79 70 229; /* indigo/violet */
-  --accent-2: 8 145 178; /* cyan */
-  --grid: 20 26 40;
-  --ok: 22 163 74;
-
-  --font-sans: "Space Grotesk", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-}
-
+:root,
 .dark {
-  --bg: 7 9 16;
-  --surface: 14 18 30;
-  --surface-2: 20 26 42;
-  --border: 38 46 66;
-  --text: 231 237 248;
-  --muted: 148 160 184;
-  --faint: 92 104 128;
-  --accent: 124 122 255; /* electric violet */
-  --accent-2: 45 212 191; /* teal/cyan */
-  --grid: 130 150 200;
+  --bg: 7 10 18; /* #070A12 near-black navy */
+  --surface: 13 18 30; /* #0D121E */
+  --surface-2: 18 25 41; /* #121929 */
+  --border: 34 44 66; /* cool blue-gray */
+  --text: 228 233 242; /* off-white */
+  --muted: 148 163 189; /* cool gray */
+  --faint: 96 110 138;
+  --accent: 56 189 248; /* cyan / electric blue */
+  --accent-2: 59 130 246; /* blue */
+  --grid: 90 130 200;
   --ok: 52 211 153;
+
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
 * {
@@ -44,7 +30,8 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 5.5rem;
+  color-scheme: dark;
 }
 
 body {
@@ -54,6 +41,11 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.25);
+  color: rgb(var(--text));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -69,51 +61,83 @@ body {
   }
 }
 
-/* ------- Utility layers ------- */
 @layer components {
   .mono-label {
-    @apply font-mono text-xs uppercase tracking-[0.2em] text-faint;
+    @apply font-mono text-[11px] uppercase tracking-[0.18em] text-faint;
   }
 
-  .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-surface-2/60 px-3 py-1 font-mono text-xs text-muted transition-colors;
+  /* Bento / product surface — subtle, not a giant rounded card */
+  .surface {
+    @apply rounded-xl border border-border/80;
+    background:
+      linear-gradient(180deg, rgb(var(--surface) / 0.9), rgb(var(--surface) / 0.6));
   }
 
-  .chip-accent {
-    @apply border-accent/40 bg-accent/10 text-accent;
+  .surface-hover {
+    @apply transition-all duration-300;
+  }
+  .surface-hover:hover {
+    border-color: rgb(var(--accent) / 0.45);
+    box-shadow:
+      0 0 0 1px rgb(var(--accent) / 0.15),
+      0 18px 50px -30px rgb(var(--accent) / 0.35);
   }
 
-  .card {
-    @apply rounded-2xl border border-border bg-surface/70 backdrop-blur-sm;
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-lg px-5 py-3 text-sm font-semibold text-[#04121f] transition-all;
+    background: linear-gradient(180deg, rgb(var(--accent)), rgb(var(--accent-2)));
+    box-shadow: 0 10px 30px -12px rgb(var(--accent) / 0.6);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 36px -12px rgb(var(--accent) / 0.7);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-lg border border-border px-5 py-3 text-sm font-medium text-text transition-colors;
+  }
+  .btn-ghost:hover {
+    border-color: rgb(var(--accent) / 0.5);
+    color: rgb(var(--accent));
   }
 
   .focus-ring {
     @apply outline-none ring-offset-2 ring-offset-bg focus-visible:ring-2 focus-visible:ring-accent;
   }
 
-  /* Faint blueprint grid used behind sections */
-  .bp-grid {
-    background-image: linear-gradient(
-        to right,
-        rgb(var(--grid) / 0.06) 1px,
-        transparent 1px
-      ),
-      linear-gradient(to bottom, rgb(var(--grid) / 0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
-  }
-
   .text-gradient {
-    @apply bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent;
+    background: linear-gradient(180deg, rgb(var(--text)), rgb(var(--muted)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-accent-gradient {
+    background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent-2)));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Fine technical grid, very low opacity */
+  .grid-bg {
+    background-image:
+      linear-gradient(rgb(var(--grid) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--grid) / 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .dot-bg {
+    background-image: radial-gradient(rgb(var(--grid) / 0.14) 1px, transparent 1px);
+    background-size: 26px 26px;
+  }
+
+  .hairline {
+    @apply h-px w-full border-0 bg-gradient-to-r from-transparent via-border to-transparent;
   }
 }
 
-/* Custom selection */
-::selection {
-  background: rgb(var(--accent) / 0.28);
-  color: rgb(var(--text));
-}
-
-/* Scrollbar (webkit) */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

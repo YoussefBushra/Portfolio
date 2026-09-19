@@ -1,36 +1,31 @@
-import { Nav } from "@/components/layout/Nav";
-import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/sections/Hero";
-import { About } from "@/components/sections/About";
-import { Experience } from "@/components/sections/Experience";
-import { Projects } from "@/components/sections/Projects";
-import { Skills } from "@/components/sections/Skills";
-import { Contact } from "@/components/sections/Contact";
-import { CommandPalette } from "@/components/system/CommandPalette";
-import { BootSequence } from "@/components/system/BootSequence";
-import { Minimap } from "@/components/system/Minimap";
-import { TechProvider } from "@/components/system/TechContext";
+import { GridBackground } from "@/components/premium/GridBackground";
+import { CursorGlow } from "@/components/premium/CursorGlow";
+import { Nav } from "@/components/premium/Nav";
+import { Hero } from "@/components/premium/Hero";
+import { Metrics } from "@/components/premium/Metrics";
+import { About } from "@/components/premium/About";
+import { Experience } from "@/components/premium/Experience";
+import { Projects } from "@/components/premium/Projects";
+import { Skills } from "@/components/premium/Skills";
+import { Contact } from "@/components/premium/Contact";
+import { Footer } from "@/components/premium/Footer";
 
 export default function Home() {
   return (
-    <TechProvider>
-      <BootSequence />
-      <CommandPalette />
-      <Minimap />
+    <>
+      <GridBackground />
+      <CursorGlow />
       <Nav />
       <main>
         <Hero />
-        {/* faint blueprint grid behind the content sections */}
-        <div className="relative">
-          <div className="pointer-events-none absolute inset-0 -z-10 bp-grid opacity-40" />
-          <About />
-          <Experience />
-          <Projects />
-          <Skills />
-          <Contact />
-        </div>
+        <Metrics />
+        <About />
+        <Experience />
+        <Projects />
+        <Skills />
+        <Contact />
       </main>
       <Footer />
-    </TechProvider>
+    </>
   );
 }
