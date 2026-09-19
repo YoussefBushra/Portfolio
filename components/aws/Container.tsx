@@ -50,6 +50,15 @@ export function Container({
   );
 }
 
+/** One unified tech-tag chip, used everywhere a technology is listed. */
+export function Tag({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center rounded border border-border bg-surface-2 px-2 py-0.5 text-[12px] text-text">
+      {children}
+    </span>
+  );
+}
+
 /** Cloudscape status indicator: colored dot + label. */
 export function Status({
   kind = "success",

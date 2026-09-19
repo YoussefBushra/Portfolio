@@ -10,14 +10,17 @@ export function Overview() {
     <section id="overview" className="scroll-mt-12">
       {/* Console page header — full-width white band under the service bar */}
       <div className="border-b border-border bg-surface">
-        <div className="mx-auto max-w-[1240px] px-4 py-6 sm:px-6 sm:py-8">
-          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text sm:text-[30px]">
+        <div className="mx-auto max-w-[1240px] px-4 py-6 sm:px-6 sm:py-7">
+          <h1 className="text-[26px] font-bold leading-tight tracking-tight text-text sm:text-[29px]">
             {profile.name}
           </h1>
           <div className="mt-1 text-[15px] text-muted">{profile.role}</div>
 
-          <p className="mt-3 max-w-2xl text-[14px] leading-relaxed text-text">
-            {profile.thesis} {profile.tagline}
+          <p className="mt-3 max-w-2xl text-[15px] font-semibold leading-snug text-text">
+            {profile.thesis}
+          </p>
+          <p className="mt-1.5 max-w-2xl text-[13.5px] leading-relaxed text-muted">
+            {profile.tagline}
           </p>
 
           <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
@@ -41,57 +44,42 @@ export function Overview() {
         </div>
       </div>
 
-      {/* Body: metric tiles + current role */}
-      <div className="mx-auto max-w-[1240px] space-y-4 px-4 pt-6 sm:px-6">
+      {/* Body: KPI tiles + a slim current-role pointer */}
+      <div className="mx-auto max-w-[1240px] space-y-4 px-4 pt-5 sm:px-6">
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {profile.facts.map((f) => (
-            <div key={f.label} className="cs-container px-4 py-3.5">
-              <div className="text-[13px] text-muted">{f.label}</div>
-              <div className="mt-1 text-[24px] font-bold leading-none tracking-tight text-text">
+            <div key={f.label} className="cs-container flex flex-col px-4 py-3.5">
+              <div className="min-h-[2.6em] text-[13px] leading-snug text-muted">
+                {f.label}
+              </div>
+              <div className="mt-1 text-[26px] font-bold leading-none tracking-tight text-text">
                 {f.value}
               </div>
-              <div className="mono mt-1.5 text-[11px] text-faint">{f.hint}</div>
+              <div className="mt-1.5 text-[12px] text-faint">{f.hint}</div>
             </div>
           ))}
         </div>
 
-        <Container
-          title="Current role"
-          description="What I'm building right now"
-          actions={
-            <span className="rounded border border-ok/40 bg-ok/10 px-2 py-0.5 text-[11px] font-semibold text-ok">
-              Active
-            </span>
-          }
-        >
-          <div className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-4">
-            {[
-              { k: "Role", v: cur.role },
-              { k: "Company", v: cur.company },
-              { k: "Location", v: cur.location },
-              { k: "Period", v: cur.period },
-            ].map((kv) => (
-              <div key={kv.k}>
-                <div className="kv-label">{kv.k}</div>
-                <div className="kv-value">{kv.v}</div>
-              </div>
-            ))}
+        <Container title="Current role">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <div className="text-[14px]">
+              <span className="font-bold text-text">{cur.role}</span>
+              <span className="text-muted">
+                {" "}
+                · {cur.company} · {cur.location}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Status kind="success">Active</Status>
+              <span className="text-[12px] text-faint">{cur.period}</span>
+            </div>
           </div>
-
-          <p className="mt-4 border-t border-border-2 pt-4 text-[13px] leading-relaxed text-text">
+          <p className="mt-2.5 text-[13px] leading-relaxed text-muted">
             {cur.summary}
           </p>
-
-          <div className="mt-3 flex flex-wrap gap-1.5">
-            {cur.stack.slice(0, 8).map((t) => (
-              <span
-                key={t}
-                className="mono rounded border border-border bg-surface-2 px-1.5 py-0.5 text-[11px] text-muted"
-              >
-                {t}
-              </span>
-            ))}
-          </div>
+          <a href="#experience" className="cs-link mt-2.5 inline-block text-[13px]">
+            View full history in Experience ↓
+          </a>
         </Container>
       </div>
     </section>

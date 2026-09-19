@@ -11,15 +11,21 @@ export function CvButton({
   className = "",
 }: {
   from: string;
-  variant?: "primary" | "normal";
+  variant?: "primary" | "normal" | "ghost";
   className?: string;
 }) {
+  const cls =
+    variant === "primary"
+      ? "btn-primary"
+      : variant === "ghost"
+        ? "inline-flex items-center justify-center gap-2 rounded-lg border border-white/25 px-3 py-1 text-[13px] font-semibold text-white transition-colors hover:bg-white/10"
+        : "btn-normal";
   return (
     <a
       href={CV_PATH}
       download
       onClick={() => track("cv_download", { from })}
-      className={`${variant === "primary" ? "btn-primary" : "btn-normal"} focus-ring ${className}`}
+      className={`${cls} focus-ring ${className}`}
     >
       <svg
         width="14"

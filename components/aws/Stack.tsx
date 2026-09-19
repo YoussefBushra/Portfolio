@@ -1,5 +1,5 @@
 import { stackGroups } from "@/content/skills";
-import { Container } from "@/components/aws/Container";
+import { Container, Tag } from "@/components/aws/Container";
 
 export function Stack() {
   return (
@@ -19,12 +19,7 @@ export function Stack() {
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {group.items.map((item) => (
-                  <span
-                    key={item}
-                    className="rounded border border-border bg-surface-2 px-2 py-1 text-[12.5px] text-text"
-                  >
-                    {item}
-                  </span>
+                  <Tag key={item}>{item}</Tag>
                 ))}
               </div>
             </div>

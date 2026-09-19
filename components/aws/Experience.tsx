@@ -1,5 +1,5 @@
 import { experience } from "@/content/experience";
-import { Container } from "@/components/aws/Container";
+import { Container, Tag } from "@/components/aws/Container";
 
 export function Experience() {
   return (
@@ -32,9 +32,7 @@ export function Experience() {
                   >
                     {job.current ? "Active" : "Completed"}
                   </span>
-                  <span className="mono text-[12px] text-faint">
-                    {job.period}
-                  </span>
+                  <span className="text-[12px] text-faint">{job.period}</span>
                 </div>
               </div>
 
@@ -63,7 +61,7 @@ export function Experience() {
                     key={i}
                     className="grid grid-cols-1 gap-x-3 sm:grid-cols-[128px_1fr]"
                   >
-                    <dt className="text-[12.5px] font-semibold text-accent">
+                    <dt className="text-[12.5px] font-bold text-text">
                       {h.lead}
                     </dt>
                     <dd className="text-[13px] leading-relaxed text-muted">
@@ -76,12 +74,7 @@ export function Experience() {
               {/* stack */}
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {job.stack.map((t) => (
-                  <span
-                    key={t}
-                    className="mono rounded border border-border bg-surface-2 px-1.5 py-0.5 text-[11px] text-muted"
-                  >
-                    {t}
-                  </span>
+                  <Tag key={t}>{t}</Tag>
                 ))}
               </div>
             </article>

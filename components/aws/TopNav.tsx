@@ -106,7 +106,7 @@ export function TopNav() {
             </a>
           ))}
           <span className="mx-1 h-5 w-px bg-white/15" />
-          <CvButton from="topnav" variant="primary" className="!py-1" />
+          <CvButton from="topnav" variant="ghost" />
         </div>
 
         {/* mobile toggle */}
