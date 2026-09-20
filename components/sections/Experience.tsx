@@ -21,48 +21,20 @@ function RoleEntry({ role }: { role: Role }) {
         {role.summary}
       </p>
 
-      {role.metrics?.length ? (
-        <div className="mt-5 flex flex-wrap gap-x-10 gap-y-3">
-          {role.metrics.map((m) => (
-            <div key={m.label}>
-              <div className="num text-lg font-semibold leading-none tracking-tight text-text">
-                {m.value}
-              </div>
-              <div className="mt-1 text-[12px] text-faint">{m.label}</div>
-            </div>
-          ))}
-        </div>
-      ) : null}
-
-      <ul className="mt-6 grid gap-x-10 gap-y-2.5 lg:grid-cols-2">
-        {role.highlights.map((h) => {
-          const idx = h.indexOf(" — ");
-          const lead = idx > -1 ? h.slice(0, idx) : null;
-          const body = idx > -1 ? h.slice(idx + 3) : h;
-          return (
-            <li
-              key={h}
-              className="border-l border-line pl-3.5 text-[13px] leading-[1.6] text-muted"
-            >
-              {lead ? (
-                <span className="font-semibold text-text">{lead} — </span>
-              ) : null}
-              {body}
-            </li>
-          );
-        })}
+      <ul className="mt-5 grid gap-x-12 gap-y-2.5 lg:grid-cols-2">
+        {role.highlights.map((h) => (
+          <li
+            key={h}
+            className="border-l border-line pl-3.5 text-[13px] leading-[1.6] text-muted"
+          >
+            {h}
+          </li>
+        ))}
       </ul>
 
-      <div className="mt-6 border-t border-line pt-3">
-        <h4 className="block-label">Stack</h4>
-        <ul className="mt-2 flex flex-wrap gap-1.5">
-          {role.stack.map((s) => (
-            <li key={s} className="tag">
-              {s}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <p className="mt-5 text-[12px] text-faint">
+        {role.stack.slice(0, 7).join(" · ")}
+      </p>
     </article>
   );
 }

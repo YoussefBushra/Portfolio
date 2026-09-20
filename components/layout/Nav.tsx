@@ -49,7 +49,12 @@ export function Nav() {
           className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
           aria-label={`${profile.name}, back to top`}
         >
-          <span className="h-[3px] w-5 bg-accent" aria-hidden="true" />
+          <span
+            className="flex h-6 w-6 items-center justify-center rounded-sm border border-text/70 text-[11px] font-bold leading-none tracking-tight text-text"
+            aria-hidden="true"
+          >
+            YB
+          </span>
           <span className="text-sm font-semibold tracking-tight text-text">
             Youssef Bushra
           </span>

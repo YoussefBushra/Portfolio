@@ -33,11 +33,11 @@ export const experience: Experience[] = [
       { label: "platforms integrated", value: "D365 + Odoo" },
     ],
     highlights: [
-      "Platform — backend services for a production multi-tenant SaaS platform spanning roughly 40 service and frontend applications, across logistics and financial-operations domains.",
-      "Microservices — service boundaries, message contracts, tenant isolation, and event-driven communication over RabbitMQ with idempotent consumers, in TypeScript and NestJS.",
-      "Integrations — Microsoft Dynamics 365 Finance, Odoo and custom third-party financial systems, synchronized through asynchronous, message-based flows.",
-      "Data & observability — PostgreSQL, MongoDB and Redis, with OpenTelemetry tracing and Grafana dashboards, to keep production systems reliable and observable under load.",
-      "Delivery — features across independently deployed Next.js applications behind a shared shell, shipped as Docker images through GitHub Actions CI.",
+      "Build and run backend services for a multi-tenant SaaS platform of roughly 40 service and frontend apps, across logistics and financial-operations domains.",
+      "Own service boundaries and message contracts — tenant isolation, idempotent RabbitMQ consumers, and the event-driven flows that keep the services consistent.",
+      "Integrated Microsoft Dynamics 365 Finance and Odoo with custom financial systems through asynchronous, message-based sync.",
+      "Keep production reliable on PostgreSQL, MongoDB and Redis, with OpenTelemetry tracing and Grafana dashboards for when it isn't.",
+      "Ship the frontends too: independently deployed Next.js apps behind a shared shell, released as Docker images through GitHub Actions.",
     ],
   },
   {
@@ -68,11 +68,11 @@ export const experience: Experience[] = [
       { label: "geo-query p95, target under 1s", value: "600ms" },
     ],
     highlights: [
-      "Geo-search — optimized geo-location search over a 10-million-record Elasticsearch dataset to a 600 ms average, against a sub-1-second target.",
-      "APIs — RESTful APIs with NestJS, TypeORM and PostgreSQL, plus GraphQL over a Redis cache to streamline client-side querying.",
-      "Access control — JWT authentication and role-based authorization across microservices, kept consistent between services without sacrificing scalability.",
-      "Logging pipeline — Filebeat, Elasticsearch and Kibana for real-time log collection, monitoring and visualization, integrated with DevOps into backend services.",
-      "Frontend — Next.js 14 and Tailwind features integrated with the NestJS APIs, with a multi-national team across Dubai, India, Romania and Egypt.",
+      "Led geo-search optimization over a 10-million-record Elasticsearch dataset, reaching a 600 ms average against a sub-1-second target.",
+      "Built the read APIs in NestJS, TypeORM and PostgreSQL, with GraphQL over a Redis cache for client-side querying.",
+      "Secured the services with JWT auth and role-based authorization, kept consistent across microservice boundaries.",
+      "Stood up the logging pipeline the team monitored it with — Filebeat, Elasticsearch and Kibana — alongside DevOps.",
+      "Worked across a multi-national team in Dubai, India, Romania and Egypt, wiring Next.js 14 to the NestJS APIs.",
     ],
   },
 ];

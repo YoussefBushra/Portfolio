@@ -59,7 +59,6 @@ export function Hero() {
                 <dd className="mt-1 text-text">{profile.availability}</dd>
               </div>
               <div>
-                <dt className="block-label">Elsewhere</dt>
                 <dd className="mt-1.5">
                   <SocialLinks from="hero" />
                 </dd>

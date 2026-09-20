@@ -150,14 +150,11 @@ export function Contact() {
 
         <div className="space-y-6">
           <div>
-            <h3 className="block-label">Profiles</h3>
+            <h3 className="block-label">Find me</h3>
             <div className="mt-1.5">
               <SocialLinks from="contact" />
             </div>
-          </div>
-          <div>
-            <h3 className="block-label">CV</h3>
-            <div className="mt-2">
+            <div className="mt-4">
               <CVButton from="contact" variant="ghost" />
             </div>
           </div>
