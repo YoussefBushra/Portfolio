@@ -5,7 +5,6 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-
 import { navNodes, profile } from "@/content/profile";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { CVButton } from "@/components/ui/CVButton";
-import { OPEN_PALETTE_EVENT } from "@/components/system/CommandPalette";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
@@ -84,14 +83,6 @@ export function Nav() {
 
         <div className="flex shrink-0 items-center gap-1.5">
           <CVButton from="nav" variant="compact" className="hidden lg:inline-flex" />
-          <button
-            type="button"
-            onClick={() => window.dispatchEvent(new Event(OPEN_PALETTE_EVENT))}
-            aria-label="Open command menu"
-            className="focus-ring hidden h-8 items-center rounded-sm border border-line bg-bg px-2 font-mono text-[11px] text-muted transition-colors duration-150 hover:border-accent hover:text-text sm:inline-flex"
-          >
-            ⌘K
-          </button>
           <ThemeToggle />
           <button
             type="button"

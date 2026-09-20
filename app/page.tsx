@@ -5,12 +5,10 @@ import { About } from "@/components/sections/About";
 import { Experience } from "@/components/sections/Experience";
 import { Skills } from "@/components/sections/Skills";
 import { Contact } from "@/components/sections/Contact";
-import { CommandPalette } from "@/components/system/CommandPalette";
 
 export default function Home() {
   return (
     <>
-      <CommandPalette />
       <Nav />
       <main>
         <Hero />

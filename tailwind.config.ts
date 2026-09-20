@@ -32,7 +32,7 @@ const config: Config = {
         DEFAULT: "3px",
       },
       maxWidth: {
-        page: "1240px",
+        page: "1120px",
         prose: "68ch",
       },
       transitionTimingFunction: {

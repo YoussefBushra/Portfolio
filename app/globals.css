@@ -77,7 +77,7 @@ body {
      label in the left column of the two-column section grid, where it is
      structural navigation rather than decoration. */
   .block-label {
-    @apply font-mono text-[11px] uppercase tracking-[0.14em] text-faint;
+    @apply font-sans text-[11px] font-semibold uppercase tracking-[0.08em] text-faint;
   }
 
   /* Tinted, not outlined. A border on every item rebuilds the wall of boxes
@@ -91,7 +91,7 @@ body {
   }
 
   .link {
-    @apply text-accent-text underline decoration-accent/40 decoration-1 underline-offset-[3px] transition-colors hover:decoration-accent;
+    @apply text-text underline decoration-line decoration-1 underline-offset-[3px] transition-colors hover:text-accent-text hover:decoration-accent;
   }
 
   .btn-primary {

@@ -46,7 +46,7 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
         <div className="md:sticky md:top-20 md:self-start">
           <h2 className="block-label">{label}</h2>
           {meta ? (
-            <p className="mt-1.5 font-mono text-[11px] leading-4 text-faint">{meta}</p>
+            <p className="mt-1.5 text-[12px] leading-4 text-faint">{meta}</p>
           ) : null}
         </div>
         <div className="min-w-0">{children}</div>

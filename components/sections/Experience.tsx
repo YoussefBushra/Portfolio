@@ -10,11 +10,11 @@ function RoleEntry({ role }: { role: Role }) {
         <h3 className="text-base font-semibold tracking-tight text-text">
           {role.role}
         </h3>
-        <p className="num font-mono text-[11px] text-faint">{role.period}</p>
+        <p className="num text-[12px] text-faint">{role.period}</p>
       </div>
-      <p className="mt-1 text-[13px] text-accent-text">
+      <p className="mt-1 text-[13px] font-medium text-text">
         {role.company}
-        <span className="text-faint">, {role.location}</span>
+        <span className="font-normal text-faint">, {role.location}</span>
       </p>
 
       <p className="mt-3 max-w-prose text-[15px] leading-relaxed text-muted">
@@ -28,21 +28,29 @@ function RoleEntry({ role }: { role: Role }) {
               <div className="num text-lg font-semibold leading-none tracking-tight text-text">
                 {m.value}
               </div>
-              <div className="mt-1 font-mono text-[11px] text-faint">{m.label}</div>
+              <div className="mt-1 text-[12px] text-faint">{m.label}</div>
             </div>
           ))}
         </div>
       ) : null}
 
       <ul className="mt-6 grid gap-x-10 gap-y-2.5 lg:grid-cols-2">
-        {role.highlights.map((h) => (
-          <li
-            key={h}
-            className="border-l border-line pl-3.5 text-[13px] leading-[1.6] text-muted"
-          >
-            {h}
-          </li>
-        ))}
+        {role.highlights.map((h) => {
+          const idx = h.indexOf(" — ");
+          const lead = idx > -1 ? h.slice(0, idx) : null;
+          const body = idx > -1 ? h.slice(idx + 3) : h;
+          return (
+            <li
+              key={h}
+              className="border-l border-line pl-3.5 text-[13px] leading-[1.6] text-muted"
+            >
+              {lead ? (
+                <span className="font-semibold text-text">{lead} — </span>
+              ) : null}
+              {body}
+            </li>
+          );
+        })}
       </ul>
 
       <div className="mt-6 border-t border-line pt-3">

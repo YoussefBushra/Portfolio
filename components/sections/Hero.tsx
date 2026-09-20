@@ -24,7 +24,7 @@ export function Hero() {
                 fill
                 priority
                 sizes="(max-width: 768px) 220px, 22vw"
-                className="object-cover object-[50%_12%]"
+                className="object-cover object-[50%_12%] grayscale"
               />
             </div>
           </div>
@@ -33,7 +33,7 @@ export function Hero() {
             <h1 className="text-[2rem] font-semibold leading-[1.05] tracking-tight sm:text-4xl">
               {profile.name}
             </h1>
-            <p className="mt-2 font-mono text-xs text-accent-text">{profile.role}</p>
+            <p className="mt-2 text-[13px] font-medium text-muted">{profile.role}</p>
 
             <p className="mt-6 text-xl font-medium leading-snug tracking-tight text-text sm:text-2xl">
               {profile.thesis}
@@ -68,24 +68,23 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Figures, all of them defended further down the page. */}
-        <dl className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:border-t lg:border-line">
-          {profile.facts.map((f, i) => (
-            <div
-              key={f.label}
-              className={`border-t border-line py-4 lg:border-t-0 lg:py-5 ${
-                i === 0 ? "lg:pr-5" : "lg:border-l lg:border-line lg:px-5"
-              }`}
-            >
-              <dt className="num text-2xl font-semibold tracking-tight text-text">
-                {f.value}
-              </dt>
-              <dd className="mt-1 text-[13px] leading-tight text-text">{f.label}</dd>
-              <dd className="mt-0.5 font-mono text-[11px] leading-tight text-faint">
-                {f.hint}
-              </dd>
-            </div>
-          ))}
+        {/* Two hard figures only — the soft counts live in context below. */}
+        <dl className="mt-9 flex flex-wrap gap-x-12 gap-y-4 border-t border-line pt-6">
+          {profile.facts
+            .filter((f) => f.value === "10M+" || f.value === "600ms")
+            .map((f) => (
+              <div key={f.label}>
+                <dt className="num text-2xl font-semibold tracking-tight text-text">
+                  {f.value}
+                </dt>
+                <dd className="mt-1 text-[13px] leading-tight text-text">
+                  {f.label}
+                </dd>
+                <dd className="mt-0.5 text-[12px] leading-tight text-faint">
+                  {f.hint}
+                </dd>
+              </div>
+            ))}
         </dl>
       </div>
     </section>
