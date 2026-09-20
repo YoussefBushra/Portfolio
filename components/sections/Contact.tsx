@@ -32,8 +32,11 @@ export function Contact() {
   return (
     <SectionShell id="contact" label="Contact" meta={profile.availability}>
       <div className="max-w-2xl">
+        <h2 className="text-balance text-[26px] font-semibold leading-[1.1] tracking-tight text-text sm:text-[32px]">
+          Build something that scales.
+        </h2>
         {/* Direct channels first — the fastest path for a recruiter. */}
-        <p className="text-[15px] leading-relaxed text-text">
+        <p className="mt-4 text-[15px] leading-relaxed text-muted">
           Open to backend &amp; full-stack roles and freelance systems work. The
           quickest way to reach me:
         </p>

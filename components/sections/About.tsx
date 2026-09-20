@@ -5,13 +5,23 @@ import { SectionShell } from "@/components/layout/SectionShell";
 export function About() {
   return (
     <SectionShell id="about" label="About">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-14">
-        <div className="space-y-5">
-          <dl className="grid grid-cols-1 gap-x-8 gap-y-2 border-b border-line pb-5 sm:grid-cols-[110px_1fr]">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-16">
+        <div>
+          <div className="max-w-[60ch] space-y-6">
+            {profile.summary.map((p, i) => (
+              <p key={i} className="text-[16px] leading-[1.75] text-muted">
+                {p}
+              </p>
+            ))}
+          </div>
+
+          <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-2.5 border-t border-line pt-6 sm:grid-cols-[110px_1fr]">
             {[
               { k: "Focus", v: "Backend · Distributed systems" },
-              { k: "Scope", v: "Multi-tenant SaaS · ~40 services · 10M-record search" },
-              { k: "Domains", v: "Logistics · Financial operations · Enterprise integrations" },
+              {
+                k: "Domains",
+                v: "Logistics · Financial operations · Enterprise integrations",
+              },
             ].map((row) => (
               <div key={row.k} className="contents">
                 <dt className="block-label pt-0.5">{row.k}</dt>
@@ -19,11 +29,6 @@ export function About() {
               </div>
             ))}
           </dl>
-          {profile.summary.map((p, i) => (
-            <p key={i} className="max-w-prose text-[15px] leading-[1.7] text-muted">
-              {p}
-            </p>
-          ))}
         </div>
 
         <div className="space-y-6">

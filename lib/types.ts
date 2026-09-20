@@ -57,6 +57,10 @@ export interface Experience {
 export interface SkillGroup {
   name: string;
   items: string[];
+  /** "primary" domains render as cards; "secondary" render as a quiet line. */
+  emphasis?: "primary" | "secondary";
+  /** Optional evidence link: short label + section anchor. */
+  evidence?: { label: string; href: string };
 }
 
 export interface EducationEntry {
