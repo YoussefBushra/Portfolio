@@ -10,8 +10,8 @@ export function About() {
           <dl className="grid grid-cols-1 gap-x-8 gap-y-2 border-b border-line pb-5 sm:grid-cols-[110px_1fr]">
             {[
               { k: "Focus", v: "Backend · Distributed systems" },
+              { k: "Scope", v: "Multi-tenant SaaS · ~40 services · 10M-record search" },
               { k: "Domains", v: "Logistics · Financial operations · Enterprise integrations" },
-              { k: "Experience", v: "2+ years shipping production systems" },
             ].map((row) => (
               <div key={row.k} className="contents">
                 <dt className="block-label pt-0.5">{row.k}</dt>

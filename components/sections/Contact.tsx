@@ -2,7 +2,6 @@
 
 import { SectionShell } from "@/components/layout/SectionShell";
 import { CVButton } from "@/components/ui/CVButton";
-import { SocialLinks } from "@/components/ui/SocialLinks";
 import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 import { useForm, ValidationError } from "@formspree/react";
@@ -13,6 +12,9 @@ import { useEffect } from "react";
  * way, and Formspree scopes abuse protection to the form itself.
  */
 const FORM_ID = "xnpabgrq";
+
+const LINKEDIN = profile.socials.find((s) => s.label === "LinkedIn")?.href;
+const GITHUB = profile.socials.find((s) => s.label === "GitHub")?.href;
 
 const field =
   "focus-ring w-full rounded-sm border border-line bg-bg px-3 py-2 text-sm text-text placeholder:text-faint transition-colors duration-150 focus:border-accent";
@@ -28,13 +30,47 @@ export function Contact() {
 
   return (
     <SectionShell id="contact" label="Contact" meta={profile.availability}>
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:gap-14">
-        <div>
+      <div className="max-w-2xl">
+        {/* Direct channels first — the fastest path for a recruiter. */}
+        <p className="text-[15px] leading-relaxed text-text">
+          Open to backend &amp; full-stack roles and freelance systems work. The
+          quickest way to reach me:
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2.5">
+          {LINKEDIN ? (
+            <a
+              href={LINKEDIN}
+              target="_blank"
+              rel="noreferrer noopener"
+              onClick={() => track("social_click", { label: "LinkedIn", from: "contact" })}
+              className="btn-primary"
+            >
+              LinkedIn
+            </a>
+          ) : null}
+          {GITHUB ? (
+            <a
+              href={GITHUB}
+              target="_blank"
+              rel="noreferrer noopener"
+              onClick={() => track("social_click", { label: "GitHub", from: "contact" })}
+              className="btn-ghost"
+            >
+              GitHub
+            </a>
+          ) : null}
+          <CVButton from="contact" variant="ghost" />
+        </div>
+
+        {/* Message form, secondary. */}
+        <div className="mt-9 border-t border-line pt-6">
+          <h3 className="block-label">Or send a message</h3>
+
           {state.succeeded ? (
-            <div className="rounded-sm border border-line bg-surface p-6">
-              <h3 className="text-base font-semibold tracking-tight text-text">
+            <div className="mt-4 rounded-sm border border-line bg-surface p-6">
+              <h4 className="text-base font-semibold tracking-tight text-text">
                 Message sent
-              </h3>
+              </h4>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">
                 Thanks for reaching out. I will get back to you shortly.
               </p>
@@ -47,8 +83,7 @@ export function Contact() {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} noValidate>
-              {/* Sets the subject line of the notification email. */}
+            <form onSubmit={handleSubmit} noValidate className="mt-4">
               <input
                 type="hidden"
                 name="_subject"
@@ -77,10 +112,7 @@ export function Contact() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label
-                    htmlFor="email"
-                    className="text-[13px] font-medium text-text"
-                  >
+                  <label htmlFor="email" className="text-[13px] font-medium text-text">
                     Email
                   </label>
                   <input
@@ -102,10 +134,7 @@ export function Contact() {
               </div>
 
               <div className="mt-4 flex flex-col gap-1.5">
-                <label
-                  htmlFor="message"
-                  className="text-[13px] font-medium text-text"
-                >
+                <label htmlFor="message" className="text-[13px] font-medium text-text">
                   Message
                 </label>
                 <textarea
@@ -127,37 +156,19 @@ export function Contact() {
                 />
               </div>
 
-              {/* Anything Formspree rejects at the form level, e.g. a blocked
-                  submission or an outage, rather than a single bad field. */}
-              <ValidationError
-                errors={state.errors}
-                className={`${errorText} mt-4`}
-              />
+              <ValidationError errors={state.errors} className={`${errorText} mt-4`} />
 
-              <div className="mt-5 flex flex-wrap items-center gap-3">
+              <div className="mt-5">
                 <button
                   type="submit"
                   disabled={state.submitting}
-                  className="btn-primary disabled:cursor-not-allowed disabled:opacity-70"
+                  className="btn-ghost disabled:cursor-not-allowed disabled:opacity-70"
                 >
                   {state.submitting ? "Sending" : "Send message"}
                 </button>
-               
               </div>
             </form>
           )}
-        </div>
-
-        <div className="space-y-6">
-          <div>
-            <h3 className="block-label">Find me</h3>
-            <div className="mt-1.5">
-              <SocialLinks from="contact" />
-            </div>
-            <div className="mt-4">
-              <CVButton from="contact" variant="ghost" />
-            </div>
-          </div>
         </div>
       </div>
     </SectionShell>
