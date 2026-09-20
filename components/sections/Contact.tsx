@@ -2,6 +2,7 @@
 
 import { SectionShell } from "@/components/layout/SectionShell";
 import { CVButton } from "@/components/ui/CVButton";
+import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
 import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 import { useForm, ValidationError } from "@formspree/react";
@@ -45,6 +46,7 @@ export function Contact() {
               onClick={() => track("social_click", { label: "LinkedIn", from: "contact" })}
               className="btn-primary"
             >
+              <LinkedInMark />
               LinkedIn
             </a>
           ) : null}
@@ -56,6 +58,7 @@ export function Contact() {
               onClick={() => track("social_click", { label: "GitHub", from: "contact" })}
               className="btn-ghost"
             >
+              <GitHubMark />
               GitHub
             </a>
           ) : null}
