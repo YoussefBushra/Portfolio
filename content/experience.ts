@@ -9,7 +9,7 @@ export const experience: Experience[] = [
     start: "2024-08",
     current: true,
     summary:
-      "Backend and full-stack development on a production logistics and freight-forwarding platform, supporting financial and operational workflows across CRM, invoicing and system integrations.",
+      "Backend and full-stack development on a production logistics and freight-forwarding platform, across CRM, invoicing and system integrations.",
     stack: [
       "TypeScript",
       "NestJS",
@@ -22,11 +22,9 @@ export const experience: Experience[] = [
       "Microsoft Dynamics 365",
     ],
     highlights: [
-      "Built and maintained backend services for a live logistics and freight-forwarding platform used in production.",
-      "Developed core CRM features — leads, companies, contacts, activities, documents and financial accounts — with bulk data import and validation.",
-      "Built integrations with Microsoft Dynamics 365 to synchronize invoices, payments, customers and exchange rates between systems.",
-      "Automated logistics document generation, producing shipping documents, commercial invoices and manifests from data across several systems.",
-      "Focused on reliability and data integrity in how independently deployed services communicate.",
+      "Built core CRM features — leads, companies, contacts, financial accounts — with bulk import and validation.",
+      "Integrated Microsoft Dynamics 365 to sync invoices, payments, customers and exchange rates between systems.",
+      "Automated logistics document generation and focused on reliability and data integrity across services.",
     ],
   },
   {

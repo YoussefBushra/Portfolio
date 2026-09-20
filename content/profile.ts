@@ -11,7 +11,7 @@ export const profile: Profile = {
     "Youssef Bushra Fouad, backend-focused full stack engineer building microservices for a multi-tenant SaaS platform with NestJS, Node.js, TypeScript, RabbitMQ, PostgreSQL and MongoDB. Experienced in event-driven architecture, enterprise integrations and high-volume search.",
   summary: [
     "I'm a backend-focused software engineer who builds and maintains the systems behind real business products — the services, integrations and data workflows that keep a platform running reliably.",
-    "Most of my work is on production systems in logistics and finance: CRM and invoicing features, integrations with external business systems, and the background processes that move data between them. I build the interfaces on top of them too, and I care about reliability, data integrity, and keeping systems clear as they grow.",
+    "I work mostly on production systems in logistics and finance, and I build the interfaces on top of them too. What I care about most is reliability, data integrity, and keeping systems clear as they grow.",
   ],
   socials: [
     {

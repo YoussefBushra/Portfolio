@@ -4,12 +4,12 @@ import type { SkillGroup } from "@/lib/types";
 export const skillGroups: SkillGroup[] = [
   { name: "Backend", items: ["NestJS", "Node.js", "TypeScript"] },
   { name: "Data", items: ["PostgreSQL", "MongoDB", "Redis", "Elasticsearch"] },
-  { name: "Frontend", items: ["React", "Next.js", "Tailwind CSS"] },
   {
     name: "Architecture & integration",
     items: ["Microservices", "RabbitMQ", "Microsoft Dynamics 365"],
   },
   { name: "Testing & delivery", items: ["Jest", "Docker", "GitHub Actions"] },
+  { name: "Frontend", items: ["React", "Next.js", "Tailwind CSS"] },
 ];
 
 export const spokenLanguages = "Arabic (native), English (C1), German (A1)";

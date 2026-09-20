@@ -17,16 +17,16 @@ export function Hero() {
   return (
     <section id="hero" className="px-6 md:px-10">
       <div className="mx-auto max-w-page pb-10 pt-20 md:pb-12 md:pt-24">
-        <div className="grid gap-8 md:grid-cols-[210px_minmax(0,1fr)] md:gap-12">
+        <div className="grid items-stretch gap-8 md:grid-cols-[290px_minmax(0,1fr)] md:gap-12">
           <div>
-            <div className="relative aspect-[3/4] w-full max-w-[210px] overflow-hidden rounded-md border border-line bg-surface shadow-sm md:max-w-none">
+            <div className="relative aspect-[3/4] w-full max-w-[240px] overflow-hidden rounded-md border border-line bg-surface shadow-sm md:h-full md:max-w-none">
               <Image
                 src={PORTRAIT}
                 alt={`${profile.name}, ${profile.role}`}
                 fill
                 priority
-                sizes="(max-width: 768px) 210px, 210px"
-                className="object-cover object-[50%_30%]"
+                sizes="(max-width: 768px) 240px, 290px"
+                className="object-cover object-[50%_25%]"
               />
             </div>
           </div>

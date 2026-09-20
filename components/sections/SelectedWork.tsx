@@ -27,17 +27,6 @@ const WORK: WorkItem[] = [
     ],
   },
   {
-    title: "Large-scale search optimization",
-    context: "Block Gemini · Dubai",
-    body: "Optimized geo-location search across a dataset of more than 10 million records, reaching approximately 600 ms average response — comfortably inside a one-second target.",
-    scale: true,
-    tech: ["Elasticsearch", "NestJS", "PostgreSQL", "Redis"],
-    details: [
-      "Elasticsearch index and query tuning for geo-location queries",
-      "Caching plus a logging and monitoring pipeline to operate the system",
-    ],
-  },
-  {
     title: "CRM & business platform development",
     context: "Skil-Dev · Logistics & freight-forwarding platform",
     body: "Built and maintained core CRM features — leads, companies, contacts, activities, documents and financial accounts — including bulk data import and validation, on a platform serving logistics and financial operations.",
@@ -57,6 +46,17 @@ const WORK: WorkItem[] = [
       "Cross-system data aggregation into generated PDF document sets",
       "Background job processing with scheduled cleanup",
       "Data-privacy handling and dangerous-goods detection",
+    ],
+  },
+  {
+    title: "Large-scale search optimization",
+    context: "Block Gemini · Dubai",
+    body: "Optimized geo-location search across a dataset of more than 10 million records, reaching approximately 600 ms average response — comfortably inside a one-second target.",
+    scale: true,
+    tech: ["Elasticsearch", "NestJS", "PostgreSQL", "Redis"],
+    details: [
+      "Elasticsearch index and query tuning for geo-location queries",
+      "Caching plus a logging and monitoring pipeline to operate the system",
     ],
   },
 ];
