@@ -1,8 +1,8 @@
-import Image from "next/image";
-import { profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
+import { profile } from "@/content/profile";
+import Image from "next/image";
 
 const PORTRAIT = "/portrait.jpg";
 const GITHUB = profile.socials.find((s) => s.label === "GitHub")?.href ?? "#";
@@ -26,7 +26,7 @@ export function Hero() {
                 fill
                 priority
                 sizes="(max-width: 768px) 220px, 22vw"
-                className="scale-[1.28] object-cover object-[50%_8%]"
+                className="object-cover object-[50%_30%]"
               />
             </div>
           </div>
