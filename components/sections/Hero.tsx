@@ -1,7 +1,6 @@
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
-import { SystemFlow } from "@/components/ui/SystemFlow";
 import { profile } from "@/content/profile";
 import Image from "next/image";
 
@@ -18,22 +17,22 @@ export function Hero() {
   return (
     <section id="hero" className="px-6 md:px-10">
       <div className="mx-auto max-w-page pb-10 pt-20 md:pb-12 md:pt-24">
-        <div className="grid gap-8 md:grid-cols-[200px_minmax(0,1fr)] md:gap-12 lg:grid-cols-[200px_minmax(0,1fr)_280px]">
+        <div className="grid gap-8 md:grid-cols-[210px_minmax(0,1fr)] md:gap-12">
           <div>
-            <div className="relative aspect-[3/4] w-full max-w-[200px] overflow-hidden rounded-md border border-line bg-surface shadow-sm md:max-w-none">
+            <div className="relative aspect-[3/4] w-full max-w-[210px] overflow-hidden rounded-md border border-line bg-surface shadow-sm md:max-w-none">
               <Image
                 src={PORTRAIT}
                 alt={`${profile.name}, ${profile.role}`}
                 fill
                 priority
-                sizes="(max-width: 768px) 200px, 200px"
+                sizes="(max-width: 768px) 210px, 210px"
                 className="object-cover object-[50%_30%]"
               />
             </div>
           </div>
 
           <div className="min-w-0">
-            <p className="text-[13px] font-medium text-muted">{profile.role}</p>
+            <p className="text-[13px] font-medium text-muted">Software Engineer</p>
             <h1 className="mt-1.5 text-[2rem] font-semibold leading-[1.03] tracking-tight text-text sm:text-4xl">
               {profile.name}
             </h1>
@@ -72,14 +71,6 @@ export function Hero() {
               </a>
               <ContactLink />
             </div>
-          </div>
-
-          {/* Subtle engineering visual, in the negative space (desktop only). */}
-          <div
-            className="hidden items-center justify-center lg:flex"
-            aria-hidden="true"
-          >
-            <SystemFlow className="h-auto w-full max-w-[260px] opacity-90" />
           </div>
         </div>
       </div>

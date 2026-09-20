@@ -28,10 +28,17 @@ function emphasize(text: string): ReactNode[] {
 
 function RoleEntry({ role }: { role: Role }) {
   return (
-    <article className="panel p-5 sm:p-6">
+    <article
+      className={`panel p-5 sm:p-6 ${role.current ? "border-l-2 border-l-accent" : ""}`}
+    >
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <h3 className="text-[17px] font-semibold tracking-tight text-text">
+        <h3 className="flex items-center gap-2.5 text-[17px] font-semibold tracking-tight text-text">
           {role.role}
+          {role.current ? (
+            <span className="rounded-sm border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-accent-text">
+              Current
+            </span>
+          ) : null}
         </h3>
         <p className="num text-[12.5px] text-faint">{role.period}</p>
       </div>

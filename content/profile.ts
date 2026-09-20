@@ -5,13 +5,13 @@ export const profile: Profile = {
   role: "Backend-Focused Full Stack Engineer",
   thesis: "I build the services other systems depend on.",
   tagline:
-    "Backend and distributed systems: message-driven microservices on a multi-tenant SaaS platform, search at scale, and enterprise integrations.",
+    "Backend-focused engineer experienced in production systems, business applications, integrations, and scalable backend services.",
   location: "Cairo, Egypt",
   metaDescription:
     "Youssef Bushra Fouad, backend-focused full stack engineer building microservices for a multi-tenant SaaS platform with NestJS, Node.js, TypeScript, RabbitMQ, PostgreSQL and MongoDB. Experienced in event-driven architecture, enterprise integrations and high-volume search.",
   summary: [
-    "I build backend services for a production multi-tenant SaaS platform. Services are decomposed by business domain, own their data, and communicate asynchronously through a message broker, behind a single API gateway that resolves authentication and authorization centrally.",
-    "Most of my work sits between services: boundaries and message contracts, tenant isolation enforced at the data-access layer, idempotent consumers, and the asynchronous flows that keep independently deployed services consistent under load. I build the interfaces on top of them too, and I care about clean boundaries, measurable performance, and systems that stay legible as they grow.",
+    "I'm a backend-focused software engineer who builds and maintains the systems behind real business products — the services, integrations and data workflows that keep a platform running reliably.",
+    "Most of my work is on production systems in logistics and finance: CRM and invoicing features, integrations with external business systems, and the background processes that move data between them. I build the interfaces on top of them too, and I care about reliability, data integrity, and keeping systems clear as they grow.",
   ],
   socials: [
     {
@@ -53,8 +53,9 @@ export const profile: Profile = {
 };
 
 export const navNodes: NavNode[] = [
+  { id: "work", label: "Work" },
   { id: "about", label: "About" },
   { id: "experience", label: "Experience" },
-  { id: "skills", label: "Stack" },
+  { id: "skills", label: "Skills" },
   { id: "contact", label: "Contact" },
 ];
