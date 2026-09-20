@@ -4,10 +4,18 @@ import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 
 /** Compact list of external profiles, one per row. */
-export function SocialLinks({ from }: { from: string }) {
+export function SocialLinks({
+  from,
+  exclude = [],
+}: {
+  from: string;
+  exclude?: string[];
+}) {
   return (
     <ul className="space-y-1">
-      {profile.socials.map((s) => (
+      {profile.socials
+        .filter((s) => !exclude.includes(s.label))
+        .map((s) => (
         <li key={s.label}>
           <a
             href={s.href}

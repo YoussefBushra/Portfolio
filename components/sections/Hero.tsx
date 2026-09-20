@@ -2,10 +2,10 @@ import Image from "next/image";
 import { profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
-import { SocialLinks } from "@/components/ui/SocialLinks";
 
 const PORTRAIT = "/portrait.jpg";
 const GITHUB = profile.socials.find((s) => s.label === "GitHub")?.href ?? "#";
+const LINKEDIN = profile.socials.find((s) => s.label === "LinkedIn")?.href ?? "#";
 
 function GitHubMark() {
   return (
@@ -24,34 +24,43 @@ export function Hero() {
   return (
     <section id="hero" className="px-6 md:px-10">
       <div className="mx-auto max-w-page pb-10 pt-20 md:pb-12 md:pt-24">
-        <div className="grid gap-8 md:grid-cols-12 md:gap-10">
-          <div className="md:col-span-3">
-            <div className="relative aspect-[4/5] w-full max-w-[220px] overflow-hidden rounded-sm border border-line bg-surface md:max-w-none">
+        <div className="grid gap-8 md:grid-cols-[220px_minmax(0,1fr)] md:gap-12">
+          <div>
+            <div className="relative aspect-[4/5] w-full max-w-[220px] overflow-hidden rounded-md border border-line bg-surface md:max-w-none">
               <Image
                 src={PORTRAIT}
                 alt={`${profile.name}, ${profile.role}`}
                 fill
                 priority
                 sizes="(max-width: 768px) 220px, 22vw"
-                className="scale-[1.28] object-cover object-[50%_8%] grayscale"
+                className="scale-[1.28] object-cover object-[50%_8%]"
               />
             </div>
           </div>
 
-          <div className="md:col-span-6">
+          <div className="min-w-0">
             <h1 className="text-[2rem] font-semibold leading-[1.05] tracking-tight sm:text-4xl">
               {profile.name}
             </h1>
-            <p className="mt-2 text-[13px] font-medium text-muted">{profile.role}</p>
+            <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px]">
+              <span className="font-medium text-muted">{profile.role}</span>
+              <span className="text-line" aria-hidden>
+                ·
+              </span>
+              <span className="inline-flex items-center gap-1.5 text-muted">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                {profile.availability}
+              </span>
+            </div>
 
-            <p className="mt-6 text-xl font-medium leading-snug tracking-tight text-text sm:text-2xl">
+            <p className="mt-6 max-w-xl text-xl font-medium leading-snug tracking-tight text-text sm:text-2xl">
               {profile.thesis}
             </p>
-            <p className="mt-3 max-w-prose text-[15px] leading-relaxed text-muted">
+            <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">
               {profile.tagline}
             </p>
 
-            <div className="mt-7 flex flex-wrap gap-2.5">
+            <div className="mt-7 flex flex-wrap items-center gap-2.5">
               <CVButton from="hero" variant="primary" />
               <a
                 href={GITHUB}
@@ -62,53 +71,46 @@ export function Hero() {
                 <GitHubMark />
                 GitHub
               </a>
+              <a
+                href={LINKEDIN}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="btn-ghost"
+              >
+                LinkedIn
+              </a>
               <ContactLink />
             </div>
-          </div>
 
-          <div className="md:col-span-3">
-            <dl className="space-y-3 text-sm">
-              <div>
-                <dt className="block-label">Based in</dt>
-                <dd className="mt-1 text-text">{profile.location}</dd>
-              </div>
-              <div>
-                <dt className="block-label">Status</dt>
-                <dd className="mt-1 text-text">{profile.availability}</dd>
-              </div>
-              <div>
-                <dd className="mt-1.5">
-                  <SocialLinks from="hero" />
-                </dd>
-              </div>
-            </dl>
+            {/* Two hard figures in one tidy card, with where they came from. */}
+            <div className="panel mt-8 flex flex-wrap items-center gap-x-8 gap-y-4 p-5 sm:max-w-xl">
+              {profile.facts
+                .filter((f) => f.value === "10M+" || f.value === "600ms")
+                .map((f, i) => (
+                  <div
+                    key={f.label}
+                    className={i > 0 ? "sm:border-l sm:border-line sm:pl-8" : ""}
+                  >
+                    <div className="num text-2xl font-semibold tracking-tight text-text">
+                      {f.value}
+                    </div>
+                    <div className="mt-1 text-[13px] leading-tight text-text">
+                      {f.label}
+                    </div>
+                    <div className="mt-0.5 text-[12px] leading-tight text-faint">
+                      {f.hint}
+                    </div>
+                  </div>
+                ))}
+              <a
+                href="#experience"
+                className="focus-ring rounded-sm text-[12px] text-muted underline decoration-line underline-offset-[3px] transition-colors hover:text-text hover:decoration-accent sm:ml-auto sm:self-end"
+              >
+                at Block Gemini →
+              </a>
+            </div>
           </div>
         </div>
-
-        {/* Two hard figures, with where they came from. */}
-        <dl className="mt-9 flex flex-wrap items-end gap-x-12 gap-y-4 border-t border-line pt-6">
-          {profile.facts
-            .filter((f) => f.value === "10M+" || f.value === "600ms")
-            .map((f) => (
-              <div key={f.label}>
-                <dt className="num text-2xl font-semibold tracking-tight text-text">
-                  {f.value}
-                </dt>
-                <dd className="mt-1 text-[13px] leading-tight text-text">
-                  {f.label}
-                </dd>
-                <dd className="mt-0.5 text-[12px] leading-tight text-faint">
-                  {f.hint}
-                </dd>
-              </div>
-            ))}
-          <a
-            href="#experience"
-            className="focus-ring rounded-sm text-[12px] text-muted underline decoration-line underline-offset-[3px] transition-colors hover:text-text hover:decoration-accent"
-          >
-            Elasticsearch geo-search at Block Gemini →
-          </a>
-        </dl>
       </div>
     </section>
   );

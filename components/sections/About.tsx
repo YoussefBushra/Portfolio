@@ -4,7 +4,7 @@ import { SectionShell } from "@/components/layout/SectionShell";
 
 export function About() {
   return (
-    <SectionShell id="about" label="About" meta={profile.location}>
+    <SectionShell id="about" label="About">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-14">
         <div className="space-y-5">
           <dl className="grid grid-cols-1 gap-x-8 gap-y-2 border-b border-line pb-5 sm:grid-cols-[110px_1fr]">

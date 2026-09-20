@@ -5,7 +5,7 @@ import { SectionShell } from "@/components/layout/SectionShell";
 
 function RoleEntry({ role }: { role: Role }) {
   return (
-    <article className="border-t border-line pt-6">
+    <article className="panel p-5 sm:p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h3 className="text-base font-semibold tracking-tight text-text">
           {role.role}
@@ -46,7 +46,7 @@ export function Experience() {
       label="Experience"
       meta={`${careerStartYear()} to present`}
     >
-      <div className="space-y-9">
+      <div className="space-y-4">
         {experience.map((role) => (
           <RoleEntry key={role.company} role={role} />
         ))}
