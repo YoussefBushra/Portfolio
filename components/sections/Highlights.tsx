@@ -22,7 +22,7 @@ export function Highlights() {
       <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {HIGHLIGHTS.map((h) => (
           <div key={h.label} className="panel p-6">
-            <dt className="num text-balance text-[26px] font-semibold leading-[1.05] tracking-tight text-text sm:text-[30px]">
+            <dt className="num flex min-h-[2.1em] items-start text-balance text-[26px] font-semibold leading-[1.05] tracking-tight text-text sm:text-[30px]">
               {h.value}
             </dt>
             <dd className="mt-3 text-[14px] font-medium text-text">{h.label}</dd>

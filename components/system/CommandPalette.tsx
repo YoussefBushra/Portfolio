@@ -183,7 +183,7 @@ export function CommandPalette() {
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             onMouseDown={(e) => e.stopPropagation()}
             onKeyDown={onKeyDown}
-            className="w-full max-w-lg overflow-hidden rounded border border-line bg-surface shadow-2xl shadow-black/10"
+            className="w-full max-w-lg overflow-hidden rounded-md border border-line bg-surface shadow-2xl shadow-black/10"
           >
             <div className="border-b border-line px-4">
               <input

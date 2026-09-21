@@ -20,7 +20,7 @@ export function Hero() {
       <div className="mx-auto max-w-page px-6 pb-10 pt-20 md:px-10 md:pb-12 md:pt-24">
         <div className="grid items-start gap-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-14">
           <div>
-            <div className="relative aspect-[3/4] w-full max-w-[240px] overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+            <div className="relative aspect-[3/4] w-full max-w-[200px] overflow-hidden rounded-2xl border border-line bg-surface shadow-sm md:max-w-none">
               <Image
                 src={PORTRAIT}
                 alt={`${profile.name}, ${profile.role}`}

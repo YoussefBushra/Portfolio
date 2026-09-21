@@ -94,7 +94,7 @@ export function Nav() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-8 w-8 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
+            className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
           >
             <span className="flex flex-col gap-[3px]">
               <span
