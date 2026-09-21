@@ -49,23 +49,24 @@ export function Nav() {
           className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
           aria-label={`${profile.name}, back to top`}
         >
-          {/* Same stacked-bars mark as the favicon; the square adapts to the
-              theme (dark on light, light on dark) while the bars stay amber. */}
+          {/* Identical geometry to the favicon (centered stacked bars); only
+              the colors are theme-aware so the square adapts (dark on light,
+              light on dark) while the bars stay amber. */}
           <svg
             viewBox="0 0 32 32"
             className="h-[26px] w-[26px] shrink-0"
             aria-hidden="true"
           >
-            <rect width="32" height="32" rx="7" className="fill-text" />
-            <rect x="6" y="10" width="20" height="4" rx="1.5" className="fill-accent" />
+            <rect width="32" height="32" rx="4" className="fill-text" />
+            <rect x="5" y="9" width="22" height="4" rx="1" className="fill-accent" />
             <rect
-              x="6"
-              y="18"
-              width="12"
+              x="9"
+              y="19"
+              width="14"
               height="4"
-              rx="1.5"
+              rx="1"
               className="fill-accent"
-              opacity="0.5"
+              opacity="0.55"
             />
           </svg>
           <span className="text-sm font-semibold tracking-tight text-text">
