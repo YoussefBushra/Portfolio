@@ -18,7 +18,7 @@ const WORK: WorkItem[] = [
   {
     title: "Business system integration — Microsoft Dynamics 365",
     context: "Skil-Dev · Logistics & freight-forwarding platform",
-    body: "Built and maintained integrations with Microsoft Dynamics 365 that keep financial and operational data in sync between the company's platform and its accounting systems — invoices, payments, customers and exchange rates.",
+    body: "Built and maintained Microsoft Dynamics 365 integrations for invoices, payments, customers, and exchange rates across the company's logistics platform.",
     tech: ["Microsoft Dynamics 365", "NestJS", "TypeScript", "PostgreSQL"],
     details: [
       "OData client with OAuth2, token refresh and rate-limit handling",
@@ -29,7 +29,7 @@ const WORK: WorkItem[] = [
   {
     title: "CRM & business platform development",
     context: "Skil-Dev · Logistics & freight-forwarding platform",
-    body: "Built and maintained core CRM features — leads, companies, contacts, activities, documents and financial accounts — including bulk data import and validation, on a platform serving logistics and financial operations.",
+    body: "Built and maintained CRM features for leads, companies, contacts, activities, documents, and financial accounts, including bulk Excel import and validation.",
     tech: ["NestJS", "TypeScript", "PostgreSQL", "React"],
     details: [
       "Full CRM domain, with lead-to-company conversion as an audited transaction",
@@ -40,18 +40,19 @@ const WORK: WorkItem[] = [
   {
     title: "Document & workflow automation",
     context: "Skil-Dev · Logistics operations",
-    body: "Developed automated document generation for logistics operations — shipping documents, commercial invoices, manifests and document bundles — produced from data gathered across multiple systems.",
+    body: "Built the service that generates shipping documents and document bundles from shipment data gathered across multiple systems, with asynchronous processing and scheduled cleanup.",
     tech: ["NestJS", "PostgreSQL", "Background jobs"],
     details: [
-      "Cross-system data aggregation into generated PDF document sets",
-      "Background job processing with scheduled cleanup",
-      "Data-privacy handling and dangerous-goods detection",
+      "Shipping and container document generation from cross-service shipment data",
+      "PDF documents and multi-document bundles built from templates",
+      "Asynchronous document jobs with scheduled cleanup of generated files",
+      "Dangerous-goods detection and consignee-data privacy handling",
     ],
   },
   {
     title: "Large-scale search optimization",
     context: "Block Gemini · Dubai",
-    body: "Optimized geo-location search across a dataset of more than 10 million records, reaching approximately 600 ms average response — comfortably inside a one-second target.",
+    body: "Optimized geo-location search across more than 10 million records, reaching approximately 600 ms average response against a one-second target.",
     scale: true,
     tech: ["Elasticsearch", "NestJS", "PostgreSQL", "Redis"],
     details: [
@@ -90,10 +91,13 @@ function ScaleVisual() {
 
 export function SelectedWork() {
   return (
-    <SectionShell id="work" label="Selected Work" variant="wide">
+    <SectionShell id="work" label="Selected Work">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {WORK.map((w) => (
-          <article key={w.title} className="panel flex flex-col p-6">
+          <article
+            key={w.title}
+            className="panel flex flex-col p-6 transition-all duration-200 hover:border-faint hover:shadow-md"
+          >
             <h3 className="text-[17px] font-semibold tracking-tight text-text">
               {w.title}
             </h3>

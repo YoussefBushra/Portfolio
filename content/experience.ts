@@ -9,7 +9,7 @@ export const experience: Experience[] = [
     start: "2024-08",
     current: true,
     summary:
-      "Backend and full-stack development on a production logistics and freight-forwarding platform, across CRM, invoicing and system integrations.",
+      "Backend and full-stack development for a logistics and freight-forwarding platform, working across CRM, invoicing, Microsoft Dynamics 365 integrations, and document workflows.",
     stack: [
       "TypeScript",
       "NestJS",
@@ -22,9 +22,10 @@ export const experience: Experience[] = [
       "Microsoft Dynamics 365",
     ],
     highlights: [
-      "Built core CRM features — leads, companies, contacts, financial accounts — with bulk import and validation.",
-      "Integrated Microsoft Dynamics 365 to sync invoices, payments, customers and exchange rates between systems.",
-      "Automated logistics document generation and focused on reliability and data integrity across services.",
+      "Built CRM features for leads, companies, contacts, activities, and financial accounts, including bulk Excel import and validation.",
+      "Integrated Microsoft Dynamics 365 for invoices, payments, customers, and exchange rates.",
+      "Built automated generation of shipping documents and document bundles from data collected across multiple services.",
+      "Developed and maintained NestJS microservices using RabbitMQ and PostgreSQL.",
     ],
   },
   {
@@ -35,7 +36,7 @@ export const experience: Experience[] = [
     start: "2024-01",
     end: "2024-08",
     summary:
-      "Optimized large-scale geo-location search and built the tooling the team used to run and monitor it.",
+      "Optimized geo-location search over a 10M+ record dataset, reaching approximately 600 ms average response against a one-second target.",
     stack: [
       "NestJS",
       "PostgreSQL",
@@ -45,10 +46,10 @@ export const experience: Experience[] = [
       "Kibana",
     ],
     highlights: [
-      "Optimized geo-location search over a 10-million-record dataset, reaching a 600 ms average response against a sub-1-second target.",
-      "Built the APIs and the logging and monitoring pipeline the team used to operate the search system.",
-      "Handled authentication and role-based access across the services.",
-      "Worked with a multi-national team across Dubai, India, Romania and Egypt.",
+      "Tuned Elasticsearch indexing and queries to bring geo-location search under the one-second target.",
+      "Built the search APIs and a logging and monitoring pipeline to operate the system.",
+      "Implemented authentication and role-based access across the services.",
+      "Collaborated with a distributed team across Dubai, India, Romania and Egypt.",
     ],
   },
 ];

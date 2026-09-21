@@ -9,23 +9,24 @@ const GITHUB = profile.socials.find((s) => s.label === "GitHub")?.href ?? "#";
 const LINKEDIN = profile.socials.find((s) => s.label === "LinkedIn")?.href ?? "#";
 
 /**
- * The identity band. Not a hero: it carries the photo, the name, the claim,
- * the contact details and five figures in a single screen, because the first
- * screen is the only one some readers will look at.
+ * The identity band: the photo, the name, the positioning claim, and the
+ * contact actions in a single screen, because the first screen is the only one
+ * some readers will look at. The portrait is deliberately kept modest so the
+ * text carries the most weight.
  */
 export function Hero() {
   return (
-    <section id="hero" className="px-6 md:px-10">
-      <div className="mx-auto max-w-page pb-10 pt-20 md:pb-12 md:pt-24">
-        <div className="grid items-stretch gap-8 md:grid-cols-[290px_minmax(0,1fr)] md:gap-12">
+    <section id="hero">
+      <div className="mx-auto max-w-page px-6 pb-10 pt-20 md:px-10 md:pb-12 md:pt-24">
+        <div className="grid items-start gap-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-14">
           <div>
-            <div className="relative aspect-[3/4] w-full max-w-[240px] overflow-hidden rounded-md border border-line bg-surface shadow-sm md:h-full md:max-w-none">
+            <div className="relative aspect-[3/4] w-full max-w-[240px] overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
               <Image
                 src={PORTRAIT}
                 alt={`${profile.name}, ${profile.role}`}
                 fill
                 priority
-                sizes="(max-width: 768px) 240px, 290px"
+                sizes="(max-width: 768px) 240px, 240px"
                 className="object-cover object-[50%_25%]"
               />
             </div>

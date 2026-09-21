@@ -7,7 +7,7 @@ export function About() {
     <SectionShell id="about" label="About">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-16">
         <div>
-          <div className="max-w-[60ch] space-y-6">
+          <div className="max-w-2xl space-y-6">
             {profile.summary.map((p, i) => (
               <p key={i} className="text-[16px] leading-[1.75] text-muted">
                 {p}
@@ -17,10 +17,10 @@ export function About() {
 
           <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-2.5 border-t border-line pt-6 sm:grid-cols-[110px_1fr]">
             {[
-              { k: "Focus", v: "Backend · Distributed systems" },
+              { k: "Focus", v: "Backend · Full-stack" },
               {
                 k: "Domains",
-                v: "Logistics · Financial operations · Enterprise integrations",
+                v: "Logistics · Freight forwarding · Financial operations",
               },
             ].map((row) => (
               <div key={row.k} className="contents">

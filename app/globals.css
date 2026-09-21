@@ -105,7 +105,7 @@ body {
   }
 
   .btn-ghost {
-    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-line bg-bg px-4 py-2.5 text-sm font-medium text-text transition-colors duration-150 hover:border-accent active:translate-y-px;
+    @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-line bg-bg px-4 py-2.5 text-sm font-medium text-text transition-colors duration-150 hover:border-faint hover:bg-surface active:translate-y-px;
   }
 
   /* Numbers are tabular everywhere so columns of figures line up. */

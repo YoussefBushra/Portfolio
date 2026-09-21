@@ -8,7 +8,7 @@ import { SectionShell } from "@/components/layout/SectionShell";
  * Measurable results shouldn't disappear into prose. These phrases get a quiet
  * weight bump — no colour, no separate counter — so a skim still catches them.
  */
-const EMPHASIS = ["10-million-record", "sub-1-second", "600 ms", "10M+", "roughly 40"];
+const EMPHASIS = ["10M+", "600 ms", "one-second target"];
 const EMPHASIS_RE = new RegExp(
   `(${EMPHASIS.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
   "g"

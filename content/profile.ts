@@ -2,16 +2,16 @@ import type { NavNode, Profile } from "@/lib/types";
 
 export const profile: Profile = {
   name: "Youssef Bushra Fouad",
-  role: "Backend-Focused Full Stack Engineer",
-  thesis: "I build the services other systems depend on.",
+  role: "Backend-Focused Software Engineer",
+  thesis: "I build backend systems for logistics and finance.",
   tagline:
-    "Backend-focused engineer experienced in production systems, business applications, integrations, and scalable backend services.",
+    "Software engineer working on production business systems, ERP integrations, CRM workflows, and backend services.",
   location: "Cairo, Egypt",
   metaDescription:
-    "Youssef Bushra Fouad, backend-focused full stack engineer building microservices for a multi-tenant SaaS platform with NestJS, Node.js, TypeScript, RabbitMQ, PostgreSQL and MongoDB. Experienced in event-driven architecture, enterprise integrations and high-volume search.",
+    "Youssef Bushra Fouad — backend-focused software engineer building production systems for logistics and finance: Microsoft Dynamics 365 integrations, CRM workflows, invoicing and payments, and backend services with NestJS, Node.js, TypeScript, PostgreSQL, RabbitMQ, Redis and Elasticsearch.",
   summary: [
-    "I'm a backend-focused software engineer who builds and maintains the systems behind real business products — the services, integrations and data workflows that keep a platform running reliably.",
-    "I work mostly on production systems in logistics and finance, and I build the interfaces on top of them too. What I care about most is reliability, data integrity, and keeping systems clear as they grow.",
+    "I'm a backend-focused software engineer working on production systems for logistics and financial operations. My work includes CRM features, Microsoft Dynamics 365 integrations, invoicing and payment workflows, and automated shipping-document generation.",
+    "I work primarily with NestJS, PostgreSQL, RabbitMQ and TypeScript, and also contribute to the React/Next.js applications built around these services.",
   ],
   socials: [
     {

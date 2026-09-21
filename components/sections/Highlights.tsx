@@ -6,19 +6,19 @@ import { SectionShell } from "@/components/layout/SectionShell";
  * worked in. No repository or commit statistics; only verifiable career facts.
  */
 const HIGHLIGHTS = [
-  { value: "10M+", label: "Records searched", note: "geo-location search dataset" },
-  { value: "~600ms", label: "Average search response", note: "against a one-second target" },
-  { value: "Production", label: "Backend systems", note: "live business platforms" },
+  { value: "10M+", label: "Records searched", note: "Geo-location search dataset" },
+  { value: "~600ms", label: "Average response", note: "Geo-location search" },
+  { value: "CRM + ERP", label: "Business systems", note: "CRM and Dynamics 365" },
   {
-    value: "Finance & logistics",
-    label: "Business systems",
-    note: "CRM, invoicing, integrations",
+    value: "Finance + Logistics",
+    label: "Production domains",
+    note: "Invoices, payments & shipping",
   },
 ];
 
 export function Highlights() {
   return (
-    <SectionShell id="highlights" label="Professional Highlights" variant="wide">
+    <SectionShell id="highlights" label="Professional Highlights">
       <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {HIGHLIGHTS.map((h) => (
           <div key={h.label} className="panel p-6">
