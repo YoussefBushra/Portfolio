@@ -6,7 +6,6 @@ interface WorkItem {
   body: string;
   tech: string[];
   details: string[];
-  scale?: boolean;
 }
 
 /**
@@ -53,7 +52,6 @@ const WORK: WorkItem[] = [
     title: "Large-scale search optimization",
     context: "Block Gemini · Dubai",
     body: "Optimized geo-location search across more than 10 million records, reaching approximately 600 ms average response against a one-second target.",
-    scale: true,
     tech: ["Elasticsearch", "NestJS", "PostgreSQL", "Redis"],
     details: [
       "Elasticsearch index and query tuning for geo-location queries",
@@ -61,33 +59,6 @@ const WORK: WorkItem[] = [
     ],
   },
 ];
-
-function ScaleVisual() {
-  return (
-    <div className="mt-4 flex items-center gap-4 rounded-sm border border-line bg-surface px-4 py-3">
-      <div>
-        <div className="num text-[20px] font-semibold leading-none tracking-tight text-text">
-          10M+
-        </div>
-        <div className="mt-1 text-[12px] text-muted">records</div>
-      </div>
-      <div
-        className="h-px flex-1"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(90deg, rgb(var(--line)) 0 6px, transparent 6px 12px)",
-        }}
-        aria-hidden
-      />
-      <div className="text-right">
-        <div className="num text-[20px] font-semibold leading-none tracking-tight text-accent-text">
-          ~600ms
-        </div>
-        <div className="mt-1 text-[12px] text-muted">avg response</div>
-      </div>
-    </div>
-  );
-}
 
 export function SelectedWork() {
   return (
@@ -104,8 +75,6 @@ export function SelectedWork() {
             <p className="mt-1 text-[12.5px] text-faint">{w.context}</p>
 
             <p className="mt-3 text-[14px] leading-relaxed text-muted">{w.body}</p>
-
-            {w.scale ? <ScaleVisual /> : null}
 
             <p className="mt-4 text-[12.5px] text-muted">
               <span className="font-medium text-text">Tech</span>{" "}

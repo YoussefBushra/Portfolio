@@ -49,12 +49,25 @@ export function Nav() {
           className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
           aria-label={`${profile.name}, back to top`}
         >
-          <span
-            className="flex h-6 w-6 items-center justify-center rounded-sm border border-text/70 text-[11px] font-bold leading-none tracking-tight text-text"
+          {/* Same stacked-bars mark as the favicon; the square adapts to the
+              theme (dark on light, light on dark) while the bars stay amber. */}
+          <svg
+            viewBox="0 0 32 32"
+            className="h-[26px] w-[26px] shrink-0"
             aria-hidden="true"
           >
-            YB
-          </span>
+            <rect width="32" height="32" rx="7" className="fill-text" />
+            <rect x="6" y="10" width="20" height="4" rx="1.5" className="fill-accent" />
+            <rect
+              x="6"
+              y="18"
+              width="12"
+              height="4"
+              rx="1.5"
+              className="fill-accent"
+              opacity="0.5"
+            />
+          </svg>
           <span className="text-sm font-semibold tracking-tight text-text">
             Youssef Bushra
           </span>
@@ -94,7 +107,7 @@ export function Nav() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-10 w-10 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
+            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
           >
             <span className="flex flex-col gap-[3px]">
               <span

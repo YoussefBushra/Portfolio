@@ -17,7 +17,7 @@ export function CVButton({ from, variant = "ghost", className = "" }: CVButtonPr
     primary: "btn-primary",
     ghost: "btn-ghost",
     compact:
-      "focus-ring inline-flex items-center gap-2 whitespace-nowrap rounded-sm border border-line bg-surface px-3 py-1.5 text-[13px] font-medium text-muted transition-colors duration-200 hover:border-accent hover:text-text",
+      "focus-ring inline-flex h-9 items-center gap-2 whitespace-nowrap rounded-sm border border-line bg-surface px-3 text-[13px] font-medium text-muted transition-colors duration-200 hover:border-accent hover:text-text",
   }[variant];
 
   return (
