@@ -63,7 +63,7 @@ const WORK: WorkItem[] = [
 export function SelectedWork() {
   return (
     <SectionShell id="work" label="Selected Work">
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {WORK.map((w) => (
           <article
             key={w.title}
@@ -81,14 +81,18 @@ export function SelectedWork() {
               <span className="text-faint">·</span> {w.tech.join(" · ")}
             </p>
 
-            <details className="group mt-3 border-t border-line pt-3">
+            <details className="group relative mt-3 border-t border-line pt-3">
               <summary className="focus-ring inline-flex cursor-pointer list-none items-center gap-1.5 rounded-sm text-[12.5px] font-medium text-muted transition-colors hover:text-text">
                 <span className="text-faint transition-transform group-open:rotate-90">
                   ›
                 </span>
                 Technical details
               </summary>
-              <ul className="mt-2.5 space-y-1.5">
+              {/* Positioned absolutely so opening the panel floats over the
+                  content below rather than growing the card — nothing else on
+                  the page reflows. Native <details> keeps it keyboard- and
+                  screen-reader-accessible with no extra JS. */}
+              <ul className="absolute left-0 right-0 top-full z-20 mt-2 space-y-1.5 rounded-md border border-line bg-surface p-4 shadow-lg">
                 {w.details.map((d) => (
                   <li
                     key={d}
