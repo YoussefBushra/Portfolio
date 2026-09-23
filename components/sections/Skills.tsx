@@ -1,34 +1,29 @@
-import { skillGroups, spokenLanguages } from "@/content/skills";
+import { skillGroups } from "@/content/skills";
 import { SectionShell } from "@/components/layout/SectionShell";
 
 /**
- * Technologies as supporting evidence — categorized and kept simple. Not the
- * main selling point: no bars, no logo walls, no percentages.
+ * The quietest section: a typographic matrix. Category headings with items
+ * stacked beneath — the type does the organising, no boxes, bars or logos.
  */
 export function Skills() {
   return (
-    <SectionShell id="skills" label="Skills">
-      <dl className="grid grid-cols-1 gap-x-12 gap-y-5 sm:grid-cols-2">
+    <SectionShell id="skills" index="04" label="Skills" tint>
+      <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
         {skillGroups.map((group) => (
-          <div
-            key={group.name}
-            className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-[180px_1fr]"
-          >
-            <dt className="text-[14px] font-semibold tracking-tight text-text">
+          <div key={group.name}>
+            <h3 className="text-[14px] font-semibold tracking-tight text-text">
               {group.name}
-            </dt>
-            <dd className="text-[13.5px] leading-relaxed text-muted">
-              {group.items.join(" · ")}
-            </dd>
+            </h3>
+            <ul className="mt-3 space-y-1.5">
+              {group.items.map((item) => (
+                <li key={item} className="text-[14px] leading-snug text-muted">
+                  {item}
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
-      </dl>
-
-      <p className="mt-8 text-[13.5px] text-muted">
-        <span className="font-medium text-text">Languages</span>
-        <span className="text-faint"> · </span>
-        {spokenLanguages}
-      </p>
+      </div>
     </SectionShell>
   );
 }

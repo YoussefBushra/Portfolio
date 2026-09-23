@@ -5,20 +5,30 @@ import { track } from "@/lib/analytics";
 
 interface SectionShellProps {
   id: string;
-  /** Section name, shown as the block label above the content. */
+  /** Two-digit section number, e.g. "01". Shown in amber before the label. */
+  index: string;
+  /** Section name, shown as the small uppercase label. */
   label: string;
   /** Real metadata beside the label, e.g. a range or a count. Never decoration. */
   meta?: string;
+  /** Give the section a subtle full-bleed background band. Use sparingly. */
+  tint?: boolean;
   children: ReactNode;
 }
 
 /**
- * Every section is a row in one document, built on a single shared grid: the
- * same max-width container, the same horizontal padding, a block label over a
- * hairline rule, then the content — all aligned to one left edge so the page
- * reads as one design system rather than several independently sized sections.
+ * Sections share one grid, one header treatment ("01 / SELECTED WORK") and one
+ * spacing rhythm — but no separator rules. Each section gets its identity from
+ * its own layout; the numbered header and whitespace mark where it starts.
  */
-export function SectionShell({ id, label, meta, children }: SectionShellProps) {
+export function SectionShell({
+  id,
+  index,
+  label,
+  meta,
+  tint = false,
+  children,
+}: SectionShellProps) {
   const ref = useRef<HTMLElement>(null);
   const seen = useRef(false);
 
@@ -42,18 +52,17 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
   return (
     // Anchor clearance comes from `scroll-padding-top` on <html>; a
     // scroll-margin here as well would stack into a double offset.
-    <section ref={ref} id={id}>
-      <div className="mx-auto max-w-page px-6 py-12 md:px-10 md:py-16">
-        {/* Sections are separated by whitespace, not full-width rules. A short
-            amber tick (echoing the logo) marks each section start. */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          <h2 className="block-label flex items-center gap-2.5">
-            <span className="h-[3px] w-5 rounded-full bg-accent" aria-hidden />
-            {label}
+    <section ref={ref} id={id} className={tint ? "bg-surface" : undefined}>
+      <div className="mx-auto max-w-page px-6 py-16 md:px-10 md:py-20">
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <h2 className="block-label flex items-baseline gap-2">
+            <span className="num text-accent-text">{index}</span>
+            <span aria-hidden>/</span>
+            <span>{label}</span>
           </h2>
           {meta ? <p className="text-[12px] text-faint">{meta}</p> : null}
         </div>
-        <div className="mt-7 min-w-0">{children}</div>
+        <div className="mt-10 min-w-0 md:mt-12">{children}</div>
       </div>
     </section>
   );

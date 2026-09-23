@@ -30,16 +30,18 @@ export function Contact() {
   }, [state.succeeded]);
 
   return (
-    <SectionShell id="contact" label="Contact" meta={profile.availability}>
-      <div className="max-w-2xl">
-        <h2 className="text-balance text-[22px] font-semibold leading-[1.15] tracking-tight text-text sm:text-[26px]">
+    <SectionShell id="contact" index="05" label="Contact">
+      {/* The closing statement: larger than any other section's content so the
+          page ends on a clear note rather than another ordinary row. */}
+      <div className="max-w-3xl pb-4">
+        <p className="text-balance text-[30px] font-semibold leading-[1.12] tracking-tight text-text sm:text-[42px]">
           Let&rsquo;s talk about a software engineering role or project.
-        </h2>
-        {/* Direct channels first — the fastest path for a recruiter. */}
-        <p className="mt-4 text-[15px] leading-relaxed text-muted">
-          Open to backend and full-stack roles. The quickest way to reach me:
         </p>
-        <div className="mt-4 flex flex-wrap gap-2.5">
+        {/* Direct channels first — the fastest path for a recruiter. */}
+        <p className="mt-6 text-[16px] leading-relaxed text-muted">
+          Open to backend and full-stack roles.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-2.5">
           {LINKEDIN ? (
             <a
               href={LINKEDIN}
@@ -68,7 +70,7 @@ export function Contact() {
         </div>
 
         {/* Message form, secondary. */}
-        <div className="mt-10">
+        <div className="mt-16 max-w-2xl">
           <h3 className="block-label">Or send a message</h3>
 
           {state.succeeded ? (

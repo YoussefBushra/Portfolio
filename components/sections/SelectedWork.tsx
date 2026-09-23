@@ -40,7 +40,7 @@ const WORK: WorkItem[] = [
 
 export function SelectedWork() {
   return (
-    <SectionShell id="work" label="Selected Work">
+    <SectionShell id="work" index="01" label="Selected Work">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {WORK.map((w) => (
           <article

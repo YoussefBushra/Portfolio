@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { experience } from "@/content/experience";
 import type { Experience as Role } from "@/lib/types";
-import { careerStartYear } from "@/lib/timeline";
 import { SectionShell } from "@/components/layout/SectionShell";
 
 /**
@@ -26,28 +25,30 @@ function emphasize(text: string): ReactNode[] {
   );
 }
 
+/**
+ * One timeline entry. No card: the date, role and company establish the
+ * structure. The current role carries a thin amber rail; past roles keep the
+ * same indent so everything lines up.
+ */
 function RoleEntry({ role }: { role: Role }) {
   return (
     <article
-      className={`panel p-5 sm:p-6 ${role.current ? "border-l-2 border-l-accent" : ""}`}
+      className={`border-l-2 pl-6 sm:pl-8 ${
+        role.current ? "border-l-accent" : "border-l-transparent"
+      }`}
     >
-      <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <h3 className="flex items-center gap-2.5 text-[17px] font-semibold tracking-tight text-text">
-          {role.role}
-          {role.current ? (
-            <span className="rounded-sm border border-accent/40 bg-accent/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.06em] text-accent-text">
-              Current
-            </span>
-          ) : null}
-        </h3>
-        <p className="num text-[12.5px] text-faint">{role.period}</p>
-      </div>
-      <p className="mt-1 text-[13.5px] font-medium text-text">
+      <p className="num text-[12px] font-medium uppercase tracking-[0.08em] text-faint">
+        {role.period.replace(" - ", " — ")}
+      </p>
+      <h3 className="mt-2.5 text-[20px] font-semibold tracking-tight text-text">
+        {role.role}
+      </h3>
+      <p className="mt-1 text-[14px] font-medium text-text">
         {role.company}
-        <span className="font-normal text-faint">, {role.location}</span>
+        <span className="font-normal text-faint"> · {role.location}</span>
       </p>
 
-      <p className="mt-3.5 max-w-prose text-[15px] leading-relaxed text-muted">
+      <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted">
         {emphasize(role.summary)}
       </p>
 
@@ -55,7 +56,7 @@ function RoleEntry({ role }: { role: Role }) {
         {role.highlights.map((h) => (
           <li
             key={h}
-            className="border-l border-line pl-3.5 text-[13.5px] leading-[1.6] text-muted"
+            className="relative pl-4 text-[14px] leading-[1.6] text-muted before:absolute before:left-0 before:top-[0.65em] before:h-1 before:w-1 before:rounded-full before:bg-faint before:content-['']"
           >
             {emphasize(h)}
           </li>
@@ -71,12 +72,8 @@ function RoleEntry({ role }: { role: Role }) {
 
 export function Experience() {
   return (
-    <SectionShell
-      id="experience"
-      label="Experience"
-      meta={`${careerStartYear()} to present`}
-    >
-      <div className="space-y-4">
+    <SectionShell id="experience" index="03" label="Experience">
+      <div className="space-y-16">
         {experience.map((role) => (
           <RoleEntry key={role.company} role={role} />
         ))}
