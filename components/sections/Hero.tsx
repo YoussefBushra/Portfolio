@@ -17,7 +17,7 @@ const LINKEDIN = profile.socials.find((s) => s.label === "LinkedIn")?.href ?? "#
 export function Hero() {
   return (
     <section id="hero">
-      <div className="mx-auto max-w-page px-6 pb-10 pt-20 md:px-10 md:pb-12 md:pt-24">
+      <div className="mx-auto max-w-page px-6 pb-6 pt-20 md:px-10 md:pb-8 md:pt-24">
         <div className="grid items-center gap-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-14">
           <div>
             <div className="relative aspect-[3/4] w-full max-w-[200px] overflow-hidden rounded-2xl border border-line bg-surface shadow-sm md:max-w-none">
@@ -33,34 +33,29 @@ export function Hero() {
           </div>
 
           <div className="min-w-0">
-            <p className="text-[13px] font-medium text-muted">Software Engineer</p>
-            <h1 className="mt-1.5 text-[2rem] font-semibold leading-[1.03] tracking-tight text-text sm:text-4xl">
+            {/* Hierarchy: eyebrow → name → headline (the focal point) →
+                supporting line → availability → actions. */}
+            <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted">
+              Software Engineer
+            </p>
+            <h1 className="mt-3 text-[20px] font-semibold tracking-tight text-text sm:text-[22px]">
               {profile.name}
             </h1>
 
-            <p className="mt-6 max-w-xl text-pretty text-[26px] font-semibold leading-[1.15] tracking-tight text-text sm:text-[32px]">
+            <p className="mt-4 max-w-2xl text-pretty text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-text sm:text-[40px] lg:text-[46px]">
               {profile.thesis}
             </p>
-            <p className="mt-4 max-w-xl text-[15px] leading-relaxed text-muted sm:text-base">
+            <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px]">
               {profile.tagline}
             </p>
 
-            <div className="mt-6 inline-flex items-center gap-2 text-[13px] text-muted">
+            <div className="mt-5 inline-flex items-center gap-2 text-[13px] text-muted">
               <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
               {profile.availability}
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center gap-2.5">
+            <div className="mt-8 flex flex-wrap items-center gap-x-2.5 gap-y-3">
               <CVButton from="hero" variant="primary" />
-              <a
-                href={GITHUB}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="btn-ghost"
-              >
-                <GitHubMark />
-                GitHub
-              </a>
               <a
                 href={LINKEDIN}
                 target="_blank"
@@ -70,7 +65,16 @@ export function Hero() {
                 <LinkedInMark />
                 LinkedIn
               </a>
-              <ContactLink />
+              <a
+                href={GITHUB}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="btn-ghost"
+              >
+                <GitHubMark />
+                GitHub
+              </a>
+              <ContactLink className="ml-2" />
             </div>
           </div>
         </div>

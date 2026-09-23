@@ -53,16 +53,18 @@ export function SectionShell({
     // Anchor clearance comes from `scroll-padding-top` on <html>; a
     // scroll-margin here as well would stack into a double offset.
     <section ref={ref} id={id} className={tint ? "bg-surface" : undefined}>
-      <div className="mx-auto max-w-page px-6 py-16 md:px-10 md:py-20">
+      <div className="mx-auto max-w-page px-6 py-12 md:px-10 md:py-16">
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-          <h2 className="block-label flex items-baseline gap-2">
+          <h2 className="flex items-baseline gap-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-muted">
             <span className="num text-accent-text">{index}</span>
-            <span aria-hidden>/</span>
+            <span className="text-faint" aria-hidden>
+              /
+            </span>
             <span>{label}</span>
           </h2>
           {meta ? <p className="text-[12px] text-faint">{meta}</p> : null}
         </div>
-        <div className="mt-10 min-w-0 md:mt-12">{children}</div>
+        <div className="mt-8 min-w-0 md:mt-10">{children}</div>
       </div>
     </section>
   );

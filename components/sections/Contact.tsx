@@ -31,47 +31,53 @@ export function Contact() {
 
   return (
     <SectionShell id="contact" index="05" label="Contact">
-      {/* The closing statement: larger than any other section's content so the
-          page ends on a clear note rather than another ordinary row. */}
-      <div className="max-w-3xl pb-4">
-        <p className="text-balance text-[30px] font-semibold leading-[1.12] tracking-tight text-text sm:text-[42px]">
-          Let&rsquo;s talk about a software engineering role or project.
-        </p>
-        {/* Direct channels first — the fastest path for a recruiter. */}
-        <p className="mt-6 text-[16px] leading-relaxed text-muted">
-          Open to backend and full-stack roles.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-2.5">
-          {LINKEDIN ? (
-            <a
-              href={LINKEDIN}
-              target="_blank"
-              rel="noreferrer noopener"
-              onClick={() => track("social_click", { label: "LinkedIn", from: "contact" })}
-              className="btn-primary"
-            >
-              <LinkedInMark />
-              LinkedIn
-            </a>
-          ) : null}
-          {GITHUB ? (
-            <a
-              href={GITHUB}
-              target="_blank"
-              rel="noreferrer noopener"
-              onClick={() => track("social_click", { label: "GitHub", from: "contact" })}
-              className="btn-ghost"
-            >
-              <GitHubMark />
-              GitHub
-            </a>
-          ) : null}
-          <CVButton from="contact" variant="ghost" />
+      {/* Two columns read as one composition: the closing statement and direct
+          channels on the left, the message form on the right. Stacks on mobile. */}
+      <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
+        <div>
+          <p className="text-balance text-[30px] font-semibold leading-[1.12] tracking-tight text-text sm:text-[36px] lg:text-[40px]">
+            Let&rsquo;s talk about a software engineering role or project.
+          </p>
+          {/* Direct channels first — the fastest path for a recruiter. */}
+          <p className="mt-6 text-[16px] leading-relaxed text-muted">
+            Open to backend and full-stack roles.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-2.5">
+            {LINKEDIN ? (
+              <a
+                href={LINKEDIN}
+                target="_blank"
+                rel="noreferrer noopener"
+                onClick={() =>
+                  track("social_click", { label: "LinkedIn", from: "contact" })
+                }
+                className="btn-primary"
+              >
+                <LinkedInMark />
+                LinkedIn
+              </a>
+            ) : null}
+            {GITHUB ? (
+              <a
+                href={GITHUB}
+                target="_blank"
+                rel="noreferrer noopener"
+                onClick={() =>
+                  track("social_click", { label: "GitHub", from: "contact" })
+                }
+                className="btn-ghost"
+              >
+                <GitHubMark />
+                GitHub
+              </a>
+            ) : null}
+            <CVButton from="contact" variant="ghost" />
+          </div>
         </div>
 
-        {/* Message form, secondary. */}
-        <div className="mt-16 max-w-2xl">
-          <h3 className="block-label">Or send a message</h3>
+        {/* Message form, the right-hand column. */}
+        <div>
+          <h3 className="block-label">Send a message</h3>
 
           {state.succeeded ? (
             <div className="mt-4 rounded-sm border border-line bg-surface p-6">
@@ -100,7 +106,10 @@ export function Contact() {
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="name" className="text-[13px] font-medium text-text">
+                  <label
+                    htmlFor="name"
+                    className="text-[13px] font-medium text-text"
+                  >
                     Name
                   </label>
                   <input
@@ -119,7 +128,10 @@ export function Contact() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="email" className="text-[13px] font-medium text-text">
+                  <label
+                    htmlFor="email"
+                    className="text-[13px] font-medium text-text"
+                  >
                     Email
                   </label>
                   <input
@@ -141,7 +153,10 @@ export function Contact() {
               </div>
 
               <div className="mt-4 flex flex-col gap-1.5">
-                <label htmlFor="message" className="text-[13px] font-medium text-text">
+                <label
+                  htmlFor="message"
+                  className="text-[13px] font-medium text-text"
+                >
                   Message
                 </label>
                 <textarea
@@ -163,7 +178,10 @@ export function Contact() {
                 />
               </div>
 
-              <ValidationError errors={state.errors} className={`${errorText} mt-4`} />
+              <ValidationError
+                errors={state.errors}
+                className={`${errorText} mt-4`}
+              />
 
               <div className="mt-5">
                 <button

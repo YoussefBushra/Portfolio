@@ -3,53 +3,68 @@ import { education } from "@/content/education";
 import { spokenLanguages } from "@/content/skills";
 import { SectionShell } from "@/components/layout/SectionShell";
 
-const FACTS = [
-  { k: "Focus", v: "Backend · Full-stack" },
-  { k: "Domains", v: "Logistics · Freight forwarding · Financial operations" },
-  { k: "Languages", v: spokenLanguages },
+const COLUMNS = [
+  { k: "Focus", items: ["Backend", "Full-stack"] },
+  { k: "Domains", items: ["Logistics", "Freight forwarding", "Financial operations"] },
+  { k: "Languages", items: spokenLanguages.split(", ") },
 ];
 
 /**
- * Editorial, not a card: a large lead paragraph carries the section, with a
- * compact metadata column beside it. No borders or boxes.
+ * A full-width editorial block: the text spans the section at a readable
+ * measure, and the supporting facts sit underneath in one compact row. No
+ * cards, no borders, no sidebar.
  */
 export function About() {
   const [lead, ...rest] = profile.summary;
 
   return (
     <SectionShell id="about" index="02" label="About" tint>
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-20">
-        <div className="max-w-3xl">
-          <p className="text-pretty text-[21px] font-medium leading-[1.5] tracking-tight text-text sm:text-[24px]">
-            {lead}
-          </p>
-          {rest.map((p, i) => (
-            <p key={i} className="mt-6 max-w-2xl text-[16px] leading-[1.75] text-muted">
-              {p}
-            </p>
-          ))}
-        </div>
+      <p className="max-w-4xl text-pretty text-[21px] font-medium leading-[1.5] tracking-tight text-text sm:text-[25px]">
+        {lead}
+      </p>
+      {rest.map((p, i) => (
+        <p
+          key={i}
+          className="mt-6 max-w-3xl text-[16px] leading-[1.75] text-muted sm:text-[17px]"
+        >
+          {p}
+        </p>
+      ))}
 
-        <dl className="space-y-7">
-          {education.map((e) => (
-            <div key={e.institution}>
-              <dt className="block-label">Education</dt>
-              <dd className="mt-2 text-[14px] font-medium leading-snug text-text">
-                {e.degree}
-              </dd>
-              <dd className="mt-1 text-[14px] leading-snug text-muted">{e.institution}</dd>
-              <dd className="mt-1 text-[14px] leading-snug text-muted">{e.detail}</dd>
-              <dd className="num mt-1 text-[12px] text-faint">{e.period}</dd>
-            </div>
-          ))}
-          {FACTS.map((f) => (
-            <div key={f.k}>
-              <dt className="block-label">{f.k}</dt>
-              <dd className="mt-2 text-[14px] leading-snug text-text">{f.v}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
+      <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4">
+        {COLUMNS.slice(0, 2).map((c) => (
+          <Column key={c.k} label={c.k} items={c.items} />
+        ))}
+
+        {education.map((e) => (
+          <div key={e.institution}>
+            <dt className="block-label">Education</dt>
+            <dd className="mt-3 text-[15px] font-medium leading-snug text-text">
+              {e.degree}
+            </dd>
+            <dd className="mt-1.5 text-[14px] leading-snug text-muted">{e.institution}</dd>
+            <dd className="mt-1.5 text-[14px] leading-snug text-muted">{e.detail}</dd>
+            <dd className="num mt-1.5 text-[13px] text-faint">{e.period}</dd>
+          </div>
+        ))}
+
+        {COLUMNS.slice(2).map((c) => (
+          <Column key={c.k} label={c.k} items={c.items} />
+        ))}
+      </dl>
     </SectionShell>
+  );
+}
+
+function Column({ label, items }: { label: string; items: string[] }) {
+  return (
+    <div>
+      <dt className="block-label">{label}</dt>
+      {items.map((item) => (
+        <dd key={item} className="mt-2 text-[15px] leading-snug text-text first-of-type:mt-3">
+          {item}
+        </dd>
+      ))}
+    </div>
   );
 }
