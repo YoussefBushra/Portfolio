@@ -43,7 +43,7 @@ export function SectionShell({ id, label, meta, children }: SectionShellProps) {
     // Anchor clearance comes from `scroll-padding-top` on <html>; a
     // scroll-margin here as well would stack into a double offset.
     <section ref={ref} id={id}>
-      <div className="mx-auto max-w-page px-6 py-16 md:px-10 md:py-24">
+      <div className="mx-auto max-w-page px-6 py-12 md:px-10 md:py-16">
         {/* Sections are separated by whitespace, not full-width rules. A short
             amber tick (echoing the logo) marks each section start. */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
