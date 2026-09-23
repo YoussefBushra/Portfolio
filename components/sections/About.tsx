@@ -19,13 +19,15 @@ export function About() {
 
   return (
     <SectionShell id="about" index="02" label="About" tint>
-      <p className="max-w-4xl text-pretty text-[21px] font-medium leading-[1.5] tracking-tight text-text sm:text-[25px]">
+      {/* Both paragraphs span the full content width at an editorial size, so
+          the block matches the page width while lines stay ~80 characters. */}
+      <p className="text-pretty text-[21px] font-medium leading-[1.5] tracking-tight text-text sm:text-[24px] lg:text-[27px]">
         {lead}
       </p>
       {rest.map((p, i) => (
         <p
           key={i}
-          className="mt-6 max-w-3xl text-[16px] leading-[1.75] text-muted sm:text-[17px]"
+          className="mt-5 text-pretty text-[21px] font-medium leading-[1.5] tracking-tight text-muted sm:text-[24px] lg:text-[27px]"
         >
           {p}
         </p>

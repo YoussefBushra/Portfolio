@@ -2,28 +2,30 @@ import { skillGroups } from "@/content/skills";
 import { SectionShell } from "@/components/layout/SectionShell";
 
 /**
- * The quietest section: a typographic matrix. Category headings with items
- * stacked beneath — the type does the organising, no boxes, bars or logos.
+ * Skills as a CV-style table: one row per category, name on the left and the
+ * technologies inline on the right at reading size. Rows (not columns of short
+ * lists) keep it from reading like a footer sitemap. No pills, bars or logos.
  */
 export function Skills() {
   return (
     <SectionShell id="skills" index="04" label="Skills" tint>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3 lg:grid-cols-5">
+      <dl className="grid gap-y-7">
         {skillGroups.map((group) => (
-          <div key={group.name}>
-            <h3 className="text-[15px] font-semibold leading-snug tracking-tight text-text">
+          <div
+            key={group.name}
+            className="grid gap-y-2 sm:grid-cols-[260px_minmax(0,1fr)] sm:gap-x-10"
+          >
+            <dt className="text-[17px] font-semibold tracking-tight text-text">
               {group.name}
-            </h3>
-            <ul className="mt-4 space-y-2.5">
+            </dt>
+            <dd className="flex flex-wrap gap-x-7 gap-y-1.5 text-[17px] text-muted">
               {group.items.map((item) => (
-                <li key={item} className="text-[15px] leading-snug text-muted">
-                  {item}
-                </li>
+                <span key={item}>{item}</span>
               ))}
-            </ul>
+            </dd>
           </div>
         ))}
-      </div>
+      </dl>
     </SectionShell>
   );
 }
