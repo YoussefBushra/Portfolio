@@ -15,7 +15,7 @@ export function About() {
             ))}
           </div>
 
-          <dl className="mt-8 grid grid-cols-1 gap-x-8 gap-y-2.5 border-t border-line pt-6 sm:grid-cols-[110px_1fr]">
+          <dl className="mt-10 grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-[110px_1fr]">
             {[
               { k: "Focus", v: "Backend · Full-stack" },
               {

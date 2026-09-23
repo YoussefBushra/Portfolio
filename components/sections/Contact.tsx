@@ -68,7 +68,7 @@ export function Contact() {
         </div>
 
         {/* Message form, secondary. */}
-        <div className="mt-9 border-t border-line pt-6">
+        <div className="mt-10">
           <h3 className="block-label">Or send a message</h3>
 
           {state.succeeded ? (

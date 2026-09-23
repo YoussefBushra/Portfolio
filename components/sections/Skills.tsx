@@ -24,7 +24,7 @@ export function Skills() {
         ))}
       </dl>
 
-      <p className="mt-6 border-t border-line pt-5 text-[13.5px] text-muted">
+      <p className="mt-8 text-[13.5px] text-muted">
         <span className="font-medium text-text">Languages</span>
         <span className="text-faint"> · </span>
         {spokenLanguages}
