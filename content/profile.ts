@@ -10,8 +10,8 @@ export const profile: Profile = {
   metaDescription:
     "Youssef Bushra Fouad — backend-focused software engineer building production systems for logistics and finance: Microsoft Dynamics 365 integrations, CRM workflows, invoicing and payments, and backend services with NestJS, Node.js, TypeScript, PostgreSQL, RabbitMQ, Redis and Elasticsearch.",
   summary: [
-    "I'm a backend-focused software engineer working on production systems for logistics and financial operations. My work includes CRM features, Microsoft Dynamics 365 integrations, invoicing and payment workflows, and automated shipping-document generation.",
-    "I work primarily with NestJS, PostgreSQL, RabbitMQ and TypeScript, and also contribute to the React/Next.js applications built around these services.",
+    "I build backend services for a production multi-tenant SaaS platform. Services are decomposed by business domain, own their data, and communicate asynchronously through a message broker, behind a single API gateway that resolves authentication and authorization centrally.",
+    "Most of my work sits between services: boundaries and message contracts, tenant isolation enforced at the data-access layer, idempotent consumers, and the asynchronous flows that keep independently deployed services consistent under load. I build the interfaces on top of them too, and I care about clean boundaries, measurable performance, and systems that stay legible as they grow.",
   ],
   socials: [
     {
