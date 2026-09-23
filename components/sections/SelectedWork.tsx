@@ -45,19 +45,16 @@ export function SelectedWork() {
         {WORK.map((w) => (
           <article
             key={w.title}
-            className="panel flex flex-col p-7 transition-all duration-200 hover:border-faint hover:shadow-md sm:p-8"
+            className="panel flex flex-col p-7 transition-all duration-200 hover:border-faint hover:shadow-md sm:p-9"
           >
-            <h3 className="text-[19px] font-semibold leading-snug tracking-tight text-text">
+            <h3 className="text-[20px] font-semibold leading-snug tracking-tight text-text">
               {w.title}
             </h3>
-            <p className="mt-1.5 text-[13px] text-faint">{w.context}</p>
+            <p className="mt-2 text-[13px] text-faint">{w.context}</p>
 
-            <p className="mt-4 text-[15px] leading-relaxed text-muted">{w.body}</p>
+            <p className="mt-4 text-[15.5px] leading-[1.7] text-muted">{w.body}</p>
 
-            <p className="mt-5 text-[13px] text-muted">
-              <span className="font-medium text-text">Tech</span>{" "}
-              <span className="text-faint">·</span> {w.tech.join(" · ")}
-            </p>
+            <p className="mt-6 text-[13px] text-faint">{w.tech.join(" · ")}</p>
           </article>
         ))}
       </div>

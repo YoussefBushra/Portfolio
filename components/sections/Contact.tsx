@@ -33,7 +33,7 @@ export function Contact() {
     <SectionShell id="contact" index="05" label="Contact">
       {/* Two columns read as one composition: the closing statement and direct
           channels on the left, the message form on the right. Stacks on mobile. */}
-      <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
+      <div className="grid gap-14 lg:grid-cols-[11fr_9fr] lg:gap-20">
         <div>
           <p className="text-balance text-[30px] font-semibold leading-[1.12] tracking-tight text-text sm:text-[36px] lg:text-[40px]">
             Let&rsquo;s talk about a software engineering role or project.
@@ -108,7 +108,7 @@ export function Contact() {
                 <div className="flex flex-col gap-1.5">
                   <label
                     htmlFor="name"
-                    className="text-[13px] font-medium text-text"
+                    className="text-[13px] font-medium text-muted"
                   >
                     Name
                   </label>
@@ -130,7 +130,7 @@ export function Contact() {
                 <div className="flex flex-col gap-1.5">
                   <label
                     htmlFor="email"
-                    className="text-[13px] font-medium text-text"
+                    className="text-[13px] font-medium text-muted"
                   >
                     Email
                   </label>
@@ -155,7 +155,7 @@ export function Contact() {
               <div className="mt-4 flex flex-col gap-1.5">
                 <label
                   htmlFor="message"
-                  className="text-[13px] font-medium text-text"
+                  className="text-[13px] font-medium text-muted"
                 >
                   Message
                 </label>

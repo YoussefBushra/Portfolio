@@ -19,21 +19,18 @@ export function About() {
 
   return (
     <SectionShell id="about" index="02" label="About" tint>
-      {/* Both paragraphs span the full content width at an editorial size, so
-          the block matches the page width while lines stay ~80 characters. */}
-      <p className="text-pretty text-[21px] font-medium leading-[1.5] tracking-tight text-text sm:text-[24px] lg:text-[27px]">
+      {/* The lead spans the content width; the supporting paragraph is smaller
+          and capped at a comfortable measure so it never reads as stretched. */}
+      <p className="text-pretty text-[20px] font-medium leading-[1.55] tracking-tight text-text sm:text-[22px]">
         {lead}
       </p>
       {rest.map((p, i) => (
-        <p
-          key={i}
-          className="mt-5 text-pretty text-[21px] font-medium leading-[1.5] tracking-tight text-muted sm:text-[24px] lg:text-[27px]"
-        >
+        <p key={i} className="mt-5 max-w-2xl text-[15px] leading-[1.7] text-muted">
           {p}
         </p>
       ))}
 
-      <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-10 lg:grid-cols-4">
+      <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-9 lg:grid-cols-4">
         {COLUMNS.slice(0, 2).map((c) => (
           <Column key={c.k} label={c.k} items={c.items} />
         ))}
@@ -41,12 +38,12 @@ export function About() {
         {education.map((e) => (
           <div key={e.institution}>
             <dt className="block-label">Education</dt>
-            <dd className="mt-3 text-[15px] font-medium leading-snug text-text">
+            <dd className="mt-3 text-[14px] font-medium leading-snug text-text">
               {e.degree}
             </dd>
-            <dd className="mt-1.5 text-[14px] leading-snug text-muted">{e.institution}</dd>
-            <dd className="mt-1.5 text-[14px] leading-snug text-muted">{e.detail}</dd>
-            <dd className="num mt-1.5 text-[13px] text-faint">{e.period}</dd>
+            <dd className="mt-1 text-[14px] leading-snug text-muted">{e.institution}</dd>
+            <dd className="mt-1 text-[14px] leading-snug text-muted">{e.detail}</dd>
+            <dd className="num mt-1 text-[13px] text-faint">{e.period}</dd>
           </div>
         ))}
 
@@ -63,7 +60,7 @@ function Column({ label, items }: { label: string; items: string[] }) {
     <div>
       <dt className="block-label">{label}</dt>
       {items.map((item) => (
-        <dd key={item} className="mt-2 text-[15px] leading-snug text-text first-of-type:mt-3">
+        <dd key={item} className="mt-1.5 text-[14px] leading-snug text-text first-of-type:mt-3">
           {item}
         </dd>
       ))}

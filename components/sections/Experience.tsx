@@ -52,7 +52,7 @@ function RoleEntry({ role }: { role: Role }) {
         {emphasize(role.summary)}
       </p>
 
-      <ul className="mt-6 grid gap-x-14 gap-y-4 lg:grid-cols-2">
+      <ul className="mt-6 grid max-w-4xl gap-x-12 gap-y-4 lg:grid-cols-2">
         {role.highlights.map((h) => (
           <li
             key={h}

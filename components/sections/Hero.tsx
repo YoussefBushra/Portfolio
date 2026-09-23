@@ -17,7 +17,7 @@ const LINKEDIN = profile.socials.find((s) => s.label === "LinkedIn")?.href ?? "#
 export function Hero() {
   return (
     <section id="hero">
-      <div className="mx-auto max-w-page px-6 pb-6 pt-20 md:px-10 md:pb-8 md:pt-24">
+      <div className="mx-auto max-w-page px-6 pb-3 pt-20 md:px-10 md:pb-4 md:pt-24">
         <div className="grid items-center gap-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-14">
           <div>
             <div className="relative aspect-[3/4] w-full max-w-[200px] overflow-hidden rounded-2xl border border-line bg-surface shadow-sm md:max-w-none">

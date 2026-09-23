@@ -15,10 +15,10 @@ export function Skills() {
             key={group.name}
             className="grid gap-y-2 sm:grid-cols-[260px_minmax(0,1fr)] sm:gap-x-10"
           >
-            <dt className="text-[17px] font-semibold tracking-tight text-text">
+            <dt className="text-[17px] font-bold tracking-tight text-text">
               {group.name}
             </dt>
-            <dd className="flex flex-wrap gap-x-7 gap-y-1.5 text-[17px] text-muted">
+            <dd className="flex flex-wrap gap-x-7 gap-y-1.5 text-[16px] text-faint">
               {group.items.map((item) => (
                 <span key={item}>{item}</span>
               ))}
