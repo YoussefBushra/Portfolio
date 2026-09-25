@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { experience } from "@/content/experience";
 import type { Experience as Role } from "@/lib/types";
 import { SectionShell } from "@/components/layout/SectionShell";
+import { Eng, Stagger } from "@/components/view/Layers";
 
 /**
  * Measurable results shouldn't disappear into prose. These phrases get a quiet
@@ -66,6 +67,22 @@ function RoleEntry({ role }: { role: Role }) {
       <p className="mt-5 text-[12.5px] text-faint">
         {role.stack.slice(0, 7).join(" · ")}
       </p>
+
+      <Eng className="pt-6">
+        <div className="eng-panel max-w-4xl">
+          <p className="eng-label">Under the hood</p>
+          <ul className="mt-3 space-y-2">
+            {role.engineering.map((line, i) => (
+              <Stagger as="li" key={line} i={i} className="flex gap-2.5">
+                <span className="text-accent-text" aria-hidden>
+                  ▸
+                </span>
+                <span>{line}</span>
+              </Stagger>
+            ))}
+          </ul>
+        </div>
+      </Eng>
     </article>
   );
 }

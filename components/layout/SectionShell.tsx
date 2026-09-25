@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { track } from "@/lib/analytics";
+import { Decode } from "@/components/view/Decode";
 
 interface SectionShellProps {
   id: string;
@@ -10,7 +11,7 @@ interface SectionShellProps {
   /** Section name, shown as the small uppercase label. */
   label: string;
   /** Real metadata beside the label, e.g. a range or a count. Never decoration. */
-  meta?: string;
+  meta?: ReactNode;
   /** Give the section a subtle full-bleed background band. Use sparingly. */
   tint?: boolean;
   children: ReactNode;
@@ -60,7 +61,7 @@ export function SectionShell({
             <span className="text-faint" aria-hidden>
               /
             </span>
-            <span>{label}</span>
+            <Decode text={label} />
           </h2>
           {meta ? <p className="text-[12px] text-faint">{meta}</p> : null}
         </div>

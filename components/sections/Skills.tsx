@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { skillGroups } from "@/content/skills";
 import { SectionShell } from "@/components/layout/SectionShell";
+import { Eng } from "@/components/view/Layers";
 
 /**
  * Editorial category/value pairs: a small uppercase category on the left and
@@ -34,6 +35,14 @@ export function Skills() {
                   </span>{" "}
                 </Fragment>
               ))}
+              {group.why ? (
+                <Eng>
+                  <span className="mt-2.5 block font-mono text-[12.5px] leading-[1.6] text-faint">
+                    <span className="text-accent-text">{"// "}</span>
+                    {group.why}
+                  </span>
+                </Eng>
+              ) : null}
             </dd>
           </div>
         ))}

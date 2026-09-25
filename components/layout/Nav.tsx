@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-
 import { navNodes, profile } from "@/content/profile";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { CVButton } from "@/components/ui/CVButton";
+import { ViewSwitch } from "@/components/view/ViewSwitch";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
@@ -69,12 +70,13 @@ export function Nav() {
               opacity="0.55"
             />
           </svg>
-          <span className="text-sm font-semibold tracking-tight text-text">
+          {/* Wordmark gives way to the view switch on narrow screens. */}
+          <span className="hidden text-sm font-semibold tracking-tight text-text sm:inline">
             Youssef Bushra
           </span>
         </a>
 
-        <ul className="hidden items-center gap-0.5 md:flex">
+        <ul className="hidden items-center gap-0.5 lg:flex">
           {navNodes.map((n) => {
             const isActive = active === n.id;
             return (
@@ -101,6 +103,7 @@ export function Nav() {
         </ul>
 
         <div className="flex shrink-0 items-center gap-1.5">
+          <ViewSwitch className="mr-1" />
           <CVButton from="nav" variant="compact" className="hidden lg:inline-flex" />
           <ThemeToggle />
           <button
@@ -108,7 +111,7 @@ export function Nav() {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-sm border border-line bg-bg text-muted md:hidden"
+            className="focus-ring inline-flex h-9 w-9 items-center justify-center rounded-sm border border-line bg-bg text-muted lg:hidden"
           >
             <span className="flex flex-col gap-[3px]">
               <span
@@ -138,7 +141,7 @@ export function Nav() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-line bg-bg md:hidden"
+            className="overflow-hidden border-t border-line bg-bg lg:hidden"
           >
             <ul>
               {navNodes.map((n) => (

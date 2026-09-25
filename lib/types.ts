@@ -28,6 +28,7 @@ export interface Profile {
   role: string;
   /** The one-line claim the hero leads with. */
   thesis: string;
+  thesisTechnical: string;
   tagline: string;
   location: string;
   metaDescription: string;
@@ -53,6 +54,8 @@ export interface Experience {
   stack: string[];
   metrics?: { label: string; value: string }[];
   highlights: string[];
+  /** Engineer view only: the patterns and mechanisms behind the highlights. */
+  engineering: string[];
 }
 
 export interface SkillGroup {
@@ -62,6 +65,36 @@ export interface SkillGroup {
   emphasis?: "primary" | "secondary";
   /** Optional evidence link: short label + section anchor. */
   evidence?: { label: string; href: string };
+  /** Engineer view only: when and why these tools get reached for. */
+  why?: string;
+}
+
+export interface FlowStep {
+  label: string;
+  /** Small caption under the box, e.g. the protocol or the guarantee. */
+  note?: string;
+}
+
+export interface CaseStudy {
+  id: string;
+  /** Plain-language title, shared by both views. */
+  title: string;
+  company: string;
+  domain: string;
+  period: string;
+  /** The recruiter-layer outcome: what it does and why it mattered. */
+  outcome: string;
+  tech: string[];
+  engineer: {
+    flow: FlowStep[];
+    /** Optional failure branch shown under the flow. */
+    failure?: string;
+    notes: { k: string; v: string }[];
+    figures?: string[];
+    code?: string;
+    tradeoff: string;
+    differently: string;
+  };
 }
 
 export interface EducationEntry {

@@ -20,7 +20,8 @@ export type AnalyticsEvent =
   | "section_view"
   | "social_click"
   | "boot_skipped"
-  | "cta_click";
+  | "cta_click"
+  | "view_toggle";
 
 type Props = Record<string, string | number | boolean | null>;
 

@@ -5,6 +5,9 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { VisitTracker } from "@/components/system/VisitTracker";
+import { ShiftFx } from "@/components/view/ShiftFx";
+import { ViewProvider } from "@/components/view/ViewProvider";
+import { VIEW_BOOT_SCRIPT } from "@/lib/view";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -99,6 +102,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Sets <html data-view> before first paint, so a ?view=engineer link
+            or a remembered choice never flashes the recruiter layer. */}
+        <script dangerouslySetInnerHTML={{ __html: VIEW_BOOT_SCRIPT }} />
+      </head>
       <body className={`${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
@@ -106,7 +114,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <ViewProvider>
+            {children}
+            <ShiftFx />
+          </ViewProvider>
         </ThemeProvider>
 
         {/* Privacy-first product analytics */}

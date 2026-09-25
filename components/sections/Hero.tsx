@@ -2,9 +2,9 @@ import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
 import { profile } from "@/content/profile";
-import Image from "next/image";
+import { Eng } from "@/components/view/Layers";
+import { Portrait } from "@/components/view/Portrait";
 
-const PORTRAIT = "/portrait.jpg";
 const GITHUB = profile.socials.find((s) => s.label === "GitHub")?.href ?? "#";
 const LINKEDIN = profile.socials.find((s) => s.label === "LinkedIn")?.href ?? "#";
 
@@ -20,16 +20,7 @@ export function Hero() {
       <div className="mx-auto max-w-page px-6 pb-3 pt-20 md:px-10 md:pb-4 md:pt-24">
         <div className="grid items-center gap-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-14">
           <div>
-            <div className="relative aspect-[3/4] w-full max-w-[200px] overflow-hidden rounded-2xl border border-line bg-surface shadow-sm md:max-w-none">
-              <Image
-                src={PORTRAIT}
-                alt={`${profile.name}, ${profile.role}`}
-                fill
-                priority
-                sizes="(max-width: 768px) 240px, 240px"
-                className="object-cover object-[50%_25%]"
-              />
-            </div>
+            <Portrait alt={`${profile.name}, ${profile.role}`} />
           </div>
 
           <div className="min-w-0">
@@ -42,12 +33,18 @@ export function Hero() {
               {profile.name}
             </h1>
 
-            <p className="mt-4 max-w-2xl text-pretty text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-text sm:text-[40px] lg:text-[46px]">
+            <p className="mt-4 max-w-3xl text-pretty text-[28px] font-semibold leading-[1.12] tracking-[-0.02em] text-text sm:text-[36px] lg:text-[42px]">
               {profile.thesis}
             </p>
             <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px]">
               {profile.tagline}
             </p>
+            <Eng>
+              <p className="mt-4 inline-block max-w-2xl rounded-sm border-l-2 border-l-accent bg-surface px-3 py-2 font-mono text-[12.5px] leading-relaxed text-muted">
+                <span className="text-accent-text">$ </span>
+                {profile.thesisTechnical}
+              </p>
+            </Eng>
 
             <div className="mt-5 inline-flex items-center gap-2 text-[13px] text-muted">
               <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />

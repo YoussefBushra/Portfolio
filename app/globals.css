@@ -39,6 +39,21 @@
   color-scheme: dark;
 }
 
+/* ============================================================
+   Engineer view. Same page, a different lens: the accent turns
+   from signal amber to teal, a faint blueprint grid sits behind
+   the page, and the engineer layers open in place.
+   ============================================================ */
+html[data-view="engineer"] {
+  --accent: 20 184 166;
+  --accent-text: 15 118 110;
+  --on-accent: 4 22 20;
+}
+
+html.dark[data-view="engineer"] {
+  --accent-text: 45 212 191;
+}
+
 * {
   border-color: rgb(var(--line));
 }
@@ -59,6 +74,237 @@ body {
   overflow-x: hidden;
 }
 
+/* Blueprint grid, engineer view only. Fixed behind everything; tinted
+   sections cover it, which keeps it to the open page background. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(var(--accent) / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--accent) / 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+html[data-view="engineer"] body::before {
+  opacity: 1;
+  transition-delay: 0.25s;
+}
+
+/* ---- Layers ------------------------------------------------ */
+
+/* Collapsed with the 0fr → 1fr grid technique so it expands to its natural
+   height. `visibility` keeps the hidden layer out of the tab order and the
+   accessibility tree; it flips after the collapse finishes. */
+.eng-layer {
+  display: grid;
+  /* minmax(0, …) so wide children (code) scroll inside instead of widening the page. */
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  /* Closing: the contents fade first, then the space folds away. */
+  transition:
+    grid-template-rows 0.5s cubic-bezier(0.65, 0, 0.35, 1) 0.12s,
+    visibility 0s linear 0.62s;
+}
+.eng-layer > div {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+}
+html[data-view="engineer"] .eng-layer {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  /* Opening: the space eases open, then the contents fade into it. */
+  transition:
+    grid-template-rows 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+    visibility 0s;
+}
+html[data-view="engineer"] .eng-layer > div {
+  opacity: 1;
+  transition: opacity 0.4s ease-out 0.25s;
+}
+
+html[data-view="engineer"] .rec-only,
+html:not([data-view="engineer"]) .eng-only {
+  display: none;
+}
+
+/* Staggered children: in order on the way in, all at once on the way out. */
+[data-stagger],
+.flow-arrow {
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.2s ease-out,
+    transform 0.2s ease-out;
+}
+html[data-view="engineer"] [data-stagger],
+html[data-view="engineer"] .flow-arrow {
+  opacity: 1;
+  transform: none;
+  transition-duration: 0.35s;
+  transition-delay: calc(var(--i, 0) * 60ms + 180ms);
+}
+
+/* Diagram arrows draw from their tail toward the next box. */
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+}
+.flow-arrow-line {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 100%;
+  background: rgb(var(--faint));
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 0.2s ease-out;
+}
+.flow-arrow-line::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: -3px;
+  border: 3.5px solid transparent;
+  border-top: 4px solid rgb(var(--faint));
+  border-bottom: 0;
+}
+@media (min-width: 1024px) {
+  .flow-arrow {
+    flex: 0 0 22px;
+    width: 22px;
+    height: auto;
+  }
+  .flow-arrow-line {
+    width: 100%;
+    height: 1px;
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  .flow-arrow-line::after {
+    bottom: auto;
+    left: auto;
+    right: -1px;
+    top: -3px;
+    border: 3.5px solid transparent;
+    border-left: 4px solid rgb(var(--faint));
+    border-right: 0;
+  }
+}
+html[data-view="engineer"] .flow-arrow-line {
+  transform: none;
+  transition-duration: 0.3s;
+  transition-delay: calc(var(--i, 0) * 60ms + 180ms);
+}
+
+/* ---- Portrait --------------------------------------------- */
+
+/* One photo per lens, crossfaded. Inside a view transition the swap is
+   instant: the reveal is the animation. */
+.portrait-img {
+  transition: opacity 0.6s ease;
+}
+.portrait-eng,
+html[data-view="engineer"] .portrait-rec {
+  opacity: 0;
+}
+html[data-view="engineer"] .portrait-eng {
+  opacity: 1;
+}
+html[data-vt] .portrait-img {
+  transition: none;
+}
+
+.portrait-frame > div {
+  transition: border-color 0.4s ease;
+}
+html[data-view="engineer"] .portrait-frame > div {
+  border-color: rgb(var(--accent) / 0.45);
+}
+
+.hud-corner {
+  position: absolute;
+  z-index: 1;
+  width: 14px;
+  height: 14px;
+  border-color: rgb(var(--accent));
+  opacity: 0;
+  transform: scale(1.4);
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-view="engineer"] .hud-corner {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.5s;
+}
+
+.portrait-fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+}
+.portrait-fx[data-fx="scan"] {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgb(var(--accent) / 0.35) 0 1px,
+      transparent 1px 4px
+    ),
+    linear-gradient(to bottom, rgb(var(--accent) / 0.25), rgb(var(--accent) / 0.05));
+  mix-blend-mode: screen;
+}
+.portrait-fx[data-fx="warm"] {
+  background: radial-gradient(
+    circle at 50% 35%,
+    rgb(255 214 150 / 0.55),
+    rgb(245 165 36 / 0.15) 60%,
+    transparent 80%
+  );
+  mix-blend-mode: soft-light;
+}
+
+/* ---- View switch ------------------------------------------- */
+
+.view-switch-thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 2px;
+  background: rgb(var(--accent));
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.35s ease;
+}
+html[data-view="engineer"] .view-switch-thumb {
+  transform: translateX(100%);
+}
+.view-switch-btn {
+  color: rgb(var(--muted));
+  transition: color 0.2s ease;
+}
+.view-switch-btn:hover {
+  color: rgb(var(--text));
+}
+html:not([data-view="engineer"]) .view-switch-btn[data-for="recruiter"],
+html[data-view="engineer"] .view-switch-btn[data-for="engineer"] {
+  color: rgb(var(--on-accent));
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -69,6 +315,8 @@ body {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+    /* Staggered reveals would otherwise still wait out their delays. */
+    transition-delay: 0s !important;
   }
 }
 
@@ -108,6 +356,16 @@ body {
     @apply focus-ring inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-sm border border-line bg-bg px-4 py-2.5 text-sm font-medium text-text transition-colors duration-150 hover:border-faint hover:bg-surface active:translate-y-px;
   }
 
+  /* The engineer layer's own surface: mono, tinted, with a thin accent rule
+     so it reads as an insert beneath the shared content. */
+  .eng-panel {
+    @apply rounded-sm border-l-2 border-l-accent bg-surface px-4 py-5 font-mono text-[12.5px] leading-[1.65] text-muted sm:px-6;
+  }
+
+  .eng-label {
+    @apply font-mono text-[10.5px] font-medium uppercase tracking-[0.12em] text-accent-text;
+  }
+
   /* Numbers are tabular everywhere so columns of figures line up. */
   .num {
     @apply tabular-nums;
@@ -134,4 +392,195 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(var(--faint));
+}
+
+/* ============================================================
+   Cinematic shift (View Transitions API). The browser freezes
+   the old page and reveals the new one behind an effect, so the
+   layers, accent, grid and portrait all change inside the reveal
+   instead of popping in. Browsers without the API fall back to
+   the CSS transitions above plus the ShiftFx overlays.
+   ============================================================ */
+
+/* Inside a view transition, layout changes land at once: the reveal is
+   the animation. Staggered contents still settle in behind it. */
+html[data-vt] .eng-layer,
+html[data-vt] .eng-layer > div,
+html[data-vt] body::before {
+  transition: none !important;
+}
+
+::view-transition-group(root) {
+  animation: none;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+/* ---- → Engineer: the scan wipe ---------------------------- */
+
+html[data-vt="engineer"]::view-transition-new(root) {
+  animation: vt-wipe-down 1.15s cubic-bezier(0.7, 0, 0.25, 1) both;
+}
+html[data-vt="engineer"]::view-transition-old(root) {
+  animation: vt-power-down 1.15s ease-in both;
+}
+
+@keyframes vt-wipe-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes vt-power-down {
+  to {
+    filter: brightness(0.9) saturate(0.4);
+  }
+}
+
+/* The scan beam: a full-viewport layer whose gradients are positioned by
+   --scan-y. It carries its own view-transition-name, so it paints above the
+   wiping page, and --scan-y runs on the same curve as the wipe, so the beam
+   rides exactly on the edge between old and new. */
+@property --scan-y {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.vt-scan {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  view-transition-name: vt-scan;
+  animation:
+    vt-scan-move 1.15s cubic-bezier(0.7, 0, 0.25, 1) both,
+    vt-fade-tail 1.15s linear both;
+  background:
+    /* bright core */
+    linear-gradient(
+      to bottom,
+      transparent calc(var(--scan-y) - 2px),
+      rgb(255 255 255 / 0.95) calc(var(--scan-y) - 2px),
+      rgb(255 255 255 / 0.95) var(--scan-y),
+      transparent var(--scan-y)
+    ),
+    /* glow around the edge */
+    linear-gradient(
+      to bottom,
+      transparent calc(var(--scan-y) - 28px),
+      rgb(var(--accent) / 0.55) var(--scan-y),
+      transparent calc(var(--scan-y) + 28px)
+    ),
+    /* trail over the freshly revealed page */
+    linear-gradient(
+      to bottom,
+      transparent calc(var(--scan-y) - 220px),
+      rgb(var(--accent) / 0.2) var(--scan-y),
+      transparent var(--scan-y)
+    );
+}
+/* Fine scanlines inside the trail. */
+.vt-scan::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    rgb(var(--accent) / 0.14) 3px 4px
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent calc(var(--scan-y) - 220px),
+    black var(--scan-y),
+    transparent var(--scan-y)
+  );
+}
+
+::view-transition-group(vt-scan),
+::view-transition-group(vt-bloom),
+::view-transition-new(vt-scan),
+::view-transition-new(vt-bloom) {
+  animation: none;
+}
+
+@keyframes vt-scan-move {
+  from {
+    --scan-y: 0px;
+  }
+  to {
+    --scan-y: 100vh;
+  }
+}
+@keyframes vt-fade-tail {
+  0%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---- → Recruiter: the warm bloom -------------------------- */
+
+html[data-vt="recruiter"]::view-transition-new(root) {
+  animation: vt-bloom-reveal 0.9s cubic-bezier(0.5, 0, 0.2, 1) both;
+}
+html[data-vt="recruiter"]::view-transition-old(root) {
+  animation: vt-soften 0.9s ease-in both;
+}
+
+@keyframes vt-bloom-reveal {
+  from {
+    clip-path: circle(0 at var(--vt-x) var(--vt-y));
+  }
+  to {
+    clip-path: circle(var(--vt-r) at var(--vt-x) var(--vt-y));
+  }
+}
+@keyframes vt-soften {
+  to {
+    filter: blur(3px) brightness(1.04);
+  }
+}
+
+/* A warm ring on the edge of the reveal, with a soft wash inside it. */
+@property --bloom-r {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.vt-bloom {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  view-transition-name: vt-bloom;
+  animation:
+    vt-bloom-grow 0.9s cubic-bezier(0.5, 0, 0.2, 1) both,
+    vt-fade-tail 0.9s linear both;
+  background: radial-gradient(
+    circle at var(--vt-x) var(--vt-y),
+    rgb(245 165 36 / 0.1) 0,
+    rgb(245 165 36 / 0.05) calc(var(--bloom-r) - 60px),
+    rgb(245 165 36 / 0.35) calc(var(--bloom-r) - 8px),
+    rgb(255 228 176 / 0.9) calc(var(--bloom-r) - 1px),
+    transparent var(--bloom-r)
+  );
+}
+
+@keyframes vt-bloom-grow {
+  from {
+    --bloom-r: 0px;
+  }
+  to {
+    --bloom-r: var(--vt-r);
+  }
 }
