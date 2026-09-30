@@ -1,15 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { track } from "@/lib/analytics";
-
-type View = "recruiter" | "engineer";
+import { currentView, requestView, type View } from "@/lib/view";
 
 const HINT_KEY = "view-hint-seen";
-
-function currentView(): View {
-  return document.documentElement.dataset.view === "engineer" ? "engineer" : "recruiter";
-}
 
 /**
  * Recruiter | Engineer. Changes how the same page is told: recruiter is plain
@@ -21,18 +15,36 @@ export function ViewSwitch() {
   const [hint, setHint] = useState(false);
 
   useEffect(() => {
-    const v = currentView();
-    setView(v);
-    // One-time hint so the switch gets found. Not shown to anyone who arrived
-    // on an engineer link — they already know.
-    try {
-      if (v === "recruiter" && !localStorage.getItem(HINT_KEY)) {
-        localStorage.setItem(HINT_KEY, "1");
-        setHint(true);
+    setView(currentView());
+    const onChange = (e: Event) => setView((e as CustomEvent<View>).detail);
+    window.addEventListener("view:change", onChange);
+
+    // One-time hint so the switch gets found — after the intro, and never for
+    // someone who arrived on an engineer link.
+    let timer = 0;
+    const offerHint = () => {
+      try {
+        if (currentView() === "recruiter" && !localStorage.getItem(HINT_KEY)) {
+          localStorage.setItem(HINT_KEY, "1");
+          // Anyone who found the switch in the meantime doesn't need the hint
+          // (and it must never pop up over a transformation).
+          timer = window.setTimeout(() => {
+            const root = document.documentElement;
+            if (currentView() === "recruiter" && !root.dataset.viewPending) setHint(true);
+          }, 600);
+        }
+      } catch {
+        // storage unavailable (private mode): simply skip the hint
       }
-    } catch {
-      // storage unavailable (private mode): simply skip the hint
-    }
+    };
+    if (document.documentElement.dataset.intro === "done") offerHint();
+    else window.addEventListener("intro:done", offerHint, { once: true });
+
+    return () => {
+      window.removeEventListener("view:change", onChange);
+      window.removeEventListener("intro:done", offerHint);
+      window.clearTimeout(timer);
+    };
   }, []);
 
   // Let the hint get out of the way once the reader moves on.
@@ -51,13 +63,8 @@ export function ViewSwitch() {
   const choose = (next: View) => {
     setHint(false);
     if (next === currentView()) return;
-    document.documentElement.dataset.view = next;
     setView(next);
-    const url = new URL(window.location.href);
-    if (next === "engineer") url.searchParams.set("view", "engineer");
-    else url.searchParams.delete("view");
-    window.history.replaceState(window.history.state, "", url);
-    track("view_toggle", { to: next });
+    void requestView(next);
   };
 
   const option =
@@ -68,7 +75,7 @@ export function ViewSwitch() {
       <div
         role="group"
         aria-label="How this page is told"
-        className="inline-flex h-9 items-stretch gap-0.5 rounded-sm border border-line bg-surface p-[3px]"
+        className="view-switch inline-flex h-9 items-stretch gap-0.5 rounded-sm border border-line bg-surface p-[3px]"
       >
         <button
           type="button"

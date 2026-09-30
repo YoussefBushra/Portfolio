@@ -1,12 +1,10 @@
 import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
+import { Portrait } from "@/components/hero/Portrait";
 import { Engineer } from "@/components/view/Layer";
 import { profile } from "@/content/profile";
-import Image from "next/image";
 import { Fragment } from "react";
-
-const PORTRAIT = "/portrait.jpg";
 
 /** Engineer view: the headline's claim, one level down. */
 const STACK_LINES: [label: string, items: string[], tone: string][] = [
@@ -38,20 +36,13 @@ const LINKEDIN =
  */
 export function Hero() {
   return (
-    <section id="hero">
+    // overflow-x: clip keeps the spell (seal, sparks) from ever widening the
+    // page on narrow screens, without creating a scroll container.
+    <section id="hero" className="overflow-x-clip">
       <div className="mx-auto max-w-page px-6 pb-3 pt-20 md:px-10 md:pb-4 md:pt-24">
         <div className="grid items-center gap-8 md:grid-cols-[240px_minmax(0,1fr)] md:gap-14">
           <div>
-            <div className="relative aspect-[3/4] w-full max-w-[200px] overflow-hidden rounded-2xl border border-line bg-surface shadow-sm md:max-w-none">
-              <Image
-                src={PORTRAIT}
-                alt={`${profile.name}, ${profile.role}`}
-                fill
-                priority
-                sizes="(max-width: 768px) 240px, 240px"
-                className="object-cover object-[50%_25%]"
-              />
-            </div>
+            <Portrait alt={`${profile.name}, ${profile.role}`} />
           </div>
 
           <div className="min-w-0">

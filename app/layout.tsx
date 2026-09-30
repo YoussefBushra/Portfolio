@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { VisitTracker } from "@/components/system/VisitTracker";
+import { IntroLoader } from "@/components/intro/IntroLoader";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
@@ -100,13 +101,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Set the Recruiter / Engineer view from ?view= before first paint,
-            so a shared engineer link never flashes the recruiter layer. */}
+        {/* Before first paint: set the Recruiter / Engineer view from ?view=
+            (so a shared engineer link never flashes the recruiter layer), and
+            skip the intro if it already played this session. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{document.documentElement.dataset.view=new URLSearchParams(location.search).get("view")==="engineer"?"engineer":"recruiter"}catch(e){}`,
+            __html: `try{var d=document.documentElement;d.dataset.view=new URLSearchParams(location.search).get("view")==="engineer"?"engineer":"recruiter";if(sessionStorage.getItem("yb.intro"))d.dataset.intro="done"}catch(e){}`,
           }}
         />
+        {/* No JS, no intro: it could never finish. */}
+        <noscript>
+          <style>{`.intro{display:none!important}`}</style>
+        </noscript>
       </head>
       <body className={`${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
@@ -115,6 +121,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <IntroLoader />
           {children}
         </ThemeProvider>
 

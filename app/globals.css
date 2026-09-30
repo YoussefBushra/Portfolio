@@ -155,6 +155,133 @@ html[data-view="engineer"] .view-opt-engineer {
   color: rgb(var(--bg));
 }
 
+/* While a transformation plays, the switch already shows the choice. */
+html[data-view-pending="engineer"] .view-opt-engineer,
+html[data-view-pending="recruiter"] .view-opt-recruiter {
+  background-color: rgb(var(--text));
+  color: rgb(var(--bg));
+}
+html[data-view-pending="engineer"] .view-opt-recruiter,
+html[data-view-pending="recruiter"] .view-opt-engineer {
+  background-color: transparent;
+  color: rgb(var(--muted));
+}
+
+/* ---- Hero portrait: one photo per view ------------------------------
+   The engineer photo sits on top and simply appears in engineer view; the
+   transformation itself is played by cast.ts through the portal layer. */
+.portrait-eng {
+  opacity: 0;
+}
+html[data-view="engineer"] .portrait-eng {
+  opacity: 1;
+}
+.portal-layer {
+  display: none;
+}
+
+/* The spell stage: a square centred on the portal point (the face), larger
+   than the portrait, above the page content but below the nav. */
+.spell-stage {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  width: 240%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 30;
+  visibility: hidden;
+  opacity: 0;
+}
+.sigil {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+/* Each ring is its own layer: the glow is rasterised once and the ring spins
+   on the GPU (see Sigil.tsx). */
+.sigil > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px rgb(var(--accent) / 0.85));
+  will-change: transform;
+}
+.spell-wave {
+  position: fixed;
+  width: 120px;
+  height: 120px;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 30;
+  visibility: hidden;
+  opacity: 0;
+  background: radial-gradient(
+    circle,
+    transparent 56%,
+    rgb(var(--accent) / 0.1) 62%,
+    rgb(var(--accent) / 0.5) 67%,
+    rgb(255 236 190 / 0.6) 68.5%,
+    transparent 71%
+  );
+  will-change: transform, opacity;
+}
+
+/* ---- Intro loader --------------------------------------------------- */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--bg));
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+html[data-intro="done"] .intro {
+  display: none;
+}
+html.intro-lock body {
+  overflow: hidden;
+}
+.intro-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.4s ease;
+}
+.intro-mark {
+  width: 76px;
+  height: 76px;
+}
+.intro-bar {
+  transform: scaleX(0);
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.intro-name {
+  margin-top: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgb(var(--text));
+}
+.intro-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+.intro-leaving .intro-inner {
+  transform: scale(0.92) translateY(-6px);
+  opacity: 0;
+}
+
 /* In engineer view the work grid becomes full-width case studies, giving the
    technical layer room for a figure beside the notes. */
 html[data-view="engineer"] .work-grid {
