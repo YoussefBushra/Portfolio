@@ -39,6 +39,25 @@
   color-scheme: dark;
 }
 
+/* Engineer view runs on electric cyan instead of amber. The HUD tokens are
+   the two destination colours, independent of the current view, so a
+   transformation can arrive in the colour it's about to switch to. */
+:root {
+  --hud-rec: 245 165 36;
+  --hud-eng: 6 182 212;
+}
+.dark {
+  --hud-eng: 34 211 238;
+}
+html[data-view="engineer"] {
+  --accent: 6 182 212;
+  --accent-text: 14 116 144;
+}
+html.dark[data-view="engineer"] {
+  --accent: 34 211 238;
+  --accent-text: 103 232 249;
+}
+
 * {
   border-color: rgb(var(--line));
 }
@@ -169,20 +188,30 @@ html[data-view-pending="recruiter"] .view-opt-engineer {
 
 /* ---- Hero portrait: one photo per view ------------------------------
    The engineer photo sits on top and simply appears in engineer view; the
-   transformation itself is played by cast.ts through the portal layer. */
+   transformation itself is played by cast.ts on the tile canvas. */
 .portrait-eng {
   opacity: 0;
 }
 html[data-view="engineer"] .portrait-eng {
   opacity: 1;
 }
-.portal-layer {
-  display: none;
+.tiles-canvas {
+  visibility: hidden;
+  opacity: 0;
 }
 
-/* The spell stage: a square centred on the portal point (the face), larger
-   than the portrait, above the page content but below the nav. */
-.spell-stage {
+/* While a transformation plays, layout changes land at once and GSAP owns
+   the motion (cards glide via Flip; blocks render inside wireframes). */
+html[data-casting] .layer,
+html[data-casting] [data-flip] {
+  transition: none !important;
+}
+
+/* The HUD stage: a square centred on the face, larger than the portrait,
+   above the page content but below the nav. --hud is set per switch to the
+   colour of the destination view. */
+.hud-stage {
+  --hud: var(--hud-eng);
   position: absolute;
   left: 50%;
   top: 42%;
@@ -193,43 +222,94 @@ html[data-view="engineer"] .portrait-eng {
   z-index: 30;
   visibility: hidden;
   opacity: 0;
+  color: rgb(var(--hud));
 }
-.sigil {
+.reticle {
   position: absolute;
   inset: 0;
   visibility: hidden;
   opacity: 0;
   will-change: transform, opacity;
 }
-/* Each ring is its own layer: the glow is rasterised once and the ring spins
-   on the GPU (see Sigil.tsx). */
-.sigil > svg {
+/* Each ring is its own layer and spins on the GPU. No blur filter: the glow
+   is drawn into the SVG (see Reticle.tsx). */
+.reticle > svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 0 4px rgb(var(--accent) / 0.85));
   will-change: transform;
 }
-.spell-wave {
-  position: fixed;
-  width: 120px;
-  height: 120px;
-  border-radius: 9999px;
+.reticle-label {
+  fill: currentColor;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 4.1px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  /* a knockout outline in the page colour keeps the readouts legible where
+     they cross text below the portrait */
+  stroke: rgb(var(--bg) / 0.9);
+  stroke-width: 1.6px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+
+/* ---- Blueprint wireframe drawn around a block while it (de)renders ---- */
+.rc-box {
+  position: absolute;
+  inset: -8px -10px;
+  z-index: 2;
   pointer-events: none;
-  z-index: 30;
-  visibility: hidden;
-  opacity: 0;
-  background: radial-gradient(
-    circle,
-    transparent 56%,
-    rgb(var(--accent) / 0.1) 62%,
-    rgb(var(--accent) / 0.5) 67%,
-    rgb(255 236 190 / 0.6) 68.5%,
-    transparent 71%
-  );
-  will-change: transform, opacity;
+  border: 1px dashed rgb(var(--hud) / 0.55);
+  border-radius: 2px;
+  background: linear-gradient(rgb(var(--hud) / 0.05), rgb(var(--hud) / 0.02));
+}
+.rc-c {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 0 solid rgb(var(--hud));
+}
+.rc-tl {
+  top: -1px;
+  left: -1px;
+  border-top-width: 2px;
+  border-left-width: 2px;
+}
+.rc-tr {
+  top: -1px;
+  right: -1px;
+  border-top-width: 2px;
+  border-right-width: 2px;
+}
+.rc-bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+}
+.rc-br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+}
+.rc-tag {
+  position: absolute;
+  top: -9px;
+  left: 10px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  background: rgb(var(--bg) / 0.92);
+  color: rgb(var(--hud));
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* ---- Intro loader --------------------------------------------------- */

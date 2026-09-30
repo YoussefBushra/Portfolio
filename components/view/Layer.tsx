@@ -5,17 +5,26 @@ interface LayerProps {
   /** Classes for the innermost element. Put spacing here (e.g. `pt-6`), not on
    *  the wrapper, so it collapses along with the content. */
   className?: string;
+  /** Short tag shown on the wireframe while this block renders during a view
+   *  switch, e.g. "under-the-hood". */
+  label?: string;
 }
 
 /**
  * Content shown only in engineer view. It is always in the HTML; the
  * `html[data-view]` attribute expands or collapses it (see globals.css).
  */
-export function Engineer({ children, className = "" }: LayerProps) {
+export function Engineer({
+  children,
+  className = "",
+  label = "block",
+}: LayerProps) {
   return (
     <div className="layer layer-eng">
       <div>
-        <div className={className}>{children}</div>
+        <div className={className} data-rc={label}>
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -23,11 +32,17 @@ export function Engineer({ children, className = "" }: LayerProps) {
 
 /** Content shown only in recruiter view (for places where the two views
  *  genuinely say different things, rather than one adding to the other). */
-export function Recruiter({ children, className = "" }: LayerProps) {
+export function Recruiter({
+  children,
+  className = "",
+  label = "block",
+}: LayerProps) {
   return (
     <div className="layer layer-rec">
       <div>
-        <div className={className}>{children}</div>
+        <div className={className} data-rc={label}>
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -42,6 +57,6 @@ export function withCode(text: string): ReactNode[] {
       </code>
     ) : (
       <span key={i}>{part}</span>
-    )
+    ),
   );
 }

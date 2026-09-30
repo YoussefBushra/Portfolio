@@ -19,6 +19,7 @@ export function SelectedWork() {
         {work.map((w) => (
           <article
             key={w.title}
+            data-flip="work"
             className="panel flex flex-col p-7 transition-all duration-200 hover:border-faint hover:shadow-md sm:p-9"
           >
             <h3 className="text-[20px] font-semibold leading-snug tracking-tight text-text">
@@ -32,7 +33,7 @@ export function SelectedWork() {
 
             <p className="mt-6 text-[13px] text-faint">{w.tech.join(" · ")}</p>
 
-            <Engineer className="pt-9">
+            <Engineer className="pt-9" label="under-the-hood">
               <UnderTheHood item={w} />
             </Engineer>
           </article>

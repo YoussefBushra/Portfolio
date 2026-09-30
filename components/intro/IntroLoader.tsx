@@ -49,7 +49,9 @@ export function IntroLoader() {
       )
     );
     const assets = Promise.all([
-      import("gsap").then(() => setBar(bar2.current, (p2 += 0.5))),
+      Promise.all([import("gsap"), import("gsap/Flip")]).then(() =>
+        setBar(bar2.current, (p2 += 0.5))
+      ),
       document.fonts.ready.then(() => setBar(bar2.current, (p2 += 0.5))),
     ]);
 

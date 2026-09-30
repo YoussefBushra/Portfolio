@@ -63,7 +63,7 @@ export function Hero() {
             </p>
 
             {/* Engineer view: the same claim, one level down. */}
-            <Engineer className="pt-5">
+            <Engineer className="pt-5" label="stack">
               <dl className="grid max-w-2xl grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 font-mono text-[12.5px] leading-relaxed">
                 {STACK_LINES.map(([label, items, tone]) => (
                   <Fragment key={label}>

@@ -15,7 +15,7 @@ const category = "text-[12px] font-semibold uppercase tracking-[0.14em] text-tex
 export function Skills() {
   return (
     <SectionShell id="skills" index="04" label="Skills" tint>
-      <Recruiter>
+      <Recruiter label="capabilities">
         <dl className="grid gap-y-8 sm:gap-y-10">
           {capabilities.map((c) => (
             <div key={c.name} className={row}>
@@ -28,7 +28,7 @@ export function Skills() {
         </dl>
       </Recruiter>
 
-      <Engineer>
+      <Engineer label="stack">
         <dl className="grid gap-y-8 sm:gap-y-10">
           {stack.map((group) => (
             <div key={group.name} className={row}>
