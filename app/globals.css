@@ -115,6 +115,52 @@ body {
   }
 }
 
+/* ============================================================
+   Recruiter / Engineer view. Both layers ship in the HTML (indexable, and
+   the recruiter view works without JS). html[data-view] decides which one
+   is expanded; no attribute means recruiter. Collapse runs on grid rows so
+   it animates to the content's natural height, and `visibility` keeps a
+   collapsed layer out of the accessibility tree and the tab order.
+   ============================================================ */
+.layer {
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    grid-template-rows 360ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 280ms ease 80ms,
+    visibility 0s linear 0s;
+}
+.layer > * {
+  min-height: 0;
+  overflow: hidden;
+}
+html:not([data-view="engineer"]) .layer-eng,
+html[data-view="engineer"] .layer-rec {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    grid-template-rows 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 160ms ease,
+    visibility 0s linear 300ms;
+}
+
+/* The switch's active segment follows the attribute directly, so it is right
+   on first paint — before React hydrates. */
+html:not([data-view="engineer"]) .view-opt-recruiter,
+html[data-view="engineer"] .view-opt-engineer {
+  background-color: rgb(var(--text));
+  color: rgb(var(--bg));
+}
+
+/* In engineer view the work grid becomes full-width case studies, giving the
+   technical layer room for a figure beside the notes. */
+html[data-view="engineer"] .work-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 ::selection {
   background: rgb(var(--accent) / 0.3);
   color: rgb(var(--text));

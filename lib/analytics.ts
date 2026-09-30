@@ -17,6 +17,7 @@ export type AnalyticsEvent =
   | "command_palette_open"
   | "command_run"
   | "theme_toggle"
+  | "view_toggle"
   | "section_view"
   | "social_click"
   | "boot_skipped"

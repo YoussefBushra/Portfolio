@@ -1,48 +1,22 @@
 import { SectionShell } from "@/components/layout/SectionShell";
+import { Engineer, withCode } from "@/components/view/Layer";
+import { CodeBlock, WorkFigureView } from "@/components/work/Figures";
+import { work, type WorkItem } from "@/content/work";
 
-interface WorkItem {
-  title: string;
-  context: string;
-  body: string;
-  tech: string[];
-}
+const monoLabel =
+  "font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-faint";
 
 /**
- * Selected work in plain language — what was built and why it mattered to the
- * business, with the relevant stack. Kept to a scannable outcome per card.
+ * Recruiter view: a 2×2 grid of outcomes in plain language.
+ * Engineer view: the same cards widen into full-width case studies, and an
+ * "Under the hood" layer expands beneath each outcome — notes on one side, a
+ * figure (and pseudocode) on the other. The outcome text never changes.
  */
-const WORK: WorkItem[] = [
-  {
-    title: "Business system integration — Microsoft Dynamics 365",
-    context: "Skil-Dev · Logistics & freight-forwarding platform",
-    body: "Built and maintained Microsoft Dynamics 365 integrations for invoices, payments, customers, and exchange rates across the company's logistics platform.",
-    tech: ["Microsoft Dynamics 365", "NestJS", "TypeScript", "PostgreSQL"],
-  },
-  {
-    title: "CRM & business platform development",
-    context: "Skil-Dev · Logistics & freight-forwarding platform",
-    body: "Built and maintained CRM features for leads, companies, contacts, activities, documents, and financial accounts, including bulk Excel import and validation.",
-    tech: ["NestJS", "TypeScript", "PostgreSQL", "React"],
-  },
-  {
-    title: "Document & workflow automation",
-    context: "Skil-Dev · Logistics operations",
-    body: "Built the service that generates shipping documents and document bundles from shipment data gathered across multiple systems, with asynchronous processing and scheduled cleanup.",
-    tech: ["NestJS", "PostgreSQL", "Background jobs"],
-  },
-  {
-    title: "Large-scale search optimization",
-    context: "Block Gemini · Dubai",
-    body: "Optimized geo-location search across more than 10 million records, reaching approximately 600 ms average response against a one-second target.",
-    tech: ["Elasticsearch", "NestJS", "PostgreSQL", "Redis"],
-  },
-];
-
 export function SelectedWork() {
   return (
     <SectionShell id="work" index="01" label="Selected Work">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {WORK.map((w) => (
+      <div className="work-grid grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {work.map((w) => (
           <article
             key={w.title}
             className="panel flex flex-col p-7 transition-all duration-200 hover:border-faint hover:shadow-md sm:p-9"
@@ -52,12 +26,69 @@ export function SelectedWork() {
             </h3>
             <p className="mt-2 text-[13px] text-faint">{w.context}</p>
 
-            <p className="mt-4 text-[15.5px] leading-[1.7] text-muted">{w.body}</p>
+            <p className="mt-4 max-w-3xl text-[15.5px] leading-[1.7] text-muted">
+              {w.summary}
+            </p>
 
             <p className="mt-6 text-[13px] text-faint">{w.tech.join(" · ")}</p>
+
+            <Engineer className="pt-9">
+              <UnderTheHood item={w} />
+            </Engineer>
           </article>
         ))}
       </div>
     </SectionShell>
+  );
+}
+
+function UnderTheHood({ item }: { item: WorkItem }) {
+  const { points, figure, code, tradeoff, differently } = item.engineer;
+
+  return (
+    <div>
+      <p className="flex items-center gap-2 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-accent-text">
+        <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+        Under the hood
+      </p>
+
+      {/* minmax(0, …) on every track: the <pre> must scroll inside its own box,
+          never widen the column (which the layer would then clip). */}
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,442px)] lg:gap-14">
+        <div>
+          <ul className="space-y-3.5">
+            {points.map((p) => (
+              <li
+                key={p}
+                className="relative pl-5 text-[14.5px] leading-[1.65] text-muted before:absolute before:left-0 before:top-[0.7em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-faint before:content-['']"
+              >
+                {withCode(p)}
+              </li>
+            ))}
+          </ul>
+
+          {tradeoff ? (
+            <div className="mt-8">
+              <p className={monoLabel}>Trade-off</p>
+              <p className="mt-2.5 text-[14.5px] leading-[1.65] text-text">{tradeoff}</p>
+            </div>
+          ) : null}
+
+          {differently ? (
+            <div className="mt-8">
+              <p className={monoLabel}>What I&rsquo;d do differently</p>
+              <p className="mt-2.5 text-[14.5px] leading-[1.65] text-text">{differently}</p>
+            </div>
+          ) : null}
+        </div>
+
+        {figure || code ? (
+          <div className="space-y-8">
+            {figure ? <WorkFigureView figure={figure} /> : null}
+            {code ? <CodeBlock code={code} /> : null}
+          </div>
+        ) : null}
+      </div>
+    </div>
   );
 }

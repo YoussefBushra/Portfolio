@@ -99,6 +99,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Set the Recruiter / Engineer view from ?view= before first paint,
+            so a shared engineer link never flashes the recruiter layer. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{document.documentElement.dataset.view=new URLSearchParams(location.search).get("view")==="engineer"?"engineer":"recruiter"}catch(e){}`,
+          }}
+        />
+      </head>
       <body className={`${sans.variable} ${mono.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
