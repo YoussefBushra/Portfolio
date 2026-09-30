@@ -187,17 +187,22 @@ html[data-view-pending="recruiter"] .view-opt-engineer {
 }
 
 /* ---- Hero portrait: one photo per view ------------------------------
-   The engineer photo sits on top and simply appears in engineer view; the
-   transformation itself is played by cast.ts on the tile canvas. */
+   The engineer photo sits on top and simply appears in engineer view. During
+   a switch the frame holds the old photo (data-hold) while the page
+   transforms; the finale then reveals the new one through the portal layer
+   (components/view/transform.ts). */
 .portrait-eng {
   opacity: 0;
 }
-html[data-view="engineer"] .portrait-eng {
+html[data-view="engineer"] .portrait-eng,
+.portrait-frame[data-hold="engineer"] .portrait-eng {
   opacity: 1;
 }
-.tiles-canvas {
-  visibility: hidden;
+.portrait-frame[data-hold="recruiter"] .portrait-eng {
   opacity: 0;
+}
+.portal-layer {
+  display: none;
 }
 
 /* While a transformation plays, layout changes land at once and GSAP owns
@@ -207,10 +212,10 @@ html[data-casting] [data-flip] {
   transition: none !important;
 }
 
-/* The HUD stage: a square centred on the face, larger than the portrait,
-   above the page content but below the nav. --hud is set per switch to the
-   colour of the destination view. */
-.hud-stage {
+/* The finale stage: a square centred on the face, larger than the portrait,
+   above the page content but below the nav. --hud is the colour of the view
+   being switched to. */
+.fx-stage {
   --hud: var(--hud-eng);
   position: absolute;
   left: 50%;
@@ -224,7 +229,7 @@ html[data-casting] [data-flip] {
   opacity: 0;
   color: rgb(var(--hud));
 }
-.reticle {
+.seal {
   position: absolute;
   inset: 0;
   visibility: hidden;
@@ -232,27 +237,98 @@ html[data-casting] [data-flip] {
   will-change: transform, opacity;
 }
 /* Each ring is its own layer and spins on the GPU. No blur filter: the glow
-   is drawn into the SVG (see Reticle.tsx). */
-.reticle > svg {
+   is drawn into the SVG (see Seal.tsx). */
+.seal > svg {
   position: absolute;
-  inset: 0;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   overflow: visible;
   will-change: transform;
 }
-.reticle-label {
-  fill: currentColor;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 4.1px;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  /* a knockout outline in the page colour keeps the readouts legible where
-     they cross text below the portrait */
-  stroke: rgb(var(--bg) / 0.9);
-  stroke-width: 1.6px;
-  stroke-linejoin: round;
-  paint-order: stroke;
+.seal [data-node] {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* ---- The surge: page-wide layers of a view switch ------------------- */
+.surge {
+  --hud: var(--hud-eng);
+  color: rgb(var(--hud));
+}
+.surge-charge,
+.surge-front,
+.surge-wave {
+  position: fixed;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+/* Energy along the nav's bottom edge, running out from the switch. */
+.surge-charge {
+  z-index: 41;
+  width: 100%;
+  height: 2px;
+  background: rgb(var(--hud));
+  box-shadow:
+    0 0 12px 1px rgb(var(--hud) / 0.7),
+    0 0 3px rgb(var(--hud));
+}
+/* The front that sweeps down the screen: a bright edge trailing a tinted,
+   gridded band. Moved by transform only, so it is painted once. */
+.surge-front {
+  z-index: 35;
+  width: 100%;
+  height: 150px;
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--hud) / 0),
+    rgb(var(--hud) / 0.08) 70%,
+    rgb(var(--hud) / 0.2)
+  );
+}
+.surge-front::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(var(--hud) / 0.16) 0 1px,
+    transparent 1px 44px
+  );
+  -webkit-mask-image: linear-gradient(to bottom, transparent 30%, #000);
+  mask-image: linear-gradient(to bottom, transparent 30%, #000);
+}
+.surge-front::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgb(var(--hud));
+  box-shadow:
+    0 0 16px 2px rgb(var(--hud) / 0.75),
+    0 0 3px rgb(var(--hud));
+}
+/* The shockwave when the portrait's portal flares shut. */
+.surge-wave {
+  z-index: 35;
+  width: 120px;
+  height: 120px;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    transparent 56%,
+    rgb(var(--hud) / 0.1) 62%,
+    rgb(var(--hud) / 0.5) 67%,
+    rgb(255 255 255 / 0.5) 68.5%,
+    transparent 71%
+  );
 }
 
 /* ---- Blueprint wireframe drawn around a block while it (de)renders ---- */

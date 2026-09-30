@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 const SESSION_KEY = "yb.intro";
 const MIN_MS = 700;
-const MAX_MS = 4000;
+const MAX_MS = 8000;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -21,7 +21,7 @@ function whenDecoded(img: HTMLImageElement): Promise<void> {
 /**
  * First visit per session: the logo mark, large, with its two amber bars
  * filling as real progress — bar one for the two portraits, bar two for the
- * animation library and fonts — so the first Recruiter ⇄ Engineer switch never
+ * transformation (loaded and warmed up) and fonts — so the first Recruiter ⇄ Engineer switch never
  * waits on anything. Rendered on the server so it covers the page from the
  * first paint; skipped before paint on later loads (see the head script).
  */
@@ -48,10 +48,13 @@ export function IntroLoader() {
         whenDecoded(img).then(() => setBar(bar1.current, (p1 += 1 / Math.max(imgs.length, 1))))
       )
     );
+    // The transformation's code, loaded and warmed up (photos decoded, effect
+    // layers painted once) so the first switch runs as smoothly as any other.
     const assets = Promise.all([
-      Promise.all([import("gsap"), import("gsap/Flip")]).then(() =>
-        setBar(bar2.current, (p2 += 0.5))
-      ),
+      images
+        .then(() => import("@/components/view/transform"))
+        .then((m) => m.prewarm())
+        .then(() => setBar(bar2.current, (p2 += 0.5))),
       document.fonts.ready.then(() => setBar(bar2.current, (p2 += 0.5))),
     ]);
 
