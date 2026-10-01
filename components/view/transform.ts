@@ -1,7 +1,7 @@
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import type { View } from "@/lib/view";
-import { Portal, hexCorners, type PortalState } from "@/components/hero/portal";
+import { Hologram, type HoloState } from "@/components/hero/hologram";
 import { getPortraitRefs, type PortraitRefs } from "./portraitRefs";
 import { SparkField } from "./sparkField";
 import {
@@ -29,11 +29,12 @@ gsap.registerPlugin(Flip);
  *                 cards re-flow and land in a spray of sparks, and sections
  *                 and new blocks render as the front passes them. The
  *                 portrait holds its old photo.
- *  finale   ~0.8  a hexagonal gate forms around the portrait and powers up,
- *                 chevron by chevron; the room darkens; a portal spins open
- *                 on the face, showering sparks, with a warp tunnel inside;
- *                 the new photo arrives through it; it flares, and a
- *                 shockwave crosses the page.
+ *  finale   ~0.8  the portrait becomes a hologram: brackets lock on and it
+ *                 takes a holographic tint; a scan beam sweeps down and the
+ *                 old photo derezzes into scanlines; it sweeps back up and
+ *                 the new photo materialises line by line, sparks spraying
+ *                 from the beam; the tint flickers out, and a shockwave
+ *                 crosses the page.
  *
  * With the portrait scrolled away there is no finale (nobody would see it);
  * with reduced motion the switch is instant (see Transformation.tsx).
@@ -131,28 +132,30 @@ function photo(p: PortraitRefs, v: View) {
   );
 }
 
-/** Both photos decoded, and the portal layer holding (and decoded with) the
- *  photo of the other view. */
+/** Decoded copies of both photos for the hologram to draw. Plain copies of
+ *  what the page loaded (from cache): a srcset <img> reports a
+ *  density-corrected naturalWidth, which would throw off the cover crop. */
+const copies: Partial<Record<View, HTMLImageElement>> = {};
+
 async function prepare() {
   const p = getPortraitRefs();
   if (!p) return;
-  const imgs = Array.from(
-    p.frame.querySelectorAll<HTMLImageElement>(".portrait-img"),
+  await Promise.all(
+    (["recruiter", "engineer"] as const).map(async (v) => {
+      const img = photo(p, v);
+      if (!img) return;
+      await whenDecoded(img);
+      const copy = new Image();
+      copy.src = img.currentSrc || img.src;
+      await copy.decode().catch(() => {});
+      if (copy.naturalWidth) copies[v] = copy;
+    }),
   );
-  await Promise.all(imgs.map(whenDecoded));
-  const other = photo(
-    p,
-    document.documentElement.dataset.view === "engineer"
-      ? "recruiter"
-      : "engineer",
-  );
-  p.portal.src = other?.currentSrc || other?.src || "";
-  await p.portal.decode().catch(() => {});
 }
 
 /**
  * A real, full-opacity run of every effect — charge, sweep front, card panel,
- * wireframe, gate, portal, tunnel, sparks, flare, shockwave — played quickly
+ * wireframe, hologram, sparks, shockwave — played quickly
  * behind the intro cover. A first switch otherwise pays mid-animation for
  * rasterising those layers and compiling their GPU shaders (clip-path, mask,
  * filter, canvas); an invisible warm-up doesn't help, as browsers skip
@@ -191,18 +194,9 @@ async function rehearse(onProgress?: (p: number) => void) {
       0,
     ).set(s.front, { autoAlpha: 0 });
   const undoPage = rehearsePage(gsap, Flip, tl, other);
+  const current: View = other === "engineer" ? "recruiter" : "engineer";
   const settle = p
-    ? finale(
-        tl,
-        p,
-        s.wave,
-        0.1,
-        other === "engineer" ? 1 : -1,
-        hudRgb(other),
-        mobile,
-        dark,
-        sparks,
-      )
+    ? finale(tl, p, s.wave, 0.1, current, other, hudRgb(other), dark, sparks)
     : () => {};
   tl.eventCallback("onUpdate", () => onProgress?.(tl.progress()));
   tl.timeScale(2.6).play();
@@ -239,7 +233,6 @@ export async function transform(to: View, commit: () => void) {
 
   const root = document.documentElement;
   const from: View = to === "engineer" ? "recruiter" : "engineer";
-  const dir = to === "engineer" ? 1 : -1;
   const rgb = hudRgb(to);
   const mobile = window.innerWidth < 640;
   const dark = root.classList.contains("dark");
@@ -251,15 +244,13 @@ export async function transform(to: View, commit: () => void) {
   const s = surgeEls();
   const p = getPortraitRefs();
   const pr = p?.frame.getBoundingClientRect();
-  const withFinale = !!p && !!pr && pr.bottom > top + 30 && pr.top < vh - 60;
-
-  // The portal shows the photo we're switching to, decoded before we start.
-  if (withFinale) {
-    const incoming = photo(p, to);
-    const src = incoming?.currentSrc || incoming?.src || "";
-    if (p.portal.src !== src) p.portal.src = src;
-    await p.portal.decode().catch(() => {});
-  }
+  const withFinale =
+    !!p &&
+    !!pr &&
+    pr.bottom > top + 30 &&
+    pr.top < vh - 60 &&
+    !!copies[from] &&
+    !!copies[to];
 
   root.dataset.casting = "";
   s.root?.style.setProperty(
@@ -373,7 +364,7 @@ export async function transform(to: View, commit: () => void) {
       C + reach(pr.top + pr.height * PORTAL_Y),
     );
     // …and transforms as the sweep finishes.
-    settle = finale(tl, p, s.wave, C + D * 0.6, dir, rgb, mobile, dark, sparks);
+    settle = finale(tl, p, s.wave, C + D * 0.6, from, to, rgb, dark, sparks);
   }
 
   await finished(tl);
@@ -386,259 +377,144 @@ export async function transform(to: View, commit: () => void) {
 }
 
 /**
- * The portrait finale, added to `tl` at `at`: the gate powers up, the portal
- * opens on a warp tunnel, the new photo arrives through it, flare. Returns
- * the clean-up.
+ * The portrait finale, added to `tl` at `at`: the portrait becomes a
+ * hologram, derezzes and rematerialises as the other photo. Returns the
+ * clean-up.
  */
 function finale(
   tl: gsap.core.Timeline,
   p: PortraitRefs,
   wave: HTMLElement | null,
   at: number,
-  dir: number,
+  from: View,
+  to: View,
   rgb: string,
-  mobile: boolean,
   dark: boolean,
   sparks: Sparks | null,
 ) {
-  const { frame, stage, canvas, seal, portal } = p;
+  const a = copies[from];
+  const b = copies[to];
+  if (!a || !b) return () => {};
+  const { frame, stage, canvas } = p;
   const size = stage.getBoundingClientRect().width;
-  const unit = size / 200; // seal units → px (the seal spans −100…100)
   const fw = frame.offsetWidth;
   const fh = frame.offsetHeight;
-  const py = fh * PORTAL_Y;
-  // The hexagon's inner radius must clear the frame's far corners.
-  const rMax =
-    (Math.max(Math.hypot(fw / 2, py), Math.hypot(fw / 2, fh - py)) + 2) /
-    Math.cos(Math.PI / 6);
-
-  const state: PortalState = {
-    cx: size / 2,
-    cy: size / 2,
-    r: 0,
-    rot: 0,
-    ring: 0,
-    tunnel: 0,
-    dim: 0,
-    rate: 0,
-    spin: dir,
-    // the stage is centred on the portal point of the frame
-    frame: { x: size / 2 - fw / 2, y: size / 2 - py, w: fw, h: fh, radius: 16 },
+  // The stage is a square centred on the face (PORTAL_Y down the frame).
+  const rect = {
+    x: size / 2 - fw / 2,
+    y: size / 2 - fh * PORTAL_Y,
+    w: fw,
+    h: fh,
+    radius: 16,
   };
-  const view = { zoom: 1.4 };
-  stage.style.setProperty("--hud", `var(--hud-${dir > 0 ? "eng" : "rec"})`);
 
-  // Sparks off the rim go to the page-wide field, in viewport coordinates.
+  // Sparks from the beam go to the page-wide field, in viewport coordinates.
   let origin = stage.getBoundingClientRect();
-  const portalFx = new Portal(canvas, dark, (x, y, vx, vy) =>
+  const holo = new Hologram(canvas, dark, rect, a, b, (x, y, vx, vy) =>
     sparks?.f.emit(origin.left + x, origin.top + y, vx, vy, {
-      g: 620,
-      life: [0.35, 0.85],
+      g: 700,
+      life: [0.25, 0.6],
     }),
   );
-  portalFx.tint(rgb);
+  holo.tint(rgb);
+  const s: HoloState = {
+    dim: 0,
+    lock: 0,
+    tint: 0,
+    beam: 0,
+    beamOn: 0,
+    mode: "old",
+  };
   const tick = (_t: number, ms: number) => {
     origin = stage.getBoundingClientRect();
-    portalFx.frame(Math.min(ms, 50) / 1000, state);
+    holo.frame(Math.min(ms, 50) / 1000, s);
   };
-  /** A seal-space point (corner `i` at radius `r` units) in the viewport. */
-  const at2vp = (i: number, r: number) => {
-    const a = state.rot - Math.PI / 2 + (i * Math.PI) / 3;
-    const o = stage.getBoundingClientRect();
-    return [
-      o.left + size / 2 + Math.cos(a) * r * unit,
-      o.top + size / 2 + Math.sin(a) * r * unit,
-    ] as const;
-  };
-
-  const rings = Array.from(seal.querySelectorAll<SVGElement>("[data-ring]"));
-  const cores = Array.from(seal.querySelectorAll("path[data-core]"));
-  const chevrons = Array.from(seal.querySelectorAll("[data-chevron]"));
-
-  // The aperture on the photo, in frame px. The photo layer is zoomed about
-  // the portal centre, so the clip is given in its own (unzoomed) units.
-  gsap.set(portal, { transformOrigin: `50% ${PORTAL_Y * 100}%` });
-  const clip = () => {
-    const pts = hexCorners(fw / 2, py, state.r / view.zoom, state.rot)
-      .map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`)
-      .join(",");
-    portal.style.clipPath = `polygon(${pts})`;
+  /** A spit of sparks from each corner of the frame. */
+  const corners = (n: number, speed: number) => {
+    if (!sparks) return;
+    const r = frame.getBoundingClientRect();
+    for (const [x, y] of [
+      [r.left, r.top],
+      [r.right, r.top],
+      [r.left, r.bottom],
+      [r.right, r.bottom],
+    ])
+      sparks.f.burst(x, y, n, speed);
   };
 
-  // summon: the gate forms and powers up, chevron by chevron
+  // lock on: brackets fly in, the photo takes the holographic tint
   tl.add(() => {
-    clip();
-    portal.style.display = "block";
     gsap.set(stage, { autoAlpha: 1 });
     gsap.ticker.add(tick);
   }, at)
-    .set(seal, { autoAlpha: 0, scale: 0.85 }, at)
-    .set(
-      seal.querySelectorAll("path[data-core], path[data-halo]"),
-      {
-        strokeDashoffset: 1,
-      },
-      at,
-    )
-    .set(chevrons, { autoAlpha: 0.12, scale: 1 }, at)
-    .set(portal, { autoAlpha: 0, scale: view.zoom }, at)
-    .to(state, { dim: 1, duration: 0.35, ease: "power2.out" }, at)
-    .to(frame, { scale: 1.02, duration: 0.35, ease: "power2.out" }, at)
-    .to(
-      seal,
-      { autoAlpha: 1, scale: 1, duration: 0.45, ease: "power3.out" },
-      at,
-    )
-    .to(
-      state,
-      {
-        rot: (Math.PI / 3) * dir,
-        duration: 1.3,
-        ease: "power2.inOut",
-        onUpdate: clip,
-      },
-      at,
-    );
-  // Lines draw on in random order, each with its halo (the path before it).
-  cores.forEach((c) =>
-    tl.to(
-      [c.previousElementSibling, c],
-      { strokeDashoffset: 0, duration: 0.42, ease: "power2.out" },
-      at + Math.random() * 0.18,
-    ),
-  );
-  // The chevrons lock one after another, each with a spit of sparks.
-  chevrons.forEach((ch, i) => {
-    const t = at + 0.14 + i * 0.05;
-    tl.fromTo(
-      ch,
-      { autoAlpha: 0.12, scale: 1.6 },
-      {
-        autoAlpha: 1,
-        scale: 1,
-        duration: 0.16,
-        ease: "power3.out",
-        immediateRender: false,
-      },
-      t,
-    ).call(
-      () => {
-        if (!sparks) return;
-        // chevron i sits at the gate's corner i (the gate doesn't turn)
-        const a = -Math.PI / 2 + (i * Math.PI) / 3;
-        const o = stage.getBoundingClientRect();
-        sparks.f.burst(
-          o.left + size / 2 + Math.cos(a) * 95 * unit,
-          o.top + size / 2 + Math.sin(a) * 95 * unit,
-          mobile ? 6 : 12,
-          240,
-        );
-      },
-      undefined,
-      t + 0.05,
-    );
-  });
+    .to(s, { dim: 1, duration: 0.35, ease: "power2.out" }, at)
+    .to(s, { lock: 1, duration: 0.3, ease: "power3.out" }, at)
+    .to(s, { tint: 1, duration: 0.25, ease: "power1.out" }, at + 0.05)
+    .call(() => corners(5, 200), undefined, at + 0.27);
 
-  // open: the portal spins open on the face — a warp tunnel inside, sparks
-  // showering off its rim
-  const open = at + 0.46;
-  tl.to(
-    state,
-    { ring: 1, tunnel: 1, rate: mobile ? 260 : 560, duration: 0.15 },
-    open,
-  ).to(
-    state,
-    { r: rMax * 0.42, duration: 0.32, ease: "power2.out", onUpdate: clip },
-    open,
+  // derez: the beam sweeps down, the old photo breaks into scanlines
+  const down = at + 0.32;
+  tl.set(s, { mode: "out", beam: -0.06 }, down)
+    .to(s, { beamOn: 1, duration: 0.1 }, down)
+    .to(s, { beam: 1.12, duration: 0.5, ease: "power1.inOut" }, down);
+
+  // materialise: the beam sweeps back up, building the new photo
+  const up = down + 0.56;
+  tl.set(s, { mode: "in" }, up).to(
+    s,
+    { beam: -0.12, duration: 0.6, ease: "power1.inOut" },
+    up,
   );
 
-  // arrive: the new photo comes through the tunnel as the portal widens
-  const arrive = open + 0.32;
-  tl.to(
-    state,
-    { r: rMax, duration: 0.5, ease: "power2.inOut", onUpdate: clip },
-    arrive,
-  )
-    .to(portal, { autoAlpha: 1, duration: 0.3, ease: "power1.out" }, arrive)
+  // resolve: the tint flickers out; flare and shockwave
+  const done = up + 0.62;
+  tl.set(s, { mode: "new" }, done)
+    .to(s, { beamOn: 0, duration: 0.15 }, done)
     .to(
-      view,
+      s,
       {
-        zoom: 1,
-        duration: 0.6,
-        ease: "power2.out",
-        onUpdate: () => {
-          gsap.set(portal, { scale: view.zoom });
-          clip();
+        keyframes: [
+          { tint: 0.45, duration: 0.05 },
+          { tint: 0.9, duration: 0.05 },
+          { tint: 0.2, duration: 0.06 },
+          { tint: 0.6, duration: 0.05 },
+          { tint: 0, duration: 0.22 },
+        ],
+      },
+      done,
+    )
+    .to(s, { lock: 0, duration: 0.35, ease: "power2.in" }, done + 0.12)
+    .to(s, { dim: 0, duration: 0.5, ease: "power2.out" }, done)
+    .add(() => {
+      corners(12, 380);
+      if (!wave) return;
+      const f = frame.getBoundingClientRect();
+      const vx = f.left + f.width / 2;
+      const vy = f.top + f.height * PORTAL_Y;
+      const reach = Math.hypot(
+        Math.max(vx, window.innerWidth - vx),
+        Math.max(vy, window.innerHeight - vy),
+      );
+      gsap.fromTo(
+        wave,
+        { x: vx - 60, y: vy - 60, scale: 0, autoAlpha: 0.95 },
+        {
+          scale: (reach * 2) / 120,
+          autoAlpha: 0,
+          duration: 0.8,
+          ease: "power2.out",
         },
-      },
-      arrive,
-    )
-    .to(state, { tunnel: 0, duration: 0.45, ease: "power1.in" }, arrive + 0.05);
-
-  // flare + shockwave
-  const flare = arrive + 0.55;
-  tl.add(() => {
-    if (sparks)
-      for (let i = 0; i < 6; i++) {
-        const [x, y] = at2vp(i, rMax / unit);
-        sparks.f.burst(x, y, mobile ? 8 : 18, 420);
-      }
-    if (!wave) return;
-    const f = frame.getBoundingClientRect();
-    const vx = f.left + f.width / 2;
-    const vy = f.top + f.height * PORTAL_Y;
-    const reach = Math.hypot(
-      Math.max(vx, window.innerWidth - vx),
-      Math.max(vy, window.innerHeight - vy),
-    );
-    gsap.fromTo(
-      wave,
-      { x: vx - 60, y: vy - 60, scale: 0, autoAlpha: 0.95 },
-      {
-        scale: (reach * 2) / 120,
-        autoAlpha: 0,
-        duration: 0.8,
-        ease: "power2.out",
-      },
-    );
-  }, flare)
-    .to(state, { ring: 0, rate: 0, duration: 0.3, ease: "power1.in" }, flare)
-    .fromTo(
-      frame,
-      { filter: "brightness(1.35)" },
-      {
-        filter: "brightness(1)",
-        scale: 1,
-        duration: 0.55,
-        ease: "power2.out",
-        immediateRender: false,
-      },
-      flare,
-    )
-    .to(chevrons, { autoAlpha: 0, duration: 0.25 }, flare)
-    .to(
-      seal,
-      { scale: 1.12, autoAlpha: 0, duration: 0.5, ease: "power2.in" },
-      flare + 0.02,
-    )
-    .to(state, { dim: 0, duration: 0.65, ease: "power2.out" }, flare)
+      );
+    }, done)
     // the wave is started from a callback: give it time to finish
-    .set({}, {}, flare + 0.8);
+    .set({}, {}, done + 0.8);
 
   return () => {
     gsap.ticker.remove(tick);
-    portalFx.clear();
-    // The new photo is showing underneath now: drop the hold, then the portal.
+    // The canvas shows the new photo exactly as the page will: clear it and
+    // drop the hold in the same frame.
+    holo.clear();
     delete frame.dataset.hold;
-    portal.style.display = "none";
-    portal.style.clipPath = "";
-    gsap.set(portal, { clearProps: "opacity,visibility,transform" });
     gsap.set(stage, { autoAlpha: 0 });
-    gsap.set(frame, { clearProps: "transform,filter" });
-    // The flare leaves the (hidden) seal scaled — reset it so its box can't
-    // widen the page.
-    gsap.set([seal, ...rings, ...chevrons], {
-      clearProps: "transform,opacity,visibility",
-    });
   };
 }

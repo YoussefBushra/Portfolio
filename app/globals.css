@@ -4,17 +4,18 @@
 
 /* ============================================================
    Document palette. Light is the primary design target: a
-   near-white page with tinted panels, read like a printed
-   dossier. Dark mirrors it. One accent, signal amber.
+   warm off-white page with tinted panels and soft ink rather
+   than pure white and black, read like a printed dossier.
+   Dark mirrors it. One accent, signal amber.
    ============================================================ */
 :root {
-  --bg: 252 252 253;
-  --surface: 243 244 246;
-  --surface-2: 232 234 238;
-  --line: 217 221 226;
-  --text: 17 20 24;
-  --muted: 84 91 100;
-  --faint: 105 111 121;
+  --bg: 246 244 239;
+  --surface: 238 235 228;
+  --surface-2: 229 225 216;
+  --line: 222 217 207;
+  --text: 38 37 35;
+  --muted: 88 85 80;
+  --faint: 110 106 99;
   --accent: 245 165 36;
   --accent-text: 143 82 0;
   --on-accent: 20 16 6;
@@ -54,7 +55,7 @@
 }
 html[data-view="engineer"] {
   --accent: 6 182 212;
-  --accent-text: 14 116 144;
+  --accent-text: 13 108 135;
 }
 html.dark[data-view="engineer"] {
   --accent: 34 211 238;
@@ -192,8 +193,8 @@ html[data-view-pending="recruiter"] .view-opt-engineer {
 /* ---- Hero portrait: one photo per view ------------------------------
    The engineer photo sits on top and simply appears in engineer view. During
    a switch the frame holds the old photo (data-hold) while the page
-   transforms; the finale then reveals the new one through the portal layer
-   (components/view/transform.ts). */
+   transforms; the finale then rematerialises it as the new one on the
+   hologram canvas (components/hero/hologram.ts). */
 .portrait-eng {
   opacity: 0;
 }
@@ -204,10 +205,6 @@ html[data-view="engineer"] .portrait-eng,
 .portrait-frame[data-hold="recruiter"] .portrait-eng {
   opacity: 0;
 }
-.portal-layer {
-  display: none;
-}
-
 /* While a transformation plays, layout changes land at once and GSAP owns
    the motion (cards glide via Flip; blocks render inside wireframes). */
 html[data-casting] .layer,
@@ -215,11 +212,10 @@ html[data-casting] [data-flip] {
   transition: none !important;
 }
 
-/* The finale stage: a square centred on the face, larger than the portrait,
-   above the page content but below the nav. --hud is the colour of the view
-   being switched to. */
+/* The finale stage: a square centred on the face, larger than the portrait
+   (room for the beam and brackets), above the page content but below the
+   nav. */
 .fx-stage {
-  --hud: var(--hud-eng);
   position: absolute;
   left: 50%;
   top: 42%;
@@ -230,37 +226,6 @@ html[data-casting] [data-flip] {
   z-index: 30;
   visibility: hidden;
   opacity: 0;
-  color: rgb(var(--hud));
-}
-.seal {
-  position: absolute;
-  inset: 0;
-  visibility: hidden;
-  opacity: 0;
-  will-change: transform, opacity;
-}
-/* Each ring is its own layer and spins on the GPU. No blur filter: the glow
-   is drawn into the SVG (see Seal.tsx). */
-.seal > svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  will-change: transform;
-}
-/* The halo under each line: a glow on dark; barely there on light, where a
-   wide tinted stroke reads as blur rather than light. */
-.seal [data-halo] {
-  stroke-opacity: 0.16;
-}
-html:not(.dark) .seal [data-halo] {
-  stroke-opacity: 0.07;
-}
-.seal [data-chevron] {
-  transform-box: fill-box;
-  transform-origin: center;
 }
 
 /* ---- The surge: page-wide layers of a view switch ------------------- */

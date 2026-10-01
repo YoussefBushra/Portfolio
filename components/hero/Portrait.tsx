@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { setPortraitRefs } from "@/components/view/portraitRefs";
-import { Seal } from "./Seal";
 
 const REC = "/portrait-recruiter.jpg";
 const ENG = "/portrait-engineer.jpg";
@@ -13,26 +12,18 @@ const SIZES = "(max-width: 768px) 200px, 240px";
  * The hero portrait, one photo per view. Both photos are always in the page and
  * CSS shows the one matching `html[data-view]`, so deep links, no-JS and first
  * paint are correct. During a switch the portrait holds the old photo while
- * the page transforms, then plays the finale: the seal forms, and the new
- * photo breaks through an energy portal (components/view/transform.ts).
+ * the page transforms, then plays the finale: the old photo derezzes into
+ * scanlines and the new one rematerialises as a hologram
+ * (components/hero/hologram.ts, driven by components/view/transform.ts).
  */
 export function Portrait({ alt }: { alt: string }) {
   const frame = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const seal = useRef<HTMLDivElement>(null);
-  const portal = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const [f, s, c, se, p] = [
-      frame.current,
-      stage.current,
-      canvas.current,
-      seal.current,
-      portal.current,
-    ];
-    if (f && s && c && se && p)
-      setPortraitRefs({ frame: f, stage: s, canvas: c, seal: se, portal: p });
+    const [f, s, c] = [frame.current, stage.current, canvas.current];
+    if (f && s && c) setPortraitRefs({ frame: f, stage: s, canvas: c });
     return () => setPortraitRefs(null);
   }, []);
 
@@ -61,19 +52,10 @@ export function Portrait({ alt }: { alt: string }) {
           sizes={SIZES}
           className="portrait-img portrait-eng object-cover object-[50%_25%]"
         />
-        {/* The other photo, seen through the portal during the finale. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          ref={portal}
-          alt=""
-          aria-hidden
-          className="portal-layer absolute inset-0 h-full w-full object-cover object-[50%_25%]"
-        />
       </div>
 
       <div ref={stage} aria-hidden className="fx-stage">
         <canvas ref={canvas} className="absolute inset-0 h-full w-full" />
-        <Seal ref={seal} />
       </div>
     </div>
   );
