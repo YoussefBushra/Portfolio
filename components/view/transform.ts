@@ -452,10 +452,8 @@ function finale(
   };
 
   const rings = Array.from(seal.querySelectorAll<SVGElement>("[data-ring]"));
-  const [outer, , inner] = rings; // (the gate itself stays still)
   const cores = Array.from(seal.querySelectorAll("path[data-core]"));
   const chevrons = Array.from(seal.querySelectorAll("[data-chevron]"));
-  const nodes = seal.querySelectorAll("[data-node]");
 
   // The aperture on the photo, in frame px. The photo layer is zoomed about
   // the portal centre, so the clip is given in its own (unzoomed) units.
@@ -465,7 +463,6 @@ function finale(
       .map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`)
       .join(",");
     portal.style.clipPath = `polygon(${pts})`;
-    if (inner) gsap.set(inner, { rotation: (state.rot * 180) / Math.PI });
   };
 
   // summon: the gate forms and powers up, chevron by chevron
@@ -484,7 +481,6 @@ function finale(
       at,
     )
     .set(chevrons, { autoAlpha: 0.12, scale: 1 }, at)
-    .set(nodes, { autoAlpha: 0, scale: 0 }, at)
     .set(portal, { autoAlpha: 0, scale: view.zoom }, at)
     .to(state, { dim: 1, duration: 0.35, ease: "power2.out" }, at)
     .to(frame, { scale: 1.02, duration: 0.35, ease: "power2.out" }, at)
@@ -492,18 +488,6 @@ function finale(
       seal,
       { autoAlpha: 1, scale: 1, duration: 0.45, ease: "power3.out" },
       at,
-    )
-    .to(outer, { rotation: -30 * dir, duration: 1.8, ease: "power1.inOut" }, at)
-    .to(
-      nodes,
-      {
-        autoAlpha: 1,
-        scale: 1,
-        duration: 0.2,
-        ease: "back.out(3)",
-        stagger: 0.03,
-      },
-      at + 0.3,
     )
     .to(
       state,
@@ -653,7 +637,7 @@ function finale(
     gsap.set(frame, { clearProps: "transform,filter" });
     // The flare leaves the (hidden) seal scaled — reset it so its box can't
     // widen the page.
-    gsap.set([seal, ...rings, ...chevrons, ...Array.from(nodes)], {
+    gsap.set([seal, ...rings, ...chevrons], {
       clearProps: "transform,opacity,visibility",
     });
   };

@@ -42,11 +42,14 @@
 /* Engineer view runs on electric cyan instead of amber. The HUD tokens are
    the two destination colours, independent of the current view, so a
    transformation can arrive in the colour it's about to switch to. */
+/* On white, the bright accent tones are too faint for thin glowing lines and
+   sparks: light mode's HUD runs a shade deeper (amber-600, cyan-600). */
 :root {
-  --hud-rec: 245 165 36;
-  --hud-eng: 6 182 212;
+  --hud-rec: 217 119 6;
+  --hud-eng: 8 145 178;
 }
 .dark {
+  --hud-rec: 245 165 36;
   --hud-eng: 34 211 238;
 }
 html[data-view="engineer"] {
@@ -247,7 +250,14 @@ html[data-casting] [data-flip] {
   overflow: visible;
   will-change: transform;
 }
-.seal [data-node],
+/* The halo under each line: a glow on dark; barely there on light, where a
+   wide tinted stroke reads as blur rather than light. */
+.seal [data-halo] {
+  stroke-opacity: 0.16;
+}
+html:not(.dark) .seal [data-halo] {
+  stroke-opacity: 0.07;
+}
 .seal [data-chevron] {
   transform-box: fill-box;
   transform-origin: center;
