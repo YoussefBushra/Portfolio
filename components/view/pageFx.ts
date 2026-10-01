@@ -14,15 +14,16 @@ type Timeline = ReturnType<Gsap["timeline"]>;
  *    commit, then their space closes smoothly;
  *  - blocks that appear open their space smoothly, then render inside a
  *    wireframe — dashed box, corner brackets, mono tag — as the front passes;
- *  - work cards turn into translucent blueprint panels, glide and resize to
- *    their new slots (GSAP Flip, transform-only), and their content renders
- *    back in once they land;
+ *  - work cards turn into blueprint panels that move to their new slots in
+ *    clear-path phases — shrink, shift column or row, move, grow — so no
+ *    two panels ever overlap; their content renders back in once they land;
  *  - section labels re-render as the front passes them.
  *
  * Only what's on or near the screen animates; everything else simply switches.
  */
 
-const FLIP_TARGETS = "[data-flip], section[id] h2";
+// Work cards move separately (see reflowCards), not by Flip.
+const FLIP_TARGETS = '[data-flip]:not([data-flip="work"]), section[id] h2';
 
 export const onScreen = (el: Element, margin = 0) => {
   const r = el.getBoundingClientRect();
@@ -145,6 +146,154 @@ export function captureHeights(): Heights {
   return els.filter(near).map((el) => ({ el, from: el.offsetHeight }));
 }
 
+type Box = { x: number; y: number; w: number; h: number };
+export type CardsBefore = { grid: HTMLElement; boxes: Map<HTMLElement, Box> };
+
+/** An element's box relative to the work grid. */
+function boxIn(el: HTMLElement, grid: HTMLElement): Box {
+  const r = el.getBoundingClientRect();
+  const g = grid.getBoundingClientRect();
+  return { x: r.left - g.left, y: r.top - g.top, w: r.width, h: r.height };
+}
+
+/** Before the commit: where each work card sits (if the grid is in view). */
+export function captureCards(): CardsBefore | null {
+  const grid = document.querySelector<HTMLElement>(".work-grid");
+  if (!grid || !onScreen(grid, 200)) return null;
+  const boxes = new Map<HTMLElement, Box>();
+  grid
+    .querySelectorAll<HTMLElement>(":scope > article")
+    .forEach((c) => boxes.set(c, boxIn(c, grid)));
+  return { grid, boxes };
+}
+
+const CORNERS =
+  '<i class="rc-c rc-tl"></i><i class="rc-c rc-tr"></i><i class="rc-c rc-bl"></i><i class="rc-c rc-br"></i>';
+
+/**
+ * After the commit: each card is stood in for by a blueprint panel (the real
+ * card is hidden, its content would only reflow on the way) that travels from
+ * the old slot to the new one in phases chosen so that no two panels ever
+ * overlap:
+ *
+ *   shrink   to the smaller of old/new size, in place (nothing grows yet);
+ *   shift    when the layout spreads into more columns (→ Recruiter): first
+ *            sideways into the new column — the cards are still stacked, so
+ *            their rows are clear — then up or down within it;
+ *            when it gathers into fewer columns (→ Engineer): first up or down
+ *            within the old column to the new row, then sideways;
+ *   grow     to the new size, in place (the new slots don't overlap).
+ *
+ * Within a column the cards keep their order and the gaps between them only
+ * interpolate between two non-negative values, so moving rows never collide.
+ * Returns the landing time and the panels (removed by the caller).
+ */
+function reflowCards(
+  gsap: Gsap,
+  tl: Timeline,
+  before: CardsBefore,
+  hud: string,
+  at: number,
+) {
+  const { grid, boxes } = before;
+  const cards = Array.from(boxes.keys());
+  const restore = grid.style.position;
+  if (getComputedStyle(grid).position === "static")
+    grid.style.position = "relative";
+
+  const plan = cards.map((card) => {
+    const a = boxes.get(card)!;
+    const b = boxIn(card, grid);
+    const panel = document.createElement("div");
+    panel.className = "rc-proxy";
+    panel.innerHTML = CORNERS;
+    panel.style.setProperty("--hud", hud);
+    grid.appendChild(panel);
+    gsap.set(panel, { left: a.x, top: a.y, width: a.w, height: a.h });
+    card.classList.add("rc-hidden");
+    return { card, panel, a, b };
+  });
+
+  const cols = (pick: (p: (typeof plan)[number]) => Box) =>
+    new Set(plan.map((p) => Math.round(pick(p).x))).size;
+  const spreading = cols((p) => p.b) > cols((p) => p.a);
+
+  type Step = (p: (typeof plan)[number]) => Partial<Box>;
+  const small = (p: (typeof plan)[number]) => ({
+    w: Math.min(p.a.w, p.b.w),
+    h: Math.min(p.a.h, p.b.h),
+  });
+  const steps: Step[] = [
+    (p) => small(p),
+    spreading ? (p) => ({ x: p.b.x }) : (p) => ({ y: p.b.y }),
+    spreading ? (p) => ({ y: p.b.y }) : (p) => ({ x: p.b.x }),
+    (p) => ({ w: p.b.w, h: p.b.h }),
+  ];
+
+  // The grid's height follows the panels — always just tall enough to hold
+  // them — so the content below moves with them and is never covered.
+  const fit = () => {
+    const bottom = Math.max(
+      ...plan.map(
+        (p) =>
+          (gsap.getProperty(p.panel, "top") as number) +
+          (gsap.getProperty(p.panel, "height") as number),
+      ),
+    );
+    grid.style.height = `${bottom}px`;
+  };
+  // Play the phases in order, skipping any in which nothing moves.
+  const cur = new Map(plan.map((p) => [p, { ...p.a }]));
+  let t = at;
+  for (const step of steps) {
+    const moves = plan
+      .map((p) => {
+        const from = cur.get(p)!;
+        const next = { ...from, ...step(p) };
+        cur.set(p, next);
+        const moved =
+          Math.abs(next.x - from.x) +
+            Math.abs(next.y - from.y) +
+            Math.abs(next.w - from.w) +
+            Math.abs(next.h - from.h) >
+          1;
+        return moved ? { p, next } : null;
+      })
+      .filter(Boolean) as { p: (typeof plan)[number]; next: Box }[];
+    if (!moves.length) continue;
+    moves.forEach(({ p, next }) =>
+      tl.to(
+        p.panel,
+        {
+          left: next.x,
+          top: next.y,
+          width: next.w,
+          height: next.h,
+          duration: 0.3,
+          ease: "power2.inOut",
+          lazy: false,
+          onUpdate: () => fit(),
+        },
+        t,
+      ),
+    );
+    t += 0.3;
+  }
+
+  fit();
+  tl.call(() => grid.style.removeProperty("height"), undefined, t);
+
+  const cleanup = () => {
+    plan.forEach((p) => {
+      p.panel.remove();
+      p.card.classList.remove("rc-hidden");
+    });
+    grid.style.position = restore;
+    grid.style.removeProperty("height");
+  };
+  return { land: t, plan, cleanup };
+}
+
 /**
  * After the commit: ease heights and glide the layout, and render what
  * appeared as the front passes it. `reach(top)` is how many seconds from now
@@ -156,6 +305,7 @@ export function renderAfter(
   to: View,
   state: FlipState,
   heights: Heights,
+  cardsBefore: CardsBefore | null,
   sweep: number,
   reach: (top: number) => number,
 ): Promise<void> {
@@ -164,32 +314,19 @@ export function renderAfter(
 
   // 1 · Heights start from where they were, so nothing jumps; the layout glides
   // from the old arrangement to the new one while they ease to the new values.
+  // (the work grid's height follows its cards instead, when they re-flow)
   const eased = heights
     .map((h) => ({ ...h, to: h.el.offsetHeight }))
-    .filter((h) => Math.abs(h.to - h.from) > 1);
+    .filter((h) => Math.abs(h.to - h.from) > 1 && h.el !== cardsBefore?.grid);
+
+  // The cards' new slots are measured first: a grid held at a taller height
+  // would stretch its rows.
+  const reflow = cardsBefore
+    ? reflowCards(gsap, tl, cardsBefore, hud, 0)
+    : null;
+
   eased.forEach((h) => gsap.set(h.el, { height: h.from }));
-
-  // Work cards travel as blueprint panels: their content is hidden in flight,
-  // so they can scale (transform-only, no per-frame layout) without
-  // distorting text, and panels crossing each other read as layout planes.
-  // (the cards in the glide: on or near the screen before or after the commit)
-  const flying = new Set(state.elementStates.map((e) => e.element));
-  const cards = Array.from(
-    document.querySelectorAll<HTMLElement>(".work-grid > article"),
-  ).filter((el) => flying.has(el) || onScreen(el, 200));
-  cards.forEach((c) => {
-    c.style.setProperty("--hud", hud);
-    c.classList.add("rc-ghost");
-  });
-
-  tl.add(
-    Flip.from(state, {
-      duration: sweep,
-      ease: "power3.inOut",
-      scale: true,
-    }),
-    0,
-  );
+  tl.add(Flip.from(state, { duration: sweep, ease: "power3.inOut" }), 0);
   eased.forEach((h) =>
     tl.to(
       h.el,
@@ -203,27 +340,37 @@ export function renderAfter(
     ),
   );
 
-  // 2 · Cards land, then their content renders back in, left to right.
-  cards.sort(byTop).forEach((card, i) => {
-    const t =
-      Math.max(reach(card.getBoundingClientRect().top), sweep) + i * 0.07;
-    const kids = Array.from(card.children) as HTMLElement[];
-    tl.call(() => card.classList.remove("rc-ghost"), undefined, t)
-      .fromTo(
-        kids,
-        { clipPath: "inset(0 100% 0 0)", opacity: 0.25 },
-        {
-          clipPath: "inset(0 0% 0 0)",
-          opacity: 1,
-          duration: 0.5,
-          ease: "power2.out",
-          stagger: 0.05,
-          clearProps: "clipPath,opacity",
-        },
-        t,
-      )
-      .call(() => card.style.removeProperty("--hud"), undefined, t + 0.6);
-  });
+  // 2 · Work cards travel as blueprint panels, then their content renders
+  // back in, left to right, as each lands.
+  const landing = new Map<HTMLElement, number>();
+  let cleanupCards = () => {};
+  if (reflow) {
+    const { land, plan, cleanup } = reflow;
+    cleanupCards = cleanup;
+    plan
+      .sort((x, y) => x.b.y - y.b.y || x.b.x - y.b.x)
+      .forEach(({ card, panel }, i) => {
+        const t =
+          Math.max(reach(card.getBoundingClientRect().top), land) + i * 0.07;
+        landing.set(card, t);
+        const kids = Array.from(card.children) as HTMLElement[];
+        tl.call(() => card.classList.remove("rc-hidden"), undefined, t)
+          .to(panel, { autoAlpha: 0, duration: 0.3 }, t)
+          .fromTo(
+            kids,
+            { clipPath: "inset(0 100% 0 0)", opacity: 0.25 },
+            {
+              clipPath: "inset(0 0% 0 0)",
+              opacity: 1,
+              duration: 0.5,
+              ease: "power2.out",
+              stagger: 0.05,
+              clearProps: "clipPath,opacity",
+            },
+            t,
+          );
+      });
+  }
 
   // 3 · Section labels re-render as the front passes them.
   document.querySelectorAll<HTMLElement>("section[id] h2").forEach((el) => {
@@ -248,9 +395,9 @@ export function renderAfter(
     .forEach((el) => {
       const card = el.closest<HTMLElement>(".work-grid > article");
       const top = el.getBoundingClientRect().top;
-      const t = card
-        ? Math.max(reach(top), sweep) + 0.2
-        : Math.max(reach(top), 0.15);
+      const landed = card ? landing.get(card) : undefined;
+      const t =
+        landed !== undefined ? landed + 0.2 : Math.max(reach(top), 0.15);
       const { box, kids, done } = wireframe(
         el,
         `render › ${el.dataset.rc}`,
@@ -284,10 +431,7 @@ export function renderAfter(
       .forEach((el) =>
         gsap.set(el.children, { clearProps: "clipPath,opacity" }),
       );
-    cards.forEach((c) => {
-      c.classList.remove("rc-ghost");
-      c.style.removeProperty("--hud");
-    });
+    cleanupCards();
   });
 }
 
@@ -310,16 +454,23 @@ export function rehearsePage(
     ) ?? card;
   const undo: (() => void)[] = [];
   if (card) {
+    // a blueprint panel resizing over the first card, and a Flip in place
+    const grid = card.parentElement!;
+    const before: CardsBefore = {
+      grid,
+      boxes: new Map([[card, boxIn(card, grid)]]),
+    };
     const st = Flip.getState(card);
-    card.style.setProperty(
-      "--hud",
+    const { cleanup } = reflowCards(
+      gsap,
+      tl,
+      before,
       `var(--hud-${hud === "engineer" ? "eng" : "rec"})`,
+      0,
     );
-    card.classList.add("rc-ghost");
-    tl.add(Flip.from(st, { duration: 0.3, scale: true }), 0);
+    tl.add(Flip.from(st, { duration: 0.3 }), 0);
     undo.push(() => {
-      card.classList.remove("rc-ghost");
-      card.style.removeProperty("--hud");
+      cleanup();
       gsap.set(card, { clearProps: "transform" });
     });
   }

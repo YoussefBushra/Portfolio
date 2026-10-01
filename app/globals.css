@@ -605,15 +605,20 @@ html[data-rehearsing] .intro {
   }
 }
 
-/* ---- Work cards in flight: blueprint panels --------------------------- */
-.rc-ghost {
-  background: rgb(var(--hud) / 0.07) !important;
-  border-color: rgb(var(--hud) / 0.6) !important;
-  box-shadow: inset 0 0 28px rgb(var(--hud) / 0.1) !important;
-  will-change: transform;
+/* ---- Work cards in flight: blueprint panels --------------------------
+   While the cards re-flow, each is stood in for by an empty panel (see
+   reflowCards in pageFx.ts); the real card is hidden until it lands. */
+.rc-proxy {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  border: 1px solid rgb(var(--hud) / 0.55);
+  border-radius: 6px;
+  background: rgb(var(--hud) / 0.07);
+  box-shadow: inset 0 0 28px rgb(var(--hud) / 0.1);
 }
-.rc-ghost > * {
-  opacity: 0 !important;
+.rc-hidden {
+  visibility: hidden !important;
 }
 
 /* The accent changes at the commit; let it fade rather than snap. */

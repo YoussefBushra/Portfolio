@@ -4,6 +4,7 @@ import type { View } from "@/lib/view";
 import { Sparks, hexCorners, type PortalState } from "@/components/hero/sparks";
 import { getPortraitRefs, type PortraitRefs } from "./portraitRefs";
 import {
+  captureCards,
   captureHeights,
   captureLayout,
   deRender,
@@ -254,9 +255,10 @@ export async function transform(to: View, commit: () => void) {
   tl.add(() => {
     const layout = captureLayout(Flip);
     const heights = captureHeights();
+    const cards = captureCards();
     if (withFinale) p.frame.dataset.hold = from;
     commit();
-    jobs.push(renderAfter(gsap, Flip, to, layout, heights, D, reach));
+    jobs.push(renderAfter(gsap, Flip, to, layout, heights, cards, D, reach));
   }, C);
   if (s.charge)
     tl.to(s.charge, { autoAlpha: 0, duration: 0.4, ease: "power1.out" }, C);
