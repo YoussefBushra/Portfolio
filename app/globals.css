@@ -247,7 +247,8 @@ html[data-casting] [data-flip] {
   overflow: visible;
   will-change: transform;
 }
-.seal [data-node] {
+.seal [data-node],
+.seal [data-chevron] {
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -315,6 +316,17 @@ html[data-casting] [data-flip] {
     0 0 16px 2px rgb(var(--hud) / 0.75),
     0 0 3px rgb(var(--hud));
 }
+/* Sparks from every part of the switch, free to fly across the page (see
+   components/view/sparkField.ts). Only drawn while a switch plays. */
+.surge-sparks {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 36;
+  pointer-events: none;
+}
+
 /* The shockwave when the portrait's portal flares shut. */
 .surge-wave {
   z-index: 35;

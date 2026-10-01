@@ -37,6 +37,7 @@ export function Transformation() {
       <div className="surge-charge" />
       <div className="surge-front" />
       <div className="surge-wave" />
+      <canvas className="surge-sparks" />
     </div>
   );
 }

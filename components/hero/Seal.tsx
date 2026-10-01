@@ -1,66 +1,72 @@
 import { forwardRef, type SVGProps } from "react";
 
-/* The energy seal that forms around the portrait for the finale of a view
-   switch: segmented arc rings, a dashed counter-rotating ring, crosshair ticks
-   and a hexagonal core with nodes. Every line uses pathLength=1 so it can be
-   "drawn on" by animating stroke-dashoffset from 1 to 0.
+/* The gate that forms around the portrait for the finale of a view switch:
+   a hexagonal frame of heavy bars, six chevrons at its corners that lock one
+   by one as it powers up, a dashed outer guide and an inner segmented ring
+   that turns with the portal. Straight edges and corners throughout — a
+   doorway, not a sphere. The portal's aperture opens to the gate's size.
 
-   Each ring is its own <svg> and turns with a CSS transform. The glow is not a
-   blur filter (re-rasterised every frame while lines draw on — too slow on
-   phones): every line is drawn twice, a wide faint halo under a crisp core,
-   which costs no more than the line itself. */
+   Every line uses pathLength=1 so it can be "drawn on" by animating
+   stroke-dashoffset from 1 to 0. The glow is drawn into the SVG — a wide
+   faint halo under each crisp line — rather than a blur filter, which would
+   be re-rasterised every frame while lines draw on. */
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
+const xy = (r: number, deg: number) =>
+  [Math.cos(rad(deg)) * r, Math.sin(rad(deg)) * r] as const;
 const pt = (r: number, deg: number) =>
-  `${(Math.cos(rad(deg)) * r).toFixed(2)} ${(Math.sin(rad(deg)) * r).toFixed(2)}`;
-
-/** Arc segments of `len` degrees starting at each angle in `starts`. */
-function arcs(r: number, starts: number[], len: number) {
-  return starts
-    .map((a) => `M${pt(r, a)} A${r} ${r} 0 0 1 ${pt(r, a + len)}`)
+  xy(r, deg)
+    .map((v) => v.toFixed(2))
     .join(" ");
+
+/** Hex corner angles, first corner pointing up. */
+const CORNERS = Array.from({ length: 6 }, (_, i) => -90 + i * 60);
+
+function hex(r: number) {
+  return CORNERS.map((a, i) => `${i ? "L" : "M"}${pt(r, a)}`).join(" ") + " Z";
 }
 
-function ticks(count: number, r1: number, r2: number, every = 1) {
+/** The part of each side between u0 and u1 (0 = corner, 1 = next corner). */
+function sides(r: number, u0: number, u1: number) {
+  return CORNERS.map((a) => {
+    const [x0, y0] = xy(r, a);
+    const [x1, y1] = xy(r, a + 60);
+    const p = (u: number) =>
+      `${(x0 + (x1 - x0) * u).toFixed(2)} ${(y0 + (y1 - y0) * u).toFixed(2)}`;
+    return `M${p(u0)} L${p(u1)}`;
+  }).join(" ");
+}
+
+/** Short ticks across each side, pointing at the centre. */
+function sideTicks(r: number, per: number, len: number) {
   const out: string[] = [];
-  for (let i = 0; i < count; i++) {
-    const a = (360 / count) * i;
-    const long = i % every === 0;
-    out.push(`M${pt(r1, a)} L${pt(long ? r2 + 1.5 : r2, a)}`);
-  }
+  CORNERS.forEach((a) => {
+    const [x0, y0] = xy(r, a);
+    const [x1, y1] = xy(r, a + 60);
+    for (let k = 1; k <= per; k++) {
+      const u = k / (per + 1);
+      const x = x0 + (x1 - x0) * u;
+      const y = y0 + (y1 - y0) * u;
+      const d = Math.hypot(x, y);
+      out.push(
+        `M${x.toFixed(2)} ${y.toFixed(2)} L${(x - (x / d) * len).toFixed(2)} ${(y - (y / d) * len).toFixed(2)}`,
+      );
+    }
+  });
   return out.join(" ");
 }
 
-function polygon(sides: number, r: number, offset: number) {
-  return (
-    Array.from(
-      { length: sides },
-      (_, i) => `${i ? "L" : "M"}${pt(r, offset + (360 / sides) * i)}`,
-    ).join(" ") + " Z"
-  );
-}
+const GUIDE = hex(99);
+const GATE_OUTER = sides(95, 0.1, 0.9);
+const GATE_INNER = sides(89.5, 0.16, 0.84);
+const GATE_TICKS = sideTicks(89.5, 5, 3.5);
+const INNER_SEGMENTS = sides(80, 0.3, 0.7);
+const INNER_GUIDE = hex(80);
 
-const OUTER_ARCS = arcs(92, [-35, 55, 145, 235], 70);
-const OUTER_TICKS = ticks(72, 85.5, 88, 6);
-const CONTAIN = arcs(98, [0, 180], 180);
-const DASH_RING = arcs(
-  76,
-  Array.from({ length: 30 }, (_, i) => i * 12),
-  7,
+/** A chevron at each corner, pointing into the gate. */
+const CHEVRONS = CORNERS.map((a) =>
+  [`M${pt(99, a - 4.2)}`, `L${pt(90, a)}`, `L${pt(99, a + 4.2)}`].join(" "),
 );
-const MARKERS = [0, 120, 240]
-  .map((a) => `M${pt(68, a - 3)} L${pt(72.5, a)} L${pt(68, a + 3)}`)
-  .join(" ");
-const INNER_RING = arcs(58, [0, 90, 180, 270], 80);
-const CROSS = [0, 90, 180, 270]
-  .map((a) => `M${pt(49, a)} L${pt(66, a)}`)
-  .join(" ");
-const HEX = polygon(6, 40, -90);
-const SPOKES = Array.from({ length: 6 }, (_, i) => {
-  const a = -90 + i * 60;
-  return `M${pt(40, a)} L${pt(49, a)}`;
-}).join(" ");
-const NODES = Array.from({ length: 6 }, (_, i) => -90 + i * 60);
 
 const LINE = {
   fill: "none",
@@ -92,7 +98,7 @@ function Glow({
 }
 
 /** A ring's own layer, only as large as the ring (extent `e` in seal units):
- *  a smaller layer is cheaper to spin. */
+ *  a smaller layer is cheaper to transform. */
 function box(e: number) {
   const pad = `${50 - e / 2}%`;
   return {
@@ -105,32 +111,40 @@ function box(e: number) {
 export const Seal = forwardRef<HTMLDivElement>(function Seal(_, ref) {
   return (
     <div ref={ref} className="seal" aria-hidden>
+      {/* dashed outer guide: drifts slowly against the portal's spin */}
       <svg data-ring="outer" {...box(100)}>
-        <Glow d={CONTAIN} w={0.4} />
-        <Glow d={OUTER_ARCS} w={0.9} strokeLinecap="round" />
-        <Glow d={OUTER_TICKS} w={0.4} />
+        <Glow d={GUIDE} w={0.35} />
       </svg>
 
-      <svg data-ring="middle" {...box(80)}>
-        <Glow d={DASH_RING} w={0.6} />
-        <Glow d={MARKERS} w={0.6} strokeLinejoin="round" />
+      {/* the gate: heavy double bars, ticks, and the chevrons that lock */}
+      <svg data-ring="gate" {...box(100)}>
+        <Glow d={GATE_OUTER} w={1.4} strokeLinecap="square" />
+        <Glow d={GATE_INNER} w={0.5} />
+        <Glow d={GATE_TICKS} w={0.4} />
+        {CHEVRONS.map((d, i) => (
+          <path
+            key={i}
+            d={d}
+            data-chevron=""
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2.2}
+            strokeLinejoin="miter"
+          />
+        ))}
       </svg>
 
-      <svg data-ring="inner" {...box(68)}>
-        <Glow d={INNER_RING} w={0.5} />
-        <Glow d={CROSS} w={0.5} />
-      </svg>
-
-      <svg data-ring="core" {...box(52)}>
-        <Glow d={HEX} w={0.6} strokeLinejoin="round" />
-        <Glow d={SPOKES} w={0.5} />
-        {NODES.map((a) => {
-          const [x, y] = pt(40, a).split(" ");
+      {/* inner ring: turns with the aperture */}
+      <svg data-ring="inner" {...box(82)}>
+        <Glow d={INNER_GUIDE} w={0.3} />
+        <Glow d={INNER_SEGMENTS} w={0.9} strokeLinecap="square" />
+        {CORNERS.map((a) => {
+          const [x, y] = xy(80, a);
           return (
             <circle
               key={a}
-              cx={x}
-              cy={y}
+              cx={x.toFixed(2)}
+              cy={y.toFixed(2)}
               r={1.6}
               data-node=""
               fill="currentColor"

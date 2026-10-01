@@ -308,6 +308,8 @@ export function renderAfter(
   cardsBefore: CardsBefore | null,
   sweep: number,
   reach: (top: number) => number,
+  /** Sparks at a viewport point (the cards land in a spray of them). */
+  spark?: (x: number, y: number, n: number) => void,
 ): Promise<void> {
   const tl = gsap.timeline();
   const hud = `var(--hud-${to === "engineer" ? "eng" : "rec"})`;
@@ -354,7 +356,24 @@ export function renderAfter(
           Math.max(reach(card.getBoundingClientRect().top), land) + i * 0.07;
         landing.set(card, t);
         const kids = Array.from(card.children) as HTMLElement[];
-        tl.call(() => card.classList.remove("rc-hidden"), undefined, t)
+        tl.call(
+          () => {
+            card.classList.remove("rc-hidden");
+            // a spit of sparks from each corner as it locks into place
+            if (!spark) return;
+            const r = panel.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > window.innerHeight) return;
+            for (const [x, y] of [
+              [r.left, r.top],
+              [r.right, r.top],
+              [r.left, r.bottom],
+              [r.right, r.bottom],
+            ])
+              spark(x, y, 7);
+          },
+          undefined,
+          t,
+        )
           .to(panel, { autoAlpha: 0, duration: 0.3 }, t)
           .fromTo(
             kids,

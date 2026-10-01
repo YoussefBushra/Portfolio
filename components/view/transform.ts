@@ -1,8 +1,9 @@
 import { gsap } from "gsap";
 import { Flip } from "gsap/Flip";
 import type { View } from "@/lib/view";
-import { Sparks, hexCorners, type PortalState } from "@/components/hero/sparks";
+import { Portal, hexCorners, type PortalState } from "@/components/hero/portal";
 import { getPortraitRefs, type PortraitRefs } from "./portraitRefs";
+import { SparkField } from "./sparkField";
 import {
   captureCards,
   captureHeights,
@@ -17,18 +18,22 @@ gsap.registerPlugin(Flip);
 
 /**
  * The view switch as one transformation of the whole page — the "surge".
- * Everything arrives in the colour of the view being switched to.
+ * Everything arrives in the colour of the view being switched to, and sparks
+ * fly throughout.
  *
- *  charge   0.00  energy runs along the nav's bottom edge, out from the switch
- *                 (→ Recruiter: technical blocks on screen collapse meanwhile)
+ *  charge   0.00  energy runs along the nav's bottom edge, out from the
+ *                 switch, sparks spitting from its tips (→ Recruiter:
+ *                 technical blocks on screen collapse meanwhile)
  *  commit   C     the view flips; the accent changes
- *  sweep    C→    an energy front sweeps down the screen; cards glide into
- *                 their new layout, and sections and new blocks render as the
- *                 front passes them. The portrait holds its old photo.
- *  finale   ~1.0  the energy gathers in the portrait: a seal forms, the room
- *                 darkens, a hexagonal aperture of plasma spins open and the
- *                 new photo breaks through it; it flares, and a shockwave
- *                 crosses the page.
+ *  sweep    C→    an energy front sweeps down the screen shedding sparks;
+ *                 cards re-flow and land in a spray of sparks, and sections
+ *                 and new blocks render as the front passes them. The
+ *                 portrait holds its old photo.
+ *  finale   ~0.8  a hexagonal gate forms around the portrait and powers up,
+ *                 chevron by chevron; the room darkens; a portal spins open
+ *                 on the face, showering sparks, with a warp tunnel inside;
+ *                 the new photo arrives through it; it flares, and a
+ *                 shockwave crosses the page.
  *
  * With the portrait scrolled away there is no finale (nobody would see it);
  * with reduced motion the switch is instant (see Transformation.tsx).
@@ -36,11 +41,6 @@ gsap.registerPlugin(Flip);
 
 const PORTAL_Y = 0.42; // where the portal opens: roughly the face
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const frames = (n: number) =>
-  new Promise<void>((resolve) => {
-    const step = () => (--n <= 0 ? resolve() : requestAnimationFrame(step));
-    requestAnimationFrame(step);
-  });
 const finished = (tl: gsap.core.Timeline) =>
   new Promise<void>((resolve) =>
     tl.eventCallback("onComplete", () => resolve()),
@@ -56,6 +56,43 @@ function surgeEls() {
     wave: q("wave"),
   };
 }
+
+let field: SparkField | null = null;
+
+/** The page-wide spark field, ticking until its last spark has died. */
+function startSparks(rgb: string, dark: boolean, mobile: boolean) {
+  const canvas = document.querySelector<HTMLCanvasElement>(".surge-sparks");
+  if (!canvas) return null;
+  field ??= new SparkField(canvas);
+  const f = field;
+  f.begin(rgb, dark, mobile ? 360 : 900);
+  const spawners: ((dt: number) => void)[] = [];
+  const tick = (_t: number, ms: number) => {
+    const dt = Math.min(ms, 50) / 1000;
+    spawners.forEach((s) => s(dt));
+    f.frame(dt);
+  };
+  gsap.ticker.add(tick);
+  return {
+    f,
+    /** Run `spawn` `rate` times a second while `on()` holds. */
+    every(rate: number, on: () => boolean, spawn: () => void) {
+      let carry = 0;
+      spawners.push((dt) => {
+        if (!on()) return;
+        carry += rate * dt;
+        for (; carry >= 1; carry--) spawn();
+      });
+    },
+    async stop(linger = 800) {
+      const until = performance.now() + linger;
+      while (f.active && performance.now() < until) await wait(50);
+      gsap.ticker.remove(tick);
+      f.clear();
+    },
+  };
+}
+type Sparks = NonNullable<ReturnType<typeof startSparks>>;
 
 function hudRgb(to: View) {
   return getComputedStyle(document.documentElement)
@@ -114,8 +151,8 @@ async function prepare() {
 }
 
 /**
- * A real, full-opacity run of every effect — charge, sweep front, ghost card,
- * wireframe, seal, hex portal, sparks, flare, shockwave — played quickly
+ * A real, full-opacity run of every effect — charge, sweep front, card panel,
+ * wireframe, gate, portal, tunnel, sparks, flare, shockwave — played quickly
  * behind the intro cover. A first switch otherwise pays mid-animation for
  * rasterising those layers and compiling their GPU shaders (clip-path, mask,
  * filter, canvas); an invisible warm-up doesn't help, as browsers skip
@@ -129,12 +166,15 @@ async function rehearse(onProgress?: (p: number) => void) {
     root.dataset.view === "engineer" ? "recruiter" : "engineer";
   const vh = window.innerHeight;
   const mobile = window.innerWidth < 640;
+  const dark = root.classList.contains("dark");
 
   root.dataset.rehearsing = "";
   s.root?.style.setProperty(
     "--hud",
     `var(--hud-${other === "engineer" ? "eng" : "rec"})`,
   );
+  const sparks = startSparks(hudRgb(other), dark, mobile);
+  sparks?.f.burst(window.innerWidth / 2, vh / 2, 40);
   const tl = gsap.timeline({ paused: true });
   if (s.charge)
     tl.fromTo(
@@ -160,14 +200,15 @@ async function rehearse(onProgress?: (p: number) => void) {
         other === "engineer" ? 1 : -1,
         hudRgb(other),
         mobile,
-        root.classList.contains("dark"),
-        0,
+        dark,
+        sparks,
       )
-    : async () => {};
+    : () => {};
   tl.eventCallback("onUpdate", () => onProgress?.(tl.progress()));
   tl.timeScale(2.6).play();
   await finished(tl);
-  await settle();
+  settle();
+  await sparks?.stop(0);
   undoPage();
   gsap.set([s.charge, s.front, s.wave], { autoAlpha: 0 });
   delete root.dataset.rehearsing;
@@ -202,6 +243,7 @@ export async function transform(to: View, commit: () => void) {
   const rgb = hudRgb(to);
   const mobile = window.innerWidth < 640;
   const dark = root.classList.contains("dark");
+  const vw = window.innerWidth;
   const vh = window.innerHeight;
   const top =
     document.querySelector("header")?.getBoundingClientRect().bottom ?? 56;
@@ -224,6 +266,7 @@ export async function transform(to: View, commit: () => void) {
     "--hud",
     `var(--hud-${to === "engineer" ? "eng" : "rec"})`,
   );
+  const sparks = startSparks(rgb, dark, mobile);
 
   const leaving = leavingBlocks(to);
   const C = leaving.length ? 0.42 : 0.26; // charge
@@ -237,38 +280,85 @@ export async function transform(to: View, commit: () => void) {
   const tl = gsap.timeline();
   const jobs: Promise<void>[] = [];
 
-  // 1 · charge
-  if (s.charge)
+  // 1 · charge — sparks spit from both running tips
+  const x0 = switchX(to);
+  if (s.charge) {
+    const charge = s.charge;
     tl.set(
-      s.charge,
+      charge,
       {
         top: top - 1,
-        transformOrigin: `${switchX(to)}px 50%`,
+        transformOrigin: `${x0}px 50%`,
         scaleX: 0,
         autoAlpha: 1,
       },
       0,
-    ).to(s.charge, { scaleX: 1, duration: C, ease: "power2.out" }, 0);
+    ).to(charge, { scaleX: 1, duration: C, ease: "power2.out" }, 0);
+    sparks?.every(
+      mobile ? 140 : 300,
+      () => tl.time() < C,
+      () => {
+        const k = gsap.getProperty(charge, "scaleX") as number;
+        const side = Math.random() < 0.5 ? -1 : 1;
+        const x = side < 0 ? x0 * (1 - k) : x0 + (vw - x0) * k;
+        sparks.f.emit(
+          x,
+          top,
+          side * (60 + Math.random() * 240),
+          -30 + Math.random() * 140,
+          { g: 950, life: [0.25, 0.55] },
+        );
+      },
+    );
+  }
   if (leaving.length) jobs.push(deRender(gsap, to, leaving, C));
 
-  // 2 · commit + sweep
+  // 2 · commit + sweep — the front sheds sparks as it travels
   tl.add(() => {
     const layout = captureLayout(Flip);
     const heights = captureHeights();
     const cards = captureCards();
     if (withFinale) p.frame.dataset.hold = from;
     commit();
-    jobs.push(renderAfter(gsap, Flip, to, layout, heights, cards, D, reach));
+    jobs.push(
+      renderAfter(
+        gsap,
+        Flip,
+        to,
+        layout,
+        heights,
+        cards,
+        D,
+        reach,
+        sparks ? (x, y, n) => sparks.f.burst(x, y, n, 260) : undefined,
+      ),
+    );
   }, C);
   if (s.charge)
     tl.to(s.charge, { autoAlpha: 0, duration: 0.4, ease: "power1.out" }, C);
-  if (s.front)
-    tl.set(s.front, { y: top - frontH, autoAlpha: 1 }, C)
-      .to(s.front, { y: edgeEnd - frontH, duration: D, ease: "none" }, C)
-      .to(s.front, { autoAlpha: 0, duration: 0.18 }, C + D - 0.12);
+  if (s.front) {
+    const front = s.front;
+    tl.set(front, { y: top - frontH, autoAlpha: 1 }, C)
+      .to(front, { y: edgeEnd - frontH, duration: D, ease: "none" }, C)
+      .to(front, { autoAlpha: 0, duration: 0.18 }, C + D - 0.12);
+    sparks?.every(
+      mobile ? 120 : 280,
+      () => tl.time() > C && tl.time() < C + D - 0.05,
+      () => {
+        const y = (gsap.getProperty(front, "y") as number) + frontH;
+        sparks.f.emit(
+          Math.random() * vw,
+          y,
+          (Math.random() - 0.5) * 260,
+          30 + Math.random() * 280,
+          { g: 700, life: [0.2, 0.5] },
+        );
+      },
+    );
+  }
 
   // 3 · finale
-  let settle = async () => {};
+  let settle = () => {};
   if (withFinale) {
     // The portrait takes a hit of energy as the front crosses it…
     tl.fromTo(
@@ -283,20 +373,22 @@ export async function transform(to: View, commit: () => void) {
       C + reach(pr.top + pr.height * PORTAL_Y),
     );
     // …and transforms as the sweep finishes.
-    settle = finale(tl, p, s.wave, C + D * 0.6, dir, rgb, mobile, dark);
+    settle = finale(tl, p, s.wave, C + D * 0.6, dir, rgb, mobile, dark, sparks);
   }
 
   await finished(tl);
   await Promise.all(jobs);
-  await settle();
-
+  settle();
   gsap.set([s.charge, s.front, s.wave], { autoAlpha: 0 });
   delete root.dataset.casting;
+  // The last sparks fall after the switch is done; nothing waits on them.
+  void sparks?.stop();
 }
 
 /**
- * The portrait finale, added to `tl` at `at`. Returns the clean-up, which lets
- * the last sparks die out first.
+ * The portrait finale, added to `tl` at `at`: the gate powers up, the portal
+ * opens on a warp tunnel, the new photo arrives through it, flare. Returns
+ * the clean-up.
  */
 function finale(
   tl: gsap.core.Timeline,
@@ -307,10 +399,11 @@ function finale(
   rgb: string,
   mobile: boolean,
   dark: boolean,
-  linger = 600,
+  sparks: Sparks | null,
 ) {
   const { frame, stage, canvas, seal, portal } = p;
   const size = stage.getBoundingClientRect().width;
+  const unit = size / 200; // seal units → px (the seal spans −100…100)
   const fw = frame.offsetWidth;
   const fh = frame.offsetHeight;
   const py = fh * PORTAL_Y;
@@ -325,64 +418,93 @@ function finale(
     r: 0,
     rot: 0,
     ring: 0,
+    tunnel: 0,
     dim: 0,
     rate: 0,
     spin: dir,
+    // the stage is centred on the portal point of the frame
+    frame: { x: size / 2 - fw / 2, y: size / 2 - py, w: fw, h: fh, radius: 16 },
   };
+  const view = { zoom: 1.4 };
   stage.style.setProperty("--hud", `var(--hud-${dir > 0 ? "eng" : "rec"})`);
-  const sparks = new Sparks(canvas, dark, mobile ? 160 : 320);
-  sparks.tint(rgb);
-  const tick = (_t: number, deltaMs: number) =>
-    sparks.frame(Math.min(deltaMs, 50) / 1000, state);
-  // The aperture on the photo, in frame px, turning with the seal's core.
-  const clip = () => {
-    const pts = hexCorners(fw / 2, py, state.r, state.rot)
-      .map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`)
-      .join(",");
-    portal.style.clipPath = `polygon(${pts})`;
-    if (core) gsap.set(core, { rotation: (state.rot * 180) / Math.PI });
+
+  // Sparks off the rim go to the page-wide field, in viewport coordinates.
+  let origin = stage.getBoundingClientRect();
+  const portalFx = new Portal(canvas, dark, (x, y, vx, vy) =>
+    sparks?.f.emit(origin.left + x, origin.top + y, vx, vy, {
+      g: 620,
+      life: [0.35, 0.85],
+    }),
+  );
+  portalFx.tint(rgb);
+  const tick = (_t: number, ms: number) => {
+    origin = stage.getBoundingClientRect();
+    portalFx.frame(Math.min(ms, 50) / 1000, state);
+  };
+  /** A seal-space point (corner `i` at radius `r` units) in the viewport. */
+  const at2vp = (i: number, r: number) => {
+    const a = state.rot - Math.PI / 2 + (i * Math.PI) / 3;
+    const o = stage.getBoundingClientRect();
+    return [
+      o.left + size / 2 + Math.cos(a) * r * unit,
+      o.top + size / 2 + Math.sin(a) * r * unit,
+    ] as const;
   };
 
   const rings = Array.from(seal.querySelectorAll<SVGElement>("[data-ring]"));
-  const [outer, middle, inner, core] = rings;
+  const [outer, , inner] = rings; // (the gate itself stays still)
   const cores = Array.from(seal.querySelectorAll("path[data-core]"));
+  const chevrons = Array.from(seal.querySelectorAll("[data-chevron]"));
   const nodes = seal.querySelectorAll("[data-node]");
 
-  // summon: the seal forms, the room darkens
+  // The aperture on the photo, in frame px. The photo layer is zoomed about
+  // the portal centre, so the clip is given in its own (unzoomed) units.
+  gsap.set(portal, { transformOrigin: `50% ${PORTAL_Y * 100}%` });
+  const clip = () => {
+    const pts = hexCorners(fw / 2, py, state.r / view.zoom, state.rot)
+      .map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`)
+      .join(",");
+    portal.style.clipPath = `polygon(${pts})`;
+    if (inner) gsap.set(inner, { rotation: (state.rot * 180) / Math.PI });
+  };
+
+  // summon: the gate forms and powers up, chevron by chevron
   tl.add(() => {
     clip();
     portal.style.display = "block";
     gsap.set(stage, { autoAlpha: 1 });
     gsap.ticker.add(tick);
   }, at)
-    .set(seal, { autoAlpha: 0, scale: 0.55 }, at)
-    .set(seal.querySelectorAll("path"), { strokeDashoffset: 1 }, at)
-    .set(nodes, { autoAlpha: 0, scale: 0 }, at)
-    .to(state, { dim: 1, duration: 0.35, ease: "power2.out" }, at)
-    .to(frame, { scale: 1.025, duration: 0.35, ease: "power2.out" }, at)
-    .to(
-      seal,
-      { autoAlpha: 1, scale: 1, duration: 0.5, ease: "back.out(1.5)" },
+    .set(seal, { autoAlpha: 0, scale: 0.85 }, at)
+    .set(
+      seal.querySelectorAll("path[data-core], path[data-halo]"),
+      {
+        strokeDashoffset: 1,
+      },
       at,
     )
+    .set(chevrons, { autoAlpha: 0.12, scale: 1 }, at)
+    .set(nodes, { autoAlpha: 0, scale: 0 }, at)
+    .set(portal, { autoAlpha: 0, scale: view.zoom }, at)
+    .to(state, { dim: 1, duration: 0.35, ease: "power2.out" }, at)
+    .to(frame, { scale: 1.02, duration: 0.35, ease: "power2.out" }, at)
+    .to(
+      seal,
+      { autoAlpha: 1, scale: 1, duration: 0.45, ease: "power3.out" },
+      at,
+    )
+    .to(outer, { rotation: -30 * dir, duration: 1.8, ease: "power1.inOut" }, at)
     .to(
       nodes,
       {
         autoAlpha: 1,
         scale: 1,
-        duration: 0.25,
+        duration: 0.2,
         ease: "back.out(3)",
-        stagger: 0.04,
+        stagger: 0.03,
       },
       at + 0.3,
     )
-    .to(outer, { rotation: 110 * dir, duration: 1.7, ease: "power1.inOut" }, at)
-    .to(
-      middle,
-      { rotation: -150 * dir, duration: 1.7, ease: "power1.inOut" },
-      at,
-    )
-    .to(inner, { rotation: 220 * dir, duration: 1.7, ease: "power1.inOut" }, at)
     .to(
       state,
       {
@@ -397,26 +519,86 @@ function finale(
   cores.forEach((c) =>
     tl.to(
       [c.previousElementSibling, c],
-      { strokeDashoffset: 0, duration: 0.5, ease: "power2.out" },
-      at + 0.02 + Math.random() * 0.25,
+      { strokeDashoffset: 0, duration: 0.42, ease: "power2.out" },
+      at + Math.random() * 0.18,
     ),
   );
+  // The chevrons lock one after another, each with a spit of sparks.
+  chevrons.forEach((ch, i) => {
+    const t = at + 0.14 + i * 0.05;
+    tl.fromTo(
+      ch,
+      { autoAlpha: 0.12, scale: 1.6 },
+      {
+        autoAlpha: 1,
+        scale: 1,
+        duration: 0.16,
+        ease: "power3.out",
+        immediateRender: false,
+      },
+      t,
+    ).call(
+      () => {
+        if (!sparks) return;
+        // chevron i sits at the gate's corner i (the gate doesn't turn)
+        const a = -Math.PI / 2 + (i * Math.PI) / 3;
+        const o = stage.getBoundingClientRect();
+        sparks.f.burst(
+          o.left + size / 2 + Math.cos(a) * 95 * unit,
+          o.top + size / 2 + Math.sin(a) * 95 * unit,
+          mobile ? 6 : 12,
+          240,
+        );
+      },
+      undefined,
+      t + 0.05,
+    );
+  });
 
-  // portal: a hexagon of plasma spins open and the new photo shows through
+  // open: the portal spins open on the face — a warp tunnel inside, sparks
+  // showering off its rim
+  const open = at + 0.46;
   tl.to(
     state,
-    { ring: 1, rate: mobile ? 240 : 500, duration: 0.15 },
-    at + 0.3,
+    { ring: 1, tunnel: 1, rate: mobile ? 260 : 560, duration: 0.15 },
+    open,
   ).to(
     state,
-    { r: rMax, duration: 0.65, ease: "power2.inOut", onUpdate: clip },
-    at + 0.3,
+    { r: rMax * 0.42, duration: 0.32, ease: "power2.out", onUpdate: clip },
+    open,
   );
 
+  // arrive: the new photo comes through the tunnel as the portal widens
+  const arrive = open + 0.32;
+  tl.to(
+    state,
+    { r: rMax, duration: 0.5, ease: "power2.inOut", onUpdate: clip },
+    arrive,
+  )
+    .to(portal, { autoAlpha: 1, duration: 0.3, ease: "power1.out" }, arrive)
+    .to(
+      view,
+      {
+        zoom: 1,
+        duration: 0.6,
+        ease: "power2.out",
+        onUpdate: () => {
+          gsap.set(portal, { scale: view.zoom });
+          clip();
+        },
+      },
+      arrive,
+    )
+    .to(state, { tunnel: 0, duration: 0.45, ease: "power1.in" }, arrive + 0.05);
+
   // flare + shockwave
-  const flare = at + 0.95;
+  const flare = arrive + 0.55;
   tl.add(() => {
-    sparks.burst(state.cx, state.cy, rMax * 0.85, mobile ? 40 : 90);
+    if (sparks)
+      for (let i = 0; i < 6; i++) {
+        const [x, y] = at2vp(i, rMax / unit);
+        sparks.f.burst(x, y, mobile ? 8 : 18, 420);
+      }
     if (!wave) return;
     const f = frame.getBoundingClientRect();
     const vx = f.left + f.width / 2;
@@ -449,29 +631,29 @@ function finale(
       },
       flare,
     )
+    .to(chevrons, { autoAlpha: 0, duration: 0.25 }, flare)
     .to(
       seal,
-      { scale: 1.4, autoAlpha: 0, duration: 0.6, ease: "power2.in" },
+      { scale: 1.12, autoAlpha: 0, duration: 0.5, ease: "power2.in" },
       flare + 0.02,
     )
     .to(state, { dim: 0, duration: 0.65, ease: "power2.out" }, flare)
     // the wave is started from a callback: give it time to finish
     .set({}, {}, flare + 0.8);
 
-  return async () => {
-    const until = performance.now() + linger;
-    while (sparks.active && performance.now() < until) await wait(50);
+  return () => {
     gsap.ticker.remove(tick);
-    sparks.clear();
+    portalFx.clear();
     // The new photo is showing underneath now: drop the hold, then the portal.
     delete frame.dataset.hold;
     portal.style.display = "none";
     portal.style.clipPath = "";
+    gsap.set(portal, { clearProps: "opacity,visibility,transform" });
     gsap.set(stage, { autoAlpha: 0 });
     gsap.set(frame, { clearProps: "transform,filter" });
-    // The flare leaves the (hidden) seal at 1.4× — reset it so its box can't
+    // The flare leaves the (hidden) seal scaled — reset it so its box can't
     // widen the page.
-    gsap.set([seal, ...rings, ...Array.from(nodes)], {
+    gsap.set([seal, ...rings, ...chevrons, ...Array.from(nodes)], {
       clearProps: "transform,opacity,visibility",
     });
   };
