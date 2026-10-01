@@ -22,8 +22,8 @@ type Timeline = ReturnType<Gsap["timeline"]>;
  * Only what's on or near the screen animates; everything else simply switches.
  */
 
-// Work cards move separately (see reflowCards), not by Flip.
-const FLIP_TARGETS = '[data-flip]:not([data-flip="work"]), section[id] h2';
+// (Work cards and the hero copy move separately, see reflowCards.)
+const FLIP_TARGETS = "[data-flip], section[id] h2";
 
 export const onScreen = (el: Element, margin = 0) => {
   const r = el.getBoundingClientRect();
@@ -130,13 +130,14 @@ export type Heights = { el: HTMLElement; from: number }[];
 
 /**
  * Before the commit: the heights of everything on screen whose height the
- * switch changes — the view layers (outside the work cards, which are handled
- * as a whole) and the work grid — so they can ease to their new height.
+ * switch changes — the view layers (outside re-flowing elements, which are
+ * handled as a whole: their height follows their panel) and the work grid —
+ * so they can ease to their new height.
  */
 export function captureHeights(): Heights {
   const els = [
     ...Array.from(document.querySelectorAll<HTMLElement>(".layer")).filter(
-      (el) => !el.closest(".work-grid"),
+      (el) => !el.closest("[data-reflow]"),
     ),
     ...Array.from(document.querySelectorAll<HTMLElement>(".work-grid")),
   ];
@@ -147,24 +148,39 @@ export function captureHeights(): Heights {
 }
 
 type Box = { x: number; y: number; w: number; h: number };
-export type CardsBefore = { grid: HTMLElement; boxes: Map<HTMLElement, Box> };
+/**
+ * A group of elements that re-flow as blueprint panels (marked [data-reflow]:
+ * the work cards, the hero's copy), with their container. A container marked
+ * [data-reflow-fit] has its height follow the panels (the work grid).
+ */
+export type CardsBefore = {
+  grid: HTMLElement;
+  boxes: Map<HTMLElement, Box>;
+  fit: boolean;
+};
 
-/** An element's box relative to the work grid. */
+/** An element's box relative to its container. */
 function boxIn(el: HTMLElement, grid: HTMLElement): Box {
   const r = el.getBoundingClientRect();
   const g = grid.getBoundingClientRect();
   return { x: r.left - g.left, y: r.top - g.top, w: r.width, h: r.height };
 }
 
-/** Before the commit: where each work card sits (if the grid is in view). */
-export function captureCards(): CardsBefore | null {
-  const grid = document.querySelector<HTMLElement>(".work-grid");
-  if (!grid || !onScreen(grid, 200)) return null;
-  const boxes = new Map<HTMLElement, Box>();
-  grid
-    .querySelectorAll<HTMLElement>(":scope > article")
-    .forEach((c) => boxes.set(c, boxIn(c, grid)));
-  return { grid, boxes };
+/** Before the commit: where each re-flowing element sits, per container
+ *  (containers in view only). */
+export function captureCards(): CardsBefore[] {
+  const groups = new Map<HTMLElement, CardsBefore>();
+  document.querySelectorAll<HTMLElement>("[data-reflow]").forEach((el) => {
+    const grid = el.parentElement;
+    if (!grid || !onScreen(grid, 200)) return;
+    let g = groups.get(grid);
+    if (!g) {
+      g = { grid, boxes: new Map(), fit: grid.hasAttribute("data-reflow-fit") };
+      groups.set(grid, g);
+    }
+    g.boxes.set(el, boxIn(el, grid));
+  });
+  return Array.from(groups.values());
 }
 
 const CORNERS =
@@ -230,9 +246,16 @@ function reflowCards(
     (p) => ({ w: p.b.w, h: p.b.h }),
   ];
 
-  // The grid's height follows the panels — always just tall enough to hold
-  // them — so the content below moves with them and is never covered.
+  // The layout follows the panels, so the content below moves with them and
+  // is never covered: a [data-reflow-fit] grid is held just tall enough to
+  // hold its panels; otherwise each (hidden) element takes its panel's height.
   const fit = () => {
+    if (!before.fit) {
+      plan.forEach((p) => {
+        p.card.style.height = `${gsap.getProperty(p.panel, "height")}px`;
+      });
+      return;
+    }
     const bottom = Math.max(
       ...plan.map(
         (p) =>
@@ -288,15 +311,19 @@ function reflowCards(
   }
 
   fit();
-  tl.call(() => grid.style.removeProperty("height"), undefined, end);
+  const release = () =>
+    before.fit
+      ? grid.style.removeProperty("height")
+      : plan.forEach((p) => p.card.style.removeProperty("height"));
+  tl.call(release, undefined, end);
 
   const cleanup = () => {
     plan.forEach((p) => {
       p.panel.remove();
       p.card.classList.remove("rc-hidden");
     });
+    release();
     grid.style.position = restore;
-    grid.style.removeProperty("height");
   };
   return { land: end, plan, cleanup };
 }
@@ -312,7 +339,7 @@ export function renderAfter(
   to: View,
   state: FlipState,
   heights: Heights,
-  cardsBefore: CardsBefore | null,
+  cardsBefore: CardsBefore[],
   sweep: number,
   reach: (top: number) => number,
   /** Sparks at a viewport point (the cards land in a spray of them). */
@@ -324,15 +351,14 @@ export function renderAfter(
   // 1 · Heights start from where they were, so nothing jumps; the layout glides
   // from the old arrangement to the new one while they ease to the new values.
   // (the work grid's height follows its cards instead, when they re-flow)
+  const fitted = new Set(cardsBefore.filter((g) => g.fit).map((g) => g.grid));
   const eased = heights
     .map((h) => ({ ...h, to: h.el.offsetHeight }))
-    .filter((h) => Math.abs(h.to - h.from) > 1 && h.el !== cardsBefore?.grid);
+    .filter((h) => Math.abs(h.to - h.from) > 1 && !fitted.has(h.el));
 
-  // The cards' new slots are measured first: a grid held at a taller height
+  // The panels' new slots are measured first: a grid held at a taller height
   // would stretch its rows.
-  const reflow = cardsBefore
-    ? reflowCards(gsap, tl, cardsBefore, hud, 0)
-    : null;
+  const reflows = cardsBefore.map((g) => reflowCards(gsap, tl, g, hud, 0));
 
   eased.forEach((h) => gsap.set(h.el, { height: h.from }));
   tl.add(Flip.from(state, { duration: sweep, ease: "power3.inOut" }), 0);
@@ -349,13 +375,11 @@ export function renderAfter(
     ),
   );
 
-  // 2 · Work cards travel as blueprint panels, then their content renders
-  // back in, left to right, as each lands.
+  // 2 · Work cards and the hero's copy travel as blueprint panels, then their
+  // content renders back in, left to right, as each lands.
   const landing = new Map<HTMLElement, number>();
-  let cleanupCards = () => {};
-  if (reflow) {
-    const { land, plan, cleanup } = reflow;
-    cleanupCards = cleanup;
+  const cleanupCards = () => reflows.forEach((r) => r.cleanup());
+  for (const { land, plan } of reflows) {
     plan
       .sort((x, y) => x.b.y - y.b.y || x.b.x - y.b.x)
       .forEach(({ card, panel }, i) => {
@@ -414,12 +438,12 @@ export function renderAfter(
     );
   });
 
-  // 4 · New blocks render inside a wireframe as the front passes them — in
-  // the work cards, once the card has landed.
+  // 4 · New blocks render inside a wireframe as the front passes them — in a
+  // re-flowing card or block, once it has landed.
   blocks(to === "engineer" ? "eng" : "rec")
     .filter((el) => onScreen(el, 120))
     .forEach((el) => {
-      const card = el.closest<HTMLElement>(".work-grid > article");
+      const card = el.closest<HTMLElement>("[data-reflow]");
       const top = el.getBoundingClientRect().top;
       const landed = card ? landing.get(card) : undefined;
       const t =
@@ -485,6 +509,7 @@ export function rehearsePage(
     const before: CardsBefore = {
       grid,
       boxes: new Map([[card, boxIn(card, grid)]]),
+      fit: false, // the rehearsal mustn't change the layout
     };
     const st = Flip.getState(card);
     const { cleanup } = reflowCards(

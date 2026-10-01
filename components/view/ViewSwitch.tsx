@@ -6,9 +6,10 @@ import { currentView, requestView, type View } from "@/lib/view";
 const HINT_KEY = "view-hint-seen";
 
 /**
- * Recruiter | Engineer. Changes how the same page is told: recruiter is plain
- * language and outcomes; engineer adds the technical layer underneath. The
- * view lives in the URL (?view=engineer) so either version can be shared.
+ * Recruiter | Developer. Changes how the same page is told: recruiter is plain
+ * language and outcomes; developer adds the technical layer underneath. The
+ * view lives in the URL (?view=developer) so either version can be shared.
+ * (Internally the developer view is still called "engineer".)
  */
 export function ViewSwitch() {
   const [view, setView] = useState<View>("recruiter");
@@ -104,12 +105,14 @@ export function ViewSwitch() {
           onClick={() => choose("engineer")}
           className={`${option} view-opt-engineer font-mono`}
         >
-          Engineer
+          Developer
         </button>
         {/* Progress of the transformation; the switch is locked meanwhile. */}
         <span className="view-progress" aria-hidden />
         <span className="sr-only" role="status">
-          {busy ? `Switching to the ${busy} view…` : ""}
+          {busy
+            ? `Switching to the ${busy === "engineer" ? "developer" : "recruiter"} view…`
+            : ""}
         </span>
       </div>
 
@@ -122,7 +125,7 @@ export function ViewSwitch() {
             className="absolute -top-1 right-8 h-2 w-2 rotate-45 bg-text"
             aria-hidden
           />
-          Engineer? Switch for architecture, patterns and trade-offs.
+          Developer? Switch for architecture, patterns and trade-offs.
           <button
             type="button"
             onClick={() => setHint(false)}

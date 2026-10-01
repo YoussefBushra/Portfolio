@@ -15,11 +15,14 @@ const monoLabel =
 export function SelectedWork() {
   return (
     <SectionShell id="work" index="01" label="Selected Work">
-      <div className="work-grid grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div
+        className="work-grid grid grid-cols-1 gap-4 lg:grid-cols-2"
+        data-reflow-fit
+      >
         {work.map((w) => (
           <article
             key={w.title}
-            data-flip="work"
+            data-reflow
             className="panel flex flex-col p-7 transition-all duration-200 hover:border-faint hover:shadow-md sm:p-9"
           >
             <h3 className="text-[20px] font-semibold leading-snug tracking-tight text-text">

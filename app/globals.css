@@ -42,6 +42,9 @@ html {
   scroll-behavior: smooth;
   /* Nav is 56px; this clears it with a little air below. */
   scroll-padding-top: 5rem;
+  /* The scrollbar's space is always reserved, so locking scroll (the intro)
+     and unlocking it never shifts the page sideways. */
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -241,9 +244,11 @@ html[data-view="engineer"] .portrait-eng,
   opacity: 0;
 }
 /* While a transformation plays, layout changes land at once and GSAP owns
-   the motion (cards glide via Flip; blocks render inside wireframes). */
+   the motion (cards and the hero copy re-flow as panels; blocks render inside
+   wireframes). */
 html[data-casting] .layer,
-html[data-casting] [data-flip] {
+html[data-casting] [data-flip],
+html[data-casting] [data-reflow] {
   transition: none !important;
 }
 

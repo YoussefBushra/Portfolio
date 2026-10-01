@@ -98,11 +98,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Before first paint: set the Recruiter / Engineer view from ?view=
-            (so a shared engineer link never flashes the recruiter layer). */}
+        {/* Before first paint: set the Recruiter / Developer view from ?view=
+            (so a shared developer link never flashes the recruiter layer).
+            The developer view is "engineer" internally; ?view=engineer links
+            from before the rename still work. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{document.documentElement.dataset.view=new URLSearchParams(location.search).get("view")==="engineer"?"engineer":"recruiter"}catch(e){}`,
+            __html: `try{var v=new URLSearchParams(location.search).get("view");document.documentElement.dataset.view=v==="developer"||v==="engineer"?"engineer":"recruiter"}catch(e){}`,
           }}
         />
         {/* No JS, no intro: it could never finish. */}

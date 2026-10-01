@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { navNodes, profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
+import { LogoMark } from "@/components/ui/LogoMark";
 import { ViewSwitch } from "@/components/view/ViewSwitch";
 
 export function Nav() {
@@ -49,25 +50,7 @@ export function Nav() {
           className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
           aria-label={`${profile.name}, back to top`}
         >
-          {/* Identical geometry to the favicon (centered stacked bars), drawn
-              from the palette tokens: a light square with the accent bars. */}
-          <svg
-            viewBox="0 0 32 32"
-            className="h-[26px] w-[26px] shrink-0"
-            aria-hidden="true"
-          >
-            <rect width="32" height="32" rx="4" className="fill-text" />
-            <rect x="5" y="9" width="22" height="4" rx="1" className="fill-accent" />
-            <rect
-              x="9"
-              y="19"
-              width="14"
-              height="4"
-              rx="1"
-              className="fill-accent"
-              opacity="0.55"
-            />
-          </svg>
+          <LogoMark className="h-[26px] w-[26px] shrink-0" />
           <span className="hidden text-sm font-semibold tracking-tight text-text sm:inline">
             Youssef Bushra
           </span>

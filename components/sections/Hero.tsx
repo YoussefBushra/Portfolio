@@ -45,7 +45,10 @@ export function Hero() {
             <Portrait alt={`${profile.name}, ${profile.role}`} />
           </div>
 
-          <div className="min-w-0">
+          {/* data-reflow: during a view switch this column is stood in for
+              by a blueprint panel and re-renders line by line, like the work
+              cards (components/view/pageFx.ts). */}
+          <div className="min-w-0" data-reflow>
             {/* Hierarchy: eyebrow → name → headline (the focal point) →
                 supporting line → availability → actions. */}
             <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted">

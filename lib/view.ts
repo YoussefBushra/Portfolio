@@ -29,14 +29,16 @@ export function setCaster(fn: Caster | null) {
   caster = fn;
 }
 
-/** Applies a view: attribute, URL (?view=engineer is shareable), analytics. */
+/** Applies a view: attribute, URL (?view=developer is shareable — the
+ *  switch calls this view "Developer"; ?view=engineer links still work),
+ *  analytics. */
 export function commitView(to: View) {
   const root = document.documentElement;
   root.dataset.view = to;
   delete root.dataset.viewPending;
 
   const url = new URL(window.location.href);
-  if (to === "engineer") url.searchParams.set("view", "engineer");
+  if (to === "engineer") url.searchParams.set("view", "developer");
   else url.searchParams.delete("view");
   window.history.replaceState(window.history.state, "", url);
 

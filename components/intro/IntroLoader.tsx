@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { profile } from "@/content/profile";
+import { LogoMark } from "@/components/ui/LogoMark";
 
 const MIN_MS = 900;
 const MAX_MS = 8000;
@@ -139,26 +140,7 @@ export function IntroLoader() {
     <div ref={root} className="intro" aria-hidden>
       <div className="intro-inner">
         <div className="intro-head">
-          <svg viewBox="0 0 32 32" className="intro-mark">
-            <rect width="32" height="32" rx="4" className="fill-text" />
-            <rect
-              x="5"
-              y="9"
-              width="22"
-              height="4"
-              rx="1"
-              className="fill-accent"
-            />
-            <rect
-              x="9"
-              y="19"
-              width="14"
-              height="4"
-              rx="1"
-              className="fill-accent"
-              opacity="0.55"
-            />
-          </svg>
+          <LogoMark className="intro-mark" />
           <div>
             <p className="intro-name">{profile.name}</p>
             <p className="intro-role">{profile.role}</p>
