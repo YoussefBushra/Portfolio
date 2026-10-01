@@ -6,8 +6,7 @@
  * Each spark is a short streak along its velocity that cools from white-hot
  * into the destination view's colour, under gravity and drag. They are drawn
  * in a handful of heat bands — one path per band — so hundreds of sparks
- * cost a few strokes per frame. On dark pages they blend additively (glow);
- * on light ones they draw normally in the plain colour so they stay visible.
+ * cost a few strokes per frame. They blend additively, so they glow.
  */
 
 interface Spark {
@@ -36,7 +35,6 @@ export class SparkField {
   private w = 0;
   private h = 0;
   private rgb: [number, number, number] = [255, 255, 255];
-  dark = true;
 
   constructor(
     private canvas: HTMLCanvasElement,
@@ -46,7 +44,7 @@ export class SparkField {
   }
 
   /** Size the canvas to the viewport and set the colour (as "r g b"). */
-  begin(rgb: string, dark: boolean, max?: number) {
+  begin(rgb: string, max?: number) {
     this.dpr = Math.min(window.devicePixelRatio || 1, 1.5);
     this.w = window.innerWidth;
     this.h = window.innerHeight;
@@ -54,12 +52,18 @@ export class SparkField {
     this.canvas.height = Math.round(this.h * this.dpr);
     const [r, g, b] = rgb.trim().split(/\s+/).map(Number);
     this.rgb = [r, g, b];
-    this.dark = dark;
     if (max) this.max = max;
+  }
+
+  /** Hidden while empty, so the full-viewport layer costs nothing then. */
+  private show(on: boolean) {
+    const v = on ? "visible" : "hidden";
+    if (this.canvas.style.visibility !== v) this.canvas.style.visibility = v;
   }
 
   emit(x: number, y: number, vx: number, vy: number, o: SparkOptions = {}) {
     if (this.ps.length >= this.max) return;
+    this.show(true);
     const [a, b] = o.life ?? [0.3, 0.7];
     this.ps.push({
       x,
@@ -83,7 +87,7 @@ export class SparkField {
 
   private color(heat: number, a: number) {
     const [r, g, b] = this.rgb;
-    const k = this.dark ? heat * 0.9 : 0;
+    const k = heat * 0.9;
     const mix = (c: number) => Math.round(c + (255 - c) * k);
     return `rgba(${mix(r)},${mix(g)},${mix(b)},${a})`;
   }
@@ -92,7 +96,7 @@ export class SparkField {
     const { ctx, dpr } = this;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, this.w, this.h);
-    if (!this.ps.length) return;
+    if (!this.ps.length) return this.show(false);
 
     const alive: Spark[] = [];
     const bands: Spark[][] = Array.from({ length: BANDS }, () => []);
@@ -111,7 +115,7 @@ export class SparkField {
     }
     this.ps = alive;
 
-    ctx.globalCompositeOperation = this.dark ? "lighter" : "source-over";
+    ctx.globalCompositeOperation = "lighter";
     ctx.lineCap = "round";
     bands.forEach((group, i) => {
       if (!group.length) return;
@@ -140,6 +144,7 @@ export class SparkField {
 
   clear() {
     this.ps = [];
+    this.show(false);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }

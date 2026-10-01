@@ -12,7 +12,7 @@
  */
 
 export interface HoloState {
-  /** 0–1 darkening (dark pages) or tinted aura (light pages) around it. */
+  /** 0–1 darkening of the room around it. */
   dim: number;
   /** 0–1 corner brackets locked on. */
   lock: number;
@@ -69,10 +69,10 @@ export class Hologram {
   private sinceJitter = 0;
   private carry = 0;
   private lastBeam = 0;
+  private dimLayer: HTMLCanvasElement | null = null;
 
   constructor(
     private canvas: HTMLCanvasElement,
-    private dark: boolean,
     private f: FrameRect,
     private from: HTMLImageElement,
     private to: HTMLImageElement,
@@ -140,9 +140,9 @@ export class Hologram {
   private void(y0: number, y1: number) {
     if (y1 <= y0) return;
     const { ctx, f } = this;
-    ctx.fillStyle = this.dark ? "rgba(4,8,12,0.94)" : this.color(0.88, 0.96);
+    ctx.fillStyle = "rgba(4,8,12,0.94)";
     ctx.fillRect(f.x, f.y + y0, f.w, y1 - y0);
-    ctx.fillStyle = this.color(this.dark ? 0.3 : 0, this.dark ? 0.45 : 0.4);
+    ctx.fillStyle = this.color(0.3, 0.45);
     const i0 = Math.max(0, Math.floor(y0 / ROW));
     const i1 = Math.min(this.rows.length, Math.ceil(y1 / ROW));
     for (let i = i0; i < i1; i++) {
@@ -174,26 +174,36 @@ export class Hologram {
         this.jitter[i] = Math.random() * 2 - 1;
     }
 
-    // Around the portrait: the room darkens (dark) or takes the tint (light).
+    // Around the portrait, the room darkens. The gradient is rendered once
+    // and stamped with the current strength — far cheaper than re-filling a
+    // radial gradient across the whole stage every frame.
     if (s.dim > 0.01) {
-      const cx = f.x + f.w / 2;
-      const cy = f.y + f.h * 0.42;
-      const g = ctx.createRadialGradient(
-        cx,
-        cy,
-        0,
-        cx,
-        cy,
-        Math.min(w, h) * 0.48,
-      );
-      const a = s.dim * (this.dark ? 0.5 : 0.14);
-      const tone = (x: number) =>
-        this.dark ? `rgba(5,9,13,${x})` : this.color(0.2, x);
-      g.addColorStop(0, tone(a));
-      g.addColorStop(0.55, tone(a * 0.6));
-      g.addColorStop(1, tone(0));
-      ctx.fillStyle = g;
-      ctx.fillRect(0, 0, w, h);
+      if (!this.dimLayer) {
+        const layer = document.createElement("canvas");
+        layer.width = this.canvas.width;
+        layer.height = this.canvas.height;
+        const lc = layer.getContext("2d")!;
+        lc.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const cx = f.x + f.w / 2;
+        const cy = f.y + f.h * 0.42;
+        const g = lc.createRadialGradient(
+          cx,
+          cy,
+          0,
+          cx,
+          cy,
+          Math.min(w, h) * 0.48,
+        );
+        g.addColorStop(0, "rgba(5,9,13,0.5)");
+        g.addColorStop(0.55, "rgba(5,9,13,0.3)");
+        g.addColorStop(1, "rgba(5,9,13,0)");
+        lc.fillStyle = g;
+        lc.fillRect(0, 0, w, h);
+        this.dimLayer = layer;
+      }
+      ctx.globalAlpha = Math.min(1, s.dim);
+      ctx.drawImage(this.dimLayer, 0, 0, w, h);
+      ctx.globalAlpha = 1;
     }
 
     // The photo, inside the frame's rounded corners.
@@ -243,14 +253,9 @@ export class Hologram {
     if (s.tint > 0.01) {
       const flick = 0.85 + Math.random() * 0.15;
       ctx.globalCompositeOperation = "source-atop";
-      ctx.fillStyle = this.color(
-        this.dark ? 0.1 : 0,
-        s.tint * flick * (this.dark ? 0.32 : 0.26),
-      );
+      ctx.fillStyle = this.color(0.1, s.tint * flick * 0.32);
       ctx.fillRect(f.x, f.y, f.w, f.h);
-      ctx.fillStyle = this.dark
-        ? `rgba(0,0,0,${0.22 * s.tint})`
-        : `rgba(255,255,255,${0.3 * s.tint})`;
+      ctx.fillStyle = `rgba(0,0,0,${0.22 * s.tint})`;
       for (let y = 0; y < f.h; y += ROW) ctx.fillRect(f.x, f.y + y, f.w, 1);
       ctx.globalCompositeOperation = "source-over";
     }
@@ -263,13 +268,11 @@ export class Hologram {
       const x1 = f.x + f.w + OVERHANG;
       const g = ctx.createLinearGradient(0, y - 18, 0, y + 18);
       g.addColorStop(0, this.color(0, 0));
-      g.addColorStop(0.5, this.color(0, (this.dark ? 0.4 : 0.28) * s.beamOn));
+      g.addColorStop(0.5, this.color(0, 0.4 * s.beamOn));
       g.addColorStop(1, this.color(0, 0));
       ctx.fillStyle = g;
       ctx.fillRect(x0, y - 18, x1 - x0, 36);
-      ctx.fillStyle = this.dark
-        ? this.color(0.75, s.beamOn)
-        : this.color(0, s.beamOn);
+      ctx.fillStyle = this.color(0.75, s.beamOn);
       ctx.fillRect(x0, y - 1, x1 - x0, 2);
       ctx.beginPath();
       ctx.arc(x0, y, 2.5, 0, Math.PI * 2);
@@ -301,9 +304,7 @@ export class Hologram {
       const R = f.x + f.w + off;
       const T = f.y - off;
       const B = f.y + f.h + off;
-      ctx.strokeStyle = this.dark
-        ? this.color(0.15, s.lock)
-        : this.color(0, s.lock);
+      ctx.strokeStyle = this.color(0.15, s.lock);
       ctx.lineWidth = 2;
       ctx.lineCap = "square";
       ctx.beginPath();

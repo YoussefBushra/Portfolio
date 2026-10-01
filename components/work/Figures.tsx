@@ -1,8 +1,8 @@
 import type { WorkFigure } from "@/content/work";
 
-/* Engineer-view exhibits. All colours come from theme tokens, so every figure
-   works in light and dark. Amber is reserved for the failure path — the one
-   place the accent carries meaning in a diagram. */
+/* Engineer-view exhibits. All colours come from the palette tokens. Amber is
+   reserved for the failure path — the one place the accent carries meaning in
+   a diagram. */
 
 function Node({
   x,

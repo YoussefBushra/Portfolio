@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useTheme } from "next-themes";
 import { navNodes, profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 
@@ -32,7 +31,6 @@ export function CommandPalette() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { setTheme, resolvedTheme } = useTheme();
   const reduce = useReducedMotion();
 
   const close = useCallback(() => {
@@ -73,18 +71,6 @@ export function CommandPalette() {
           a.click();
         },
       },
-      {
-        id: "toggle-theme",
-        label: `Switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`,
-        hint: "Theme",
-        group: "Actions",
-        keywords: "theme dark light mode appearance",
-        run: () => {
-          const next = resolvedTheme === "dark" ? "light" : "dark";
-          track("theme_toggle", { to: next });
-          setTheme(next);
-        },
-      },
       ...profile.socials.map((s) => ({
         id: `open-${s.label}`,
         label: `Open ${s.label}`,
@@ -97,7 +83,7 @@ export function CommandPalette() {
         },
       })),
     ],
-    [resolvedTheme, setTheme]
+    []
   );
 
   const results = useMemo(() => {
@@ -143,7 +129,7 @@ export function CommandPalette() {
   function runCommand(cmd: Command) {
     track("command_run", { command: cmd.id });
     cmd.run();
-    if (cmd.id !== "toggle-theme") close();
+    close();
   }
 
   function onKeyDown(e: React.KeyboardEvent) {

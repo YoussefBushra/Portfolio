@@ -27,10 +27,10 @@ re-skin the site.
 - **Identity band**, not a hero. The first screen carries the photo, name,
   role, the claim, both actions, location, availability, profile links and four
   figures, because it is the only screen some readers will look at.
-- **Command palette (⌘K / Ctrl+K)**, jump to any section, toggle theme, download
-  the CV, open links. Fully keyboard-navigable.
-- **Light and dark** via `next-themes`, following the system preference by
-  default, with a toggle in the nav.
+- **Command palette (⌘K / Ctrl+K)**, jump to any section, download the CV,
+  open links. Fully keyboard-navigable.
+- **One dark theme**: a near-black page with soft white ink, amber accent in
+  Recruiter view and cyan in Engineer view.
 - **Working contact form** posting to Formspree through `@formspree/react`,
   with per-field validation errors plus loading, error and success states.
 - **Data-driven content**, everything lives in typed files under `content/`.

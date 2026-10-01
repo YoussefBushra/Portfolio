@@ -61,12 +61,12 @@ function surgeEls() {
 let field: SparkField | null = null;
 
 /** The page-wide spark field, ticking until its last spark has died. */
-function startSparks(rgb: string, dark: boolean, mobile: boolean) {
+function startSparks(rgb: string, mobile: boolean) {
   const canvas = document.querySelector<HTMLCanvasElement>(".surge-sparks");
   if (!canvas) return null;
   field ??= new SparkField(canvas);
   const f = field;
-  f.begin(rgb, dark, mobile ? 360 : 900);
+  f.begin(rgb, mobile ? 360 : 900);
   const spawners: ((dt: number) => void)[] = [];
   const tick = (_t: number, ms: number) => {
     const dt = Math.min(ms, 50) / 1000;
@@ -169,14 +169,13 @@ async function rehearse(onProgress?: (p: number) => void) {
     root.dataset.view === "engineer" ? "recruiter" : "engineer";
   const vh = window.innerHeight;
   const mobile = window.innerWidth < 640;
-  const dark = root.classList.contains("dark");
 
   root.dataset.rehearsing = "";
   s.root?.style.setProperty(
     "--hud",
     `var(--hud-${other === "engineer" ? "eng" : "rec"})`,
   );
-  const sparks = startSparks(hudRgb(other), dark, mobile);
+  const sparks = startSparks(hudRgb(other), mobile);
   sparks?.f.burst(window.innerWidth / 2, vh / 2, 40);
   const tl = gsap.timeline({ paused: true });
   if (s.charge)
@@ -196,7 +195,7 @@ async function rehearse(onProgress?: (p: number) => void) {
   const undoPage = rehearsePage(gsap, Flip, tl, other);
   const current: View = other === "engineer" ? "recruiter" : "engineer";
   const settle = p
-    ? finale(tl, p, s.wave, 0.1, current, other, hudRgb(other), dark, sparks)
+    ? finale(tl, p, s.wave, 0.1, current, other, hudRgb(other), sparks)
     : () => {};
   tl.eventCallback("onUpdate", () => onProgress?.(tl.progress()));
   tl.timeScale(2.6).play();
@@ -235,7 +234,6 @@ export async function transform(to: View, commit: () => void) {
   const from: View = to === "engineer" ? "recruiter" : "engineer";
   const rgb = hudRgb(to);
   const mobile = window.innerWidth < 640;
-  const dark = root.classList.contains("dark");
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const top =
@@ -257,7 +255,7 @@ export async function transform(to: View, commit: () => void) {
     "--hud",
     `var(--hud-${to === "engineer" ? "eng" : "rec"})`,
   );
-  const sparks = startSparks(rgb, dark, mobile);
+  const sparks = startSparks(rgb, mobile);
 
   const leaving = leavingBlocks(to);
   const C = leaving.length ? 0.42 : 0.26; // charge
@@ -368,7 +366,7 @@ export async function transform(to: View, commit: () => void) {
       C + reach(pr.top + pr.height * PORTAL_Y),
     );
     // …and transforms as the sweep finishes.
-    settle = finale(tl, p, s.wave, C + D * 0.6, from, to, rgb, dark, sparks);
+    settle = finale(tl, p, s.wave, C + D * 0.6, from, to, rgb, sparks);
   }
 
   await finished(tl);
@@ -393,7 +391,6 @@ function finale(
   from: View,
   to: View,
   rgb: string,
-  dark: boolean,
   sparks: Sparks | null,
 ) {
   const a = copies[from];
@@ -414,7 +411,7 @@ function finale(
 
   // Sparks from the beam go to the page-wide field, in viewport coordinates.
   let origin = stage.getBoundingClientRect();
-  const holo = new Hologram(canvas, dark, rect, a, b, (x, y, vx, vy) =>
+  const holo = new Hologram(canvas, rect, a, b, (x, y, vx, vy) =>
     sparks?.f.emit(origin.left + x, origin.top + y, vx, vy, {
       g: 700,
       life: [0.25, 0.6],

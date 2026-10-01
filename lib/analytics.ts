@@ -16,7 +16,6 @@ export type AnalyticsEvent =
   | "contact_submit"
   | "command_palette_open"
   | "command_run"
-  | "theme_toggle"
   | "view_toggle"
   | "section_view"
   | "social_click"

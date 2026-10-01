@@ -3,7 +3,6 @@ import Script from "next/script";
 import { Archivo, IBM_Plex_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { VisitTracker } from "@/components/system/VisitTracker";
 import { IntroLoader } from "@/components/intro/IntroLoader";
 import { profile } from "@/content/profile";
@@ -87,10 +86,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#efeae1" },
-    { media: "(prefers-color-scheme: dark)", color: "#101215" },
-  ],
+  themeColor: "#101215",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -114,15 +111,8 @@ export default function RootLayout({
         </noscript>
       </head>
       <body className={`${sans.variable} ${mono.variable} font-sans`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <IntroLoader />
-          {children}
-        </ThemeProvider>
+        <IntroLoader />
+        {children}
 
         {/* Privacy-first product analytics */}
         <VisitTracker />

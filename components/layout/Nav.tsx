@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { navNodes, profile } from "@/content/profile";
-import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { CVButton } from "@/components/ui/CVButton";
 import { ViewSwitch } from "@/components/view/ViewSwitch";
 
@@ -50,9 +49,8 @@ export function Nav() {
           className="focus-ring flex shrink-0 items-center gap-2.5 rounded-sm"
           aria-label={`${profile.name}, back to top`}
         >
-          {/* Identical geometry to the favicon (centered stacked bars); only
-              the colors are theme-aware so the square adapts (dark on light,
-              light on dark) while the bars stay amber. */}
+          {/* Identical geometry to the favicon (centered stacked bars), drawn
+              from the palette tokens: a light square with the accent bars. */}
           <svg
             viewBox="0 0 32 32"
             className="h-[26px] w-[26px] shrink-0"
@@ -104,7 +102,6 @@ export function Nav() {
         <div className="flex shrink-0 items-center gap-1.5">
           <ViewSwitch />
           <CVButton from="nav" variant="compact" className="hidden lg:inline-flex" />
-          <ThemeToggle />
           <button
             type="button"
             aria-label="Toggle menu"
