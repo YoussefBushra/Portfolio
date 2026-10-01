@@ -3,19 +3,19 @@
 @tailwind utilities;
 
 /* ============================================================
-   Document palette. Light is the primary design target: a
-   warm off-white page with tinted panels and soft ink rather
-   than pure white and black, read like a printed dossier.
-   Dark mirrors it. One accent, signal amber.
+   Document palette. Light is "sand and navy": a warm sand page
+   with cream cards and navy ink instead of white and black,
+   read like a printed dossier. Dark mirrors it. One accent,
+   signal amber.
    ============================================================ */
 :root {
-  --bg: 246 244 239;
-  --surface: 238 235 228;
-  --surface-2: 229 225 216;
-  --line: 222 217 207;
-  --text: 38 37 35;
-  --muted: 88 85 80;
-  --faint: 110 106 99;
+  --bg: 239 234 225;
+  --surface: 246 242 235;
+  --surface-2: 230 224 213;
+  --line: 220 212 199;
+  --text: 27 38 56;
+  --muted: 78 86 100;
+  --faint: 98 102 110;
   --accent: 245 165 36;
   --accent-text: 143 82 0;
   --on-accent: 20 16 6;
@@ -188,6 +188,69 @@ html[data-view-pending="engineer"] .view-opt-recruiter,
 html[data-view-pending="recruiter"] .view-opt-engineer {
   background-color: transparent;
   color: rgb(var(--muted));
+}
+
+/* Busy: from the click until the transformation has finished, the switch is
+   locked and says so — the chosen side shimmers, the other dims, and a thin
+   bar in the destination colour fills with the transformation's progress
+   (--switch-progress, set by components/view/transform.ts). */
+html[data-view-busy] .view-switch {
+  cursor: progress;
+}
+html[data-view-busy] .view-switch button {
+  pointer-events: none;
+}
+html[data-view-busy="engineer"] .view-opt-recruiter,
+html[data-view-busy="recruiter"] .view-opt-engineer {
+  opacity: 0.45;
+}
+html[data-view-busy="engineer"] .view-opt-engineer,
+html[data-view-busy="recruiter"] .view-opt-recruiter {
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgb(var(--bg) / 0.26) 50%,
+    transparent 70%
+  );
+  background-size: 250% 100%;
+  animation: view-sheen 1.1s linear infinite;
+}
+@keyframes view-sheen {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.view-progress {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 1px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scaleX(var(--switch-progress, 0));
+  transform-origin: left center;
+  transition: opacity 0.25s ease;
+}
+html[data-view-busy] .view-progress {
+  opacity: 1;
+}
+html[data-view-busy="engineer"] .view-progress {
+  background: rgb(var(--hud-eng));
+  box-shadow: 0 0 6px rgb(var(--hud-eng) / 0.6);
+}
+html[data-view-busy="recruiter"] .view-progress {
+  background: rgb(var(--hud-rec));
+  box-shadow: 0 0 6px rgb(var(--hud-rec) / 0.6);
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-view-busy] .view-switch button {
+    animation: none;
+  }
 }
 
 /* ---- Hero portrait: one photo per view ------------------------------

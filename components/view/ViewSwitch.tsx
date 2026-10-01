@@ -13,11 +13,18 @@ const HINT_KEY = "view-hint-seen";
 export function ViewSwitch() {
   const [view, setView] = useState<View>("recruiter");
   const [hint, setHint] = useState(false);
+  /** The view being switched to while a transformation plays (the switch
+   *  can't be used again until it's done). */
+  const [busy, setBusy] = useState<View | null>(null);
 
   useEffect(() => {
     setView(currentView());
     const onChange = (e: Event) => setView((e as CustomEvent<View>).detail);
+    const onBusy = (e: Event) => setBusy((e as CustomEvent<View>).detail);
+    const onSettled = () => setBusy(null);
     window.addEventListener("view:change", onChange);
+    window.addEventListener("view:busy", onBusy);
+    window.addEventListener("view:settled", onSettled);
 
     // One-time hint so the switch gets found — after the intro, and never for
     // someone who arrived on an engineer link.
@@ -30,7 +37,7 @@ export function ViewSwitch() {
           // (and it must never pop up over a transformation).
           timer = window.setTimeout(() => {
             const root = document.documentElement;
-            if (currentView() === "recruiter" && !root.dataset.viewPending)
+            if (currentView() === "recruiter" && !root.dataset.viewBusy)
               setHint(true);
           }, 600);
         }
@@ -43,6 +50,8 @@ export function ViewSwitch() {
 
     return () => {
       window.removeEventListener("view:change", onChange);
+      window.removeEventListener("view:busy", onBusy);
+      window.removeEventListener("view:settled", onSettled);
       window.removeEventListener("intro:done", offerHint);
       window.clearTimeout(timer);
     };
@@ -63,7 +72,7 @@ export function ViewSwitch() {
 
   const choose = (next: View) => {
     setHint(false);
-    if (next === currentView()) return;
+    if (busy || next === currentView()) return;
     setView(next);
     void requestView(next);
   };
@@ -76,11 +85,13 @@ export function ViewSwitch() {
       <div
         role="group"
         aria-label="How this page is told"
-        className="view-switch inline-flex h-9 items-stretch gap-0.5 rounded-sm border border-line bg-surface p-[3px]"
+        aria-busy={busy ? true : undefined}
+        className="view-switch relative inline-flex h-9 items-stretch gap-0.5 rounded-sm border border-line bg-surface p-[3px]"
       >
         <button
           type="button"
           aria-pressed={view === "recruiter"}
+          aria-disabled={busy ? true : undefined}
           onClick={() => choose("recruiter")}
           className={`${option} view-opt-recruiter`}
         >
@@ -89,11 +100,17 @@ export function ViewSwitch() {
         <button
           type="button"
           aria-pressed={view === "engineer"}
+          aria-disabled={busy ? true : undefined}
           onClick={() => choose("engineer")}
           className={`${option} view-opt-engineer font-mono`}
         >
           Engineer
         </button>
+        {/* Progress of the transformation; the switch is locked meanwhile. */}
+        <span className="view-progress" aria-hidden />
+        <span className="sr-only" role="status">
+          {busy ? `Switching to the ${busy} view…` : ""}
+        </span>
       </div>
 
       {hint ? (

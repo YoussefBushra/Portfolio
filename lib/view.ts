@@ -20,7 +20,9 @@ let caster: Caster | null = null;
 let casting = false;
 
 export function currentView(): View {
-  return document.documentElement.dataset.view === "engineer" ? "engineer" : "recruiter";
+  return document.documentElement.dataset.view === "engineer"
+    ? "engineer"
+    : "recruiter";
 }
 
 export function setCaster(fn: Caster | null) {
@@ -53,8 +55,12 @@ export async function requestView(to: View) {
 
   const root = document.documentElement;
   casting = true;
-  // The switch reflects the choice at once, while the page waits for the peak.
+  // The switch reflects the choice at once, while the page waits for the peak,
+  // and shows it's busy (it can't be used again) until the transformation
+  // has finished playing.
   root.dataset.viewPending = to;
+  root.dataset.viewBusy = to;
+  window.dispatchEvent(new CustomEvent<View>("view:busy", { detail: to }));
 
   let committed = false;
   const commit = () => {
@@ -70,5 +76,8 @@ export async function requestView(to: View) {
   } finally {
     commit();
     casting = false;
+    delete root.dataset.viewBusy;
+    root.style.removeProperty("--switch-progress");
+    window.dispatchEvent(new Event("view:settled"));
   }
 }

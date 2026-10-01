@@ -242,34 +242,40 @@ function reflowCards(
     );
     grid.style.height = `${bottom}px`;
   };
-  // Play the phases in order, skipping any in which nothing moves.
+  // Play the phases in order, skipping any in which nothing moves. Each phase
+  // tweens only what it changes (size, then x, then y, or the other way
+  // round), so neighbouring phases can overlap: the motion curves smoothly
+  // from one into the next instead of stopping between them. Size never
+  // changes in two overlapping phases (shrink and grow are never adjacent).
+  const PHASE = 0.46;
+  const NEXT = 0.55; // a phase starts this far into the one before
   const cur = new Map(plan.map((p) => [p, { ...p.a }]));
+  const css = { x: "left", y: "top", w: "width", h: "height" } as const;
   let t = at;
+  let end = at;
   for (const step of steps) {
     const moves = plan
       .map((p) => {
         const from = cur.get(p)!;
         const next = { ...from, ...step(p) };
         cur.set(p, next);
-        const moved =
-          Math.abs(next.x - from.x) +
-            Math.abs(next.y - from.y) +
-            Math.abs(next.w - from.w) +
-            Math.abs(next.h - from.h) >
-          1;
-        return moved ? { p, next } : null;
+        const props: Record<string, number> = {};
+        (Object.keys(css) as (keyof typeof css)[]).forEach((k) => {
+          if (Math.abs(next[k] - from[k]) > 0.5) props[css[k]] = next[k];
+        });
+        return Object.keys(props).length ? { p, props } : null;
       })
-      .filter(Boolean) as { p: (typeof plan)[number]; next: Box }[];
+      .filter(Boolean) as {
+      p: (typeof plan)[number];
+      props: Record<string, number>;
+    }[];
     if (!moves.length) continue;
-    moves.forEach(({ p, next }) =>
+    moves.forEach(({ p, props }) =>
       tl.to(
         p.panel,
         {
-          left: next.x,
-          top: next.y,
-          width: next.w,
-          height: next.h,
-          duration: 0.3,
+          ...props,
+          duration: PHASE,
           ease: "power2.inOut",
           lazy: false,
           onUpdate: () => fit(),
@@ -277,11 +283,12 @@ function reflowCards(
         t,
       ),
     );
-    t += 0.3;
+    end = t + PHASE;
+    t += PHASE * NEXT;
   }
 
   fit();
-  tl.call(() => grid.style.removeProperty("height"), undefined, t);
+  tl.call(() => grid.style.removeProperty("height"), undefined, end);
 
   const cleanup = () => {
     plan.forEach((p) => {
@@ -291,7 +298,7 @@ function reflowCards(
     grid.style.position = restore;
     grid.style.removeProperty("height");
   };
-  return { land: t, plan, cleanup };
+  return { land: end, plan, cleanup };
 }
 
 /**

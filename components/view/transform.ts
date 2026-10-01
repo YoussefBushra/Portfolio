@@ -270,6 +270,10 @@ export async function transform(to: View, commit: () => void) {
 
   const tl = gsap.timeline();
   const jobs: Promise<void>[] = [];
+  // The switch shows how far along the transformation is.
+  tl.eventCallback("onUpdate", () =>
+    root.style.setProperty("--switch-progress", tl.progress().toFixed(3)),
+  );
 
   // 1 · charge — sparks spit from both running tips
   const x0 = switchX(to);
