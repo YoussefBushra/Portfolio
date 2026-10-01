@@ -30,7 +30,8 @@ export function ViewSwitch() {
           // (and it must never pop up over a transformation).
           timer = window.setTimeout(() => {
             const root = document.documentElement;
-            if (currentView() === "recruiter" && !root.dataset.viewPending) setHint(true);
+            if (currentView() === "recruiter" && !root.dataset.viewPending)
+              setHint(true);
           }, 600);
         }
       } catch {

@@ -78,7 +78,7 @@ export const metadata: Metadata = {
         url:
           "data:image/svg+xml," +
           encodeURIComponent(
-            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='#0e1116'/><rect x='5' y='9' width='22' height='4' rx='1' fill='#f5a524'/><rect x='9' y='19' width='14' height='4' rx='1' fill='#f5a524' opacity='0.55'/></svg>`
+            `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='#0e1116'/><rect x='5' y='9' width='22' height='4' rx='1' fill='#f5a524'/><rect x='9' y='19' width='14' height='4' rx='1' fill='#f5a524' opacity='0.55'/></svg>`,
           ),
         type: "image/svg+xml",
       },
@@ -102,11 +102,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Before first paint: set the Recruiter / Engineer view from ?view=
-            (so a shared engineer link never flashes the recruiter layer), and
-            skip the intro if it already played this session. */}
+            (so a shared engineer link never flashes the recruiter layer). */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var d=document.documentElement;d.dataset.view=new URLSearchParams(location.search).get("view")==="engineer"?"engineer":"recruiter";if(sessionStorage.getItem("yb.intro"))d.dataset.intro="done"}catch(e){}`,
+            __html: `try{document.documentElement.dataset.view=new URLSearchParams(location.search).get("view")==="engineer"?"engineer":"recruiter"}catch(e){}`,
           }}
         />
         {/* No JS, no intro: it could never finish. */}

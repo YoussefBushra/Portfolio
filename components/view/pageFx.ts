@@ -7,18 +7,19 @@ type Timeline = ReturnType<Gsap["timeline"]>;
 
 /**
  * The page part of a view switch, driven by the surge front sweeping down the
- * viewport (transform.ts decides when the front reaches a given height):
+ * viewport (transform.ts decides when the front reaches a given height).
+ * Nothing on screen changes instantly:
  *
- *  - elements marked [data-flip] (the work cards, the portrait) and section
- *    labels on screen glide from the old layout to the new one (GSAP Flip);
- *  - as the front passes a section label, it re-renders left to right;
- *  - as it passes a block that appears, the block renders inside a blueprint
- *    wireframe — dashed box, corner brackets, mono tag — then the frame fades.
- *    Blocks that disappear collapse the same way just before the commit.
+ *  - blocks that disappear collapse inside a blueprint wireframe before the
+ *    commit, then their space closes smoothly;
+ *  - blocks that appear open their space smoothly, then render inside a
+ *    wireframe — dashed box, corner brackets, mono tag — as the front passes;
+ *  - work cards turn into translucent blueprint panels, glide and resize to
+ *    their new slots (GSAP Flip, transform-only), and their content renders
+ *    back in once they land;
+ *  - section labels re-render as the front passes them.
  *
  * Only what's on or near the screen animates; everything else simply switches.
- * Wireframes are temporary children of the block, so they follow the layout
- * while cards are still resizing.
  */
 
 const FLIP_TARGETS = "[data-flip], section[id] h2";
@@ -124,37 +125,107 @@ export function captureLayout(Flip: FlipApi): FlipState {
   );
 }
 
+export type Heights = { el: HTMLElement; from: number }[];
+
 /**
- * After the commit: glide the layout, and render what appeared as the front
- * passes it. `reach(top)` is how many seconds from now the front reaches a
- * viewport y.
+ * Before the commit: the heights of everything on screen whose height the
+ * switch changes — the view layers (outside the work cards, which are handled
+ * as a whole) and the work grid — so they can ease to their new height.
+ */
+export function captureHeights(): Heights {
+  const els = [
+    ...Array.from(document.querySelectorAll<HTMLElement>(".layer")).filter(
+      (el) => !el.closest(".work-grid"),
+    ),
+    ...Array.from(document.querySelectorAll<HTMLElement>(".work-grid")),
+  ];
+  // A collapsed layer has no box of its own: judge it by where it sits.
+  const near = (el: HTMLElement) =>
+    onScreen(el.offsetHeight ? el : el.parentElement!, 200);
+  return els.filter(near).map((el) => ({ el, from: el.offsetHeight }));
+}
+
+/**
+ * After the commit: ease heights and glide the layout, and render what
+ * appeared as the front passes it. `reach(top)` is how many seconds from now
+ * the front reaches a viewport y; `sweep` is how long the layout takes.
  */
 export function renderAfter(
   gsap: Gsap,
   Flip: FlipApi,
   to: View,
   state: FlipState,
+  heights: Heights,
   sweep: number,
   reach: (top: number) => number,
 ): Promise<void> {
   const tl = gsap.timeline();
+  const hud = `var(--hud-${to === "engineer" ? "eng" : "rec"})`;
 
-  // The layout glides from the old arrangement to the new one while the
-  // front crosses the screen.
+  // 1 · Heights start from where they were, so nothing jumps; the layout glides
+  // from the old arrangement to the new one while they ease to the new values.
+  const eased = heights
+    .map((h) => ({ ...h, to: h.el.offsetHeight }))
+    .filter((h) => Math.abs(h.to - h.from) > 1);
+  eased.forEach((h) => gsap.set(h.el, { height: h.from }));
+
+  // Work cards travel as blueprint panels: their content is hidden in flight,
+  // so they can scale (transform-only, no per-frame layout) without
+  // distorting text, and panels crossing each other read as layout planes.
+  // (the cards in the glide: on or near the screen before or after the commit)
+  const flying = new Set(state.elementStates.map((e) => e.element));
   const cards = Array.from(
     document.querySelectorAll<HTMLElement>(".work-grid > article"),
-  ).filter((el) => onScreen(el, 200));
-  gsap.set(cards, { overflow: "hidden" });
+  ).filter((el) => flying.has(el) || onScreen(el, 200));
+  cards.forEach((c) => {
+    c.style.setProperty("--hud", hud);
+    c.classList.add("rc-ghost");
+  });
+
   tl.add(
     Flip.from(state, {
       duration: sweep,
       ease: "power3.inOut",
-      onComplete: () => gsap.set(cards, { clearProps: "overflow" }),
+      scale: true,
     }),
     0,
   );
+  eased.forEach((h) =>
+    tl.to(
+      h.el,
+      {
+        height: h.to,
+        duration: sweep * 0.9,
+        ease: "power3.inOut",
+        clearProps: "height,overflow",
+      },
+      0,
+    ),
+  );
 
-  // Section labels re-render as the front passes them.
+  // 2 · Cards land, then their content renders back in, left to right.
+  cards.sort(byTop).forEach((card, i) => {
+    const t =
+      Math.max(reach(card.getBoundingClientRect().top), sweep) + i * 0.07;
+    const kids = Array.from(card.children) as HTMLElement[];
+    tl.call(() => card.classList.remove("rc-ghost"), undefined, t)
+      .fromTo(
+        kids,
+        { clipPath: "inset(0 100% 0 0)", opacity: 0.25 },
+        {
+          clipPath: "inset(0 0% 0 0)",
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out",
+          stagger: 0.05,
+          clearProps: "clipPath,opacity",
+        },
+        t,
+      )
+      .call(() => card.style.removeProperty("--hud"), undefined, t + 0.6);
+  });
+
+  // 3 · Section labels re-render as the front passes them.
   document.querySelectorAll<HTMLElement>("section[id] h2").forEach((el) => {
     if (!onScreen(el)) return;
     tl.fromTo(
@@ -170,13 +241,16 @@ export function renderAfter(
     );
   });
 
-  // New blocks render inside a wireframe as the front passes them. Blocks in
-  // the work cards wait a beat so the cards have opened first.
+  // 4 · New blocks render inside a wireframe as the front passes them — in
+  // the work cards, once the card has landed.
   blocks(to === "engineer" ? "eng" : "rec")
     .filter((el) => onScreen(el, 120))
     .forEach((el) => {
-      const inCard = !!el.closest(".work-grid");
-      const t = reach(el.getBoundingClientRect().top) + (inCard ? 0.2 : 0);
+      const card = el.closest<HTMLElement>(".work-grid > article");
+      const top = el.getBoundingClientRect().top;
+      const t = card
+        ? Math.max(reach(top), sweep) + 0.2
+        : Math.max(reach(top), 0.15);
       const { box, kids, done } = wireframe(
         el,
         `render › ${el.dataset.rc}`,
@@ -210,5 +284,61 @@ export function renderAfter(
       .forEach((el) =>
         gsap.set(el.children, { clearProps: "clipPath,opacity" }),
       );
+    cards.forEach((c) => {
+      c.classList.remove("rc-ghost");
+      c.style.removeProperty("--hud");
+    });
   });
+}
+
+/**
+ * A short, real run of the page effects — ghost card panel, a Flip, a
+ * wireframe, a clip reveal — played behind the intro cover so the first real
+ * switch doesn't pay for their first paint. Returns the clean-up.
+ */
+export function rehearsePage(
+  gsap: Gsap,
+  Flip: FlipApi,
+  tl: Timeline,
+  hud: View,
+) {
+  const card = document.querySelector<HTMLElement>(".work-grid > article");
+  const label = document.querySelector<HTMLElement>("section[id] h2");
+  const block =
+    Array.from(document.querySelectorAll<HTMLElement>("[data-rc]")).find((el) =>
+      onScreen(el),
+    ) ?? card;
+  const undo: (() => void)[] = [];
+  if (card) {
+    const st = Flip.getState(card);
+    card.style.setProperty(
+      "--hud",
+      `var(--hud-${hud === "engineer" ? "eng" : "rec"})`,
+    );
+    card.classList.add("rc-ghost");
+    tl.add(Flip.from(st, { duration: 0.3, scale: true }), 0);
+    undo.push(() => {
+      card.classList.remove("rc-ghost");
+      card.style.removeProperty("--hud");
+      gsap.set(card, { clearProps: "transform" });
+    });
+  }
+  if (label)
+    tl.fromTo(
+      label,
+      { clipPath: "inset(0 100% 0 0)" },
+      { clipPath: "inset(0 0% 0 0)", duration: 0.3, clearProps: "clipPath" },
+      0,
+    );
+  if (block) {
+    const { box, done } = wireframe(block, "render", hud);
+    tl.fromTo(
+      box,
+      { clipPath: "inset(0 100% 100% 0)" },
+      { clipPath: "inset(0 0% 0% 0)", duration: 0.3 },
+      0,
+    );
+    undo.push(done);
+  }
+  return () => undo.forEach((f) => f());
 }

@@ -388,7 +388,8 @@ html[data-casting] [data-flip] {
   white-space: nowrap;
 }
 
-/* ---- Intro loader --------------------------------------------------- */
+/* ---- Intro loader ---------------------------------------------------
+   Every load: covers the page until the transformation is warmed up. */
 .intro {
   position: fixed;
   inset: 0;
@@ -396,7 +397,7 @@ html[data-casting] [data-flip] {
   display: grid;
   place-items: center;
   background: rgb(var(--bg));
-  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  color: rgb(var(--accent));
 }
 html[data-intro="done"] .intro {
   display: none;
@@ -404,38 +405,222 @@ html[data-intro="done"] .intro {
 html.intro-lock body {
   overflow: hidden;
 }
+/* While effects rehearse behind the cover it lets through a sliver of light
+   (invisible), so the browser really paints them. */
+html[data-rehearsing] .intro {
+  background: rgb(var(--bg) / 0.996);
+}
 .intro-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: min(320px, calc(100vw - 48px));
   transition:
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.4s ease;
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.3s ease;
+}
+.intro-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 .intro-mark {
-  width: 76px;
-  height: 76px;
-}
-.intro-bar {
-  transform: scaleX(0);
-  transform-box: fill-box;
-  transform-origin: left center;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  width: 34px;
+  height: 34px;
+  flex: none;
 }
 .intro-name {
-  margin-top: 18px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.01em;
+  line-height: 1.25;
   color: rgb(var(--text));
 }
-.intro-leaving {
-  opacity: 0;
+.intro-role {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--faint));
+}
+
+/* Segmented HUD bar: a fill scaled on the GPU, cut into segments by a mask. */
+.intro-meter {
+  position: relative;
+  margin-top: 26px;
+  padding-right: 52px;
+}
+.intro-bar {
+  position: relative;
+  height: 10px;
+  -webkit-mask-image: repeating-linear-gradient(
+    90deg,
+    #000 0 8px,
+    transparent 8px 10.6px
+  );
+  mask-image: repeating-linear-gradient(
+    90deg,
+    #000 0 8px,
+    transparent 8px 10.6px
+  );
+}
+.intro-track,
+.intro-fill {
+  position: absolute;
+  inset: 0;
+}
+.intro-track {
+  background: rgb(var(--accent) / 0.16);
+}
+.intro-fill {
+  background: rgb(var(--accent));
+  transform: scaleX(0);
+  transform-origin: left center;
+  will-change: transform;
+}
+.intro-glint-rail {
+  position: absolute;
+  top: -5px;
+  left: 0;
+  right: 52px;
+  height: 20px;
   pointer-events: none;
 }
-.intro-leaving .intro-inner {
-  transform: scale(0.92) translateY(-6px);
+.intro-glint {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.intro-glint::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: rgb(var(--accent));
+  box-shadow:
+    0 0 10px 2px rgb(var(--accent) / 0.7),
+    0 0 2px rgb(var(--accent));
+}
+.intro-pct {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: rgb(var(--text));
+}
+.intro-complete .intro-fill {
+  animation: intro-flash 0.28s ease-out;
+}
+@keyframes intro-flash {
+  40% {
+    background: rgb(255 255 255);
+  }
+}
+
+/* Step log: label ····· state */
+.intro-log {
+  margin-top: 22px;
+  display: grid;
+  gap: 7px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--faint));
+}
+.intro-log li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.intro-log i {
+  flex: 1;
+  border-bottom: 1px dotted rgb(var(--line));
+  transform: translateY(-3px);
+}
+.intro-log b {
+  font-weight: 500;
+  min-width: 4ch;
+  text-align: right;
+}
+.intro-log [data-state="wait"] b::after {
+  content: "--";
+}
+.intro-log [data-state="run"] {
+  color: rgb(var(--muted));
+}
+.intro-log [data-state="run"] b::after {
+  content: "···";
+  animation: intro-blink 0.8s steps(2) infinite;
+}
+.intro-log [data-state="ok"] {
+  color: rgb(var(--text));
+}
+.intro-log [data-state="ok"] b {
+  color: rgb(var(--accent-text));
+}
+.intro-log [data-state="ok"] b::after {
+  content: "ok";
+}
+@keyframes intro-blink {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+/* Leaving: the content fades, and the cover lifts behind a line of energy
+   (the same look as the sweep front of a view switch). */
+.intro-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgb(var(--accent));
+  box-shadow:
+    0 0 16px 2px rgb(var(--accent) / 0.75),
+    0 0 3px rgb(var(--accent));
   opacity: 0;
+}
+.intro-leaving {
+  pointer-events: none;
+  transform: translateY(-100%);
+  transition: transform 0.72s cubic-bezier(0.7, 0, 0.2, 1) 0.06s;
+}
+.intro-leaving .intro-inner {
+  transform: translateY(-14px);
+  opacity: 0;
+}
+.intro-leaving .intro-edge {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-leaving {
+    transform: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+}
+
+/* ---- Work cards in flight: blueprint panels --------------------------- */
+.rc-ghost {
+  background: rgb(var(--hud) / 0.07) !important;
+  border-color: rgb(var(--hud) / 0.6) !important;
+  box-shadow: inset 0 0 28px rgb(var(--hud) / 0.1) !important;
+  will-change: transform;
+}
+.rc-ghost > * {
+  opacity: 0 !important;
+}
+
+/* The accent changes at the commit; let it fade rather than snap. */
+html[data-casting] :is(main, header) * {
+  transition-property: color, background-color, border-color, fill, stroke;
+  transition-duration: 0.45s;
+  transition-timing-function: ease;
 }
 
 /* In engineer view the work grid becomes full-width case studies, giving the

@@ -23,7 +23,7 @@ export function Transformation() {
     let timer = 0;
     if (document.documentElement.dataset.intro === "done")
       timer = window.setTimeout(
-        () => void import("./transform").then((m) => m.prewarm()),
+        () => void import("./transform").then((m) => m.warmUp()),
         400,
       );
     return () => {
