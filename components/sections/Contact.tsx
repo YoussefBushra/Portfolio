@@ -6,7 +6,7 @@ import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
 import { profile } from "@/content/profile";
 import { track } from "@/lib/analytics";
 import { useForm, ValidationError } from "@formspree/react";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Formspree form id. Public by design: it ships in the client bundle either
@@ -24,10 +24,36 @@ const errorText = "text-xs leading-snug text-danger";
 
 export function Contact() {
   const [state, handleSubmit, reset] = useForm(FORM_ID);
+  const formRef = useRef<HTMLFormElement>(null);
+  const sentRef = useRef<HTMLDivElement>(null);
+  // Once Formspree accepts the message, the form transmits (folds into a
+  // line of light and fires off) before the confirmation renders in; see
+  // components/contact/transmit.ts. Reduced motion skips straight to it.
+  const [phase, setPhase] = useState<"idle" | "transmitting" | "sent">("idle");
 
   useEffect(() => {
-    if (state.succeeded) track("contact_submit", { method: "formspree" });
-  }, [state.succeeded]);
+    if (!state.succeeded || phase !== "idle") return;
+    track("contact_submit", { method: "formspree" });
+    const form = formRef.current;
+    if (!form || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setPhase("sent");
+      return;
+    }
+    setPhase("transmitting");
+    import("@/components/contact/transmit")
+      .then((m) => m.transmit(form))
+      .catch(() => {})
+      .finally(() => setPhase("sent"));
+  }, [state.succeeded, phase]);
+
+  useEffect(() => {
+    if (phase !== "sent" || !sentRef.current) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const panel = sentRef.current;
+    void import("@/components/contact/transmit").then((m) => m.receive(panel));
+  }, [phase]);
+
+  const showSent = state.succeeded && phase === "sent";
 
   return (
     <SectionShell id="contact" index="05" label="Contact">
@@ -79,8 +105,11 @@ export function Contact() {
         <div>
           <h3 className="block-label">Send a message</h3>
 
-          {state.succeeded ? (
-            <div className="mt-4 rounded-sm border border-line bg-surface p-6">
+          {showSent ? (
+            <div
+              ref={sentRef}
+              className="mt-4 rounded-sm border border-line bg-surface p-6"
+            >
               <h4 className="text-base font-semibold tracking-tight text-text">
                 Message sent
               </h4>
@@ -89,14 +118,23 @@ export function Contact() {
               </p>
               <button
                 type="button"
-                onClick={reset}
+                onClick={() => {
+                  setPhase("idle");
+                  reset();
+                }}
                 className="focus-ring mt-4 rounded-sm text-sm text-muted underline decoration-line underline-offset-[3px] transition-colors hover:text-text"
               >
                 Send another
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} noValidate className="mt-4">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              noValidate
+              aria-busy={phase === "transmitting" || undefined}
+              className="mt-4"
+            >
               <input
                 type="hidden"
                 name="_subject"
@@ -186,10 +224,14 @@ export function Contact() {
               <div className="mt-5">
                 <button
                   type="submit"
-                  disabled={state.submitting}
+                  disabled={state.submitting || phase === "transmitting"}
                   className="btn-ghost disabled:cursor-not-allowed disabled:opacity-70"
                 >
-                  {state.submitting ? "Sending" : "Send message"}
+                  {state.submitting
+                    ? "Sending…"
+                    : phase === "transmitting"
+                      ? "Sent"
+                      : "Send message"}
                 </button>
               </div>
             </form>

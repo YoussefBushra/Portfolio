@@ -6,6 +6,7 @@ import { navNodes, profile } from "@/content/profile";
 import { CVButton } from "@/components/ui/CVButton";
 import { LogoMark } from "@/components/ui/LogoMark";
 import { ViewSwitch } from "@/components/view/ViewSwitch";
+import { SectionTrack } from "@/components/layout/SectionTrack";
 
 export function Nav() {
   const [active, setActive] = useState<string>("hero");
@@ -113,6 +114,13 @@ export function Nav() {
         </div>
       </nav>
 
+      {/* Below lg: where you are on the page. Tapping it opens the menu. */}
+      <SectionTrack
+        active={active}
+        hidden={open}
+        onOpen={() => setOpen(true)}
+      />
+
       <AnimatePresence>
         {open ? (
           <motion.div
@@ -127,7 +135,24 @@ export function Nav() {
                 <li key={n.id} className="border-b border-line/70">
                   <a
                     href={`#${n.id}`}
-                    onClick={() => setOpen(false)}
+                    onClick={(e) => {
+                      // Close the menu, then scroll: a native anchor jump
+                      // started while the menu collapses gets cancelled.
+                      e.preventDefault();
+                      setOpen(false);
+                      history.replaceState(null, "", `#${n.id}`);
+                      const reduce = window.matchMedia(
+                        "(prefers-reduced-motion: reduce)",
+                      ).matches;
+                      window.setTimeout(
+                        () =>
+                          document.getElementById(n.id)?.scrollIntoView({
+                            behavior: reduce ? "auto" : "smooth",
+                            block: "start",
+                          }),
+                        220,
+                      );
+                    }}
                     className="flex items-center gap-3 px-6 py-3 text-sm text-muted"
                   >
                     <span

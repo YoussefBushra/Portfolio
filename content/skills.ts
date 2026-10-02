@@ -1,67 +1,50 @@
 /**
- * Skills, told twice.
+ * Skills: the tools, from the CV, told twice.
  *
- * Recruiter view: what I can do, in plain language.
- * Engineer view: the actual stack, from the CV, with a one-line note on where
- * each part was used (a factual "where", not an opinionated "why").
+ * Recruiter view: the tools, grouped under plain category names (`plain`);
+ * groups that are practices rather than tools (`practice`) are left out.
+ * Developer view: every group, with a one-line note on where each part was
+ * used (a factual "where", not an opinionated "why").
  */
-
-export interface Capability {
-  name: string;
-  text: string;
-}
 
 export interface StackRow {
   name: string;
+  /** The category name in the recruiter view, if it differs. */
+  plain?: string;
+  /** Practices rather than tools: shown in the developer view only. */
+  practice?: boolean;
   items: string[];
   note?: string;
 }
 
-export const capabilities: Capability[] = [
-  {
-    name: "Connecting business systems",
-    text: "Linking the logistics platform with the accounting system (Microsoft Dynamics 365) and the CRM, so records move between them automatically.",
-  },
-  {
-    name: "Reliable financial processing",
-    text: "Invoices, payments and exchange rates handled so nothing is posted twice and nothing is left half-posted.",
-  },
-  {
-    name: "Backend services",
-    text: "The services and APIs behind a live logistics platform used by many client companies.",
-  },
-  {
-    name: "Document automation",
-    text: "Shipping paperwork generated automatically from shipment data.",
-  },
-  {
-    name: "Search & data",
-    text: "Large datasets and fast search — 10 million+ records in about 600 ms.",
-  },
-  {
-    name: "Web applications",
-    text: "React and Next.js screens built on top of those services.",
-  },
-];
-
 export const stack: StackRow[] = [
   {
     name: "Backend",
-    items: ["NestJS", "Node.js", "Express.js", "TypeScript", "TypeORM", "Mongoose"],
+    items: [
+      "NestJS",
+      "Node.js",
+      "Express.js",
+      "TypeScript",
+      "TypeORM",
+      "Mongoose",
+    ],
     note: "NestJS microservices that talk over RabbitMQ RPC rather than REST.",
   },
   {
     name: "Data & search",
+    plain: "Databases & search",
     items: ["PostgreSQL", "MongoDB", "Redis", "Elasticsearch"],
     note: "PostgreSQL + TypeORM with migrations and data backfills; Elasticsearch for geo-search and audit history.",
   },
   {
     name: "Messaging & integration",
+    plain: "Integrations",
     items: ["RabbitMQ", "Microsoft Dynamics 365", "REST", "GraphQL", "Swagger"],
     note: "Dynamics 365 Finance & Operations over OData, with OAuth2 client-credentials.",
   },
   {
     name: "Reliability patterns",
+    practice: true,
     items: [
       "Microservices",
       "Transactional inbox / outbox",
@@ -73,6 +56,7 @@ export const stack: StackRow[] = [
   },
   {
     name: "Observability",
+    plain: "Monitoring",
     items: ["OpenTelemetry", "Grafana", "Kibana", "Logstash", "Filebeat"],
     note: "Logs and traces used to investigate issues and guide performance decisions.",
   },
@@ -83,6 +67,7 @@ export const stack: StackRow[] = [
   },
   {
     name: "Testing & delivery",
+    plain: "Testing & deployment",
     items: ["Jest", "Testcontainers", "Docker", "GitHub Actions"],
     note: "Unit and e2e tests against a real Postgres; multi-stage Docker builds; build and release pipelines.",
   },

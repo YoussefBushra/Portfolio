@@ -30,13 +30,15 @@ export function About() {
         </p>
       ))}
 
-      <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-9 lg:grid-cols-4">
+      {/* The facts span the full width: first column at the left edge, last
+          at the right, even space between (two-by-two on small screens). */}
+      <dl className="mt-12 grid grid-cols-2 gap-x-8 gap-y-9 lg:flex lg:justify-between lg:gap-x-12">
         {COLUMNS.slice(0, 2).map((c) => (
           <Column key={c.k} label={c.k} items={c.items} />
         ))}
 
         {education.map((e) => (
-          <div key={e.institution}>
+          <div key={e.institution} className="lg:max-w-[18rem]">
             <dt className="block-label">Education</dt>
             <dd className="mt-3 text-[14px] font-medium leading-snug text-text">
               {e.degree}

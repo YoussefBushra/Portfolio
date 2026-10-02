@@ -46,6 +46,56 @@ html {
      and unlocking it never shifts the page sideways. */
   scrollbar-gutter: stable;
 }
+/* Below lg the header also carries the section track (36px). */
+@media (max-width: 1023.98px) {
+  html {
+    scroll-padding-top: 6.5rem;
+  }
+}
+
+/* ---- Section track (small screens): where you are on the page -------- */
+.section-track {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  background: rgb(var(--bg));
+  border-top: 1px solid transparent;
+  transition:
+    grid-template-rows 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease,
+    visibility 0s linear 0.28s;
+}
+.section-track > * {
+  min-height: 0;
+  overflow: hidden;
+}
+.section-track.is-shown {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  border-top-color: rgb(var(--line) / 0.7);
+  transition:
+    grid-template-rows 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.2s ease,
+    visibility 0s;
+}
+.section-seg {
+  position: relative;
+  width: 18px;
+  height: 3px;
+  border-radius: 1px;
+  background: rgb(var(--line));
+  overflow: hidden;
+}
+.section-seg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(var(--accent));
+  transform: scaleX(var(--fill, 0));
+  transform-origin: left center;
+}
 
 body {
   background-color: rgb(var(--bg));
@@ -414,6 +464,22 @@ html[data-casting] [data-reflow] {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+/* The line of light a sent message folds into (components/contact/transmit). */
+.tx-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  margin-top: -1px;
+  background: rgb(var(--hud));
+  box-shadow:
+    0 0 14px 2px rgb(var(--hud) / 0.75),
+    0 0 3px rgb(var(--hud));
+  visibility: hidden;
+  opacity: 0;
 }
 
 /* ---- Intro loader ---------------------------------------------------
