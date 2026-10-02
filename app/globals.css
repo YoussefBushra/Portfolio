@@ -53,6 +53,40 @@ html {
   }
 }
 
+/* ---- After a switch: what changed, when it is off screen ------------- */
+.change-notice {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: calc(56px + 10px);
+  z-index: 39;
+  display: flex;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+}
+@media (max-width: 1023.98px) {
+  .change-notice {
+    top: calc(56px + 37px + 10px); /* below the section track */
+  }
+}
+.change-chip {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+  padding: 8px 8px 8px 14px;
+  border: 1px solid rgb(var(--accent) / 0.45);
+  border-radius: 4px;
+  background: rgb(var(--surface));
+  box-shadow:
+    0 8px 24px rgb(0 0 0 / 0.35),
+    0 0 0 1px rgb(var(--accent) / 0.08);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
 /* ---- Section track (small screens): where you are on the page -------- */
 .section-track {
   display: grid;
@@ -726,6 +760,37 @@ html[data-casting] :is(main, header) * {
    technical layer room for a figure beside the notes. */
 html[data-view="engineer"] .work-grid {
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Small view-specific parts inside shared elements (e.g. a skills group's
+   category name). Whole blocks use the Engineer/Recruiter layers instead. */
+html:not([data-view="engineer"]) .dev-only,
+html[data-view="engineer"] .rec-only {
+  display: none !important;
+}
+
+/* Skills: three columns of plain tool lists for recruiters; two columns of
+   mono tool lists with notes for developers. */
+.skills-tools {
+  font-size: 15px;
+}
+html[data-view="engineer"] .skills-tools {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13.5px;
+}
+@media (min-width: 640px) {
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .skills-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  html[data-view="engineer"] .skills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3rem;
+  }
 }
 
 ::selection {

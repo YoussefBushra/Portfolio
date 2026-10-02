@@ -217,21 +217,40 @@ function reflowCards(
   if (getComputedStyle(grid).position === "static")
     grid.style.position = "relative";
 
-  const plan = cards.map((card) => {
-    const a = boxes.get(card)!;
-    const b = boxIn(card, grid);
+  // An element shown in only one view (e.g. a developer-only skills group)
+  // appears by growing in place where it lands, or disappears by shrinking
+  // where it was — faded, so it never shows while others move past.
+  const empty = (r: Box) => r.w < 1 || r.h < 1;
+  const plan = cards.flatMap((card) => {
+    let a = boxes.get(card)!;
+    let b = boxIn(card, grid);
+    if (empty(a) && empty(b)) return [];
+    const appear = empty(a);
+    const vanish = empty(b);
+    if (appear) a = { ...b, h: 0 };
+    if (vanish) b = { ...a, h: 0 };
     const panel = document.createElement("div");
     panel.className = "rc-proxy";
     panel.innerHTML = CORNERS;
     panel.style.setProperty("--hud", hud);
     grid.appendChild(panel);
-    gsap.set(panel, { left: a.x, top: a.y, width: a.w, height: a.h });
+    gsap.set(panel, {
+      left: a.x,
+      top: a.y,
+      width: a.w,
+      height: a.h,
+      opacity: appear ? 0 : 1,
+    });
     card.classList.add("rc-hidden");
-    return { card, panel, a, b };
+    return [{ card, panel, a, b, appear, vanish }];
   });
 
   const cols = (pick: (p: (typeof plan)[number]) => Box) =>
-    new Set(plan.map((p) => Math.round(pick(p).x))).size;
+    new Set(
+      plan
+        .filter((p) => !p.appear && !p.vanish)
+        .map((p) => Math.round(pick(p).x)),
+    ).size;
   const spreading = cols((p) => p.b) > cols((p) => p.a);
 
   type Step = (p: (typeof plan)[number]) => Partial<Box>;
@@ -276,8 +295,10 @@ function reflowCards(
   const css = { x: "left", y: "top", w: "width", h: "height" } as const;
   let t = at;
   let end = at;
+  // (appearing panels sit out the phases: they grow in once all have landed)
   for (const step of steps) {
     const moves = plan
+      .filter((p) => !p.appear)
       .map((p) => {
         const from = cur.get(p)!;
         const next = { ...from, ...step(p) };
@@ -309,6 +330,28 @@ function reflowCards(
     end = t + PHASE;
     t += PHASE * NEXT;
   }
+
+  // Disappearing panels fade as they shrink (first phase); appearing ones
+  // grow in and fade up in their slot once everything else has arrived.
+  const appearing = plan.filter((p) => p.appear);
+  plan.forEach((p) => {
+    if (p.vanish)
+      tl.to(p.panel, { opacity: 0, duration: PHASE, ease: "power1.in" }, at);
+  });
+  appearing.forEach((p) =>
+    tl.to(
+      p.panel,
+      {
+        height: p.b.h,
+        opacity: 1,
+        duration: PHASE * 0.7,
+        ease: "power2.out",
+        onUpdate: () => fit(),
+      },
+      end,
+    ),
+  );
+  if (appearing.length) end += PHASE * 0.7;
 
   fit();
   const release = () =>
@@ -381,6 +424,7 @@ export function renderAfter(
   const cleanupCards = () => reflows.forEach((r) => r.cleanup());
   for (const { land, plan } of reflows) {
     plan
+      .filter((p) => !p.vanish)
       .sort((x, y) => x.b.y - y.b.y || x.b.x - y.b.x)
       .forEach(({ card, panel }, i) => {
         const t =
@@ -437,6 +481,38 @@ export function renderAfter(
       reach(el.getBoundingClientRect().top),
     );
   });
+
+  // 3b · Sections that read the same in both views still recompile as the
+  // front passes, so a switch is visible wherever the reader is (on a phone
+  // the changed sections are often off screen). The hero is left alone: its
+  // portrait has its own transformation.
+  document
+    .querySelectorAll<HTMLElement>("section[id]:not(#hero)")
+    .forEach((sec) => {
+      if (sec.querySelector(".layer, [data-reflow]")) return;
+      const content = sec.querySelector<HTMLElement>(
+        ":scope > div > div:last-child",
+      );
+      if (!content) return;
+      (Array.from(content.children) as HTMLElement[])
+        .filter((el) => onScreen(el))
+        .forEach((el) => {
+          const top = Math.max(el.getBoundingClientRect().top, 56);
+          tl.fromTo(
+            el,
+            { clipPath: "inset(0 100% 0 0)", opacity: 0.35 },
+            {
+              clipPath: "inset(0 0% 0 0)",
+              opacity: 1,
+              duration: 0.55,
+              ease: "power2.out",
+              immediateRender: false,
+              clearProps: "clipPath,opacity",
+            },
+            reach(top),
+          );
+        });
+    });
 
   // 4 · New blocks render inside a wireframe as the front passes them — in a
   // re-flowing card or block, once it has landed.
