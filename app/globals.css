@@ -53,40 +53,6 @@ html {
   }
 }
 
-/* ---- After a switch: what changed, when it is off screen ------------- */
-.change-notice {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: calc(56px + 10px);
-  z-index: 39;
-  display: flex;
-  justify-content: center;
-  padding: 0 16px;
-  pointer-events: none;
-}
-@media (max-width: 1023.98px) {
-  .change-notice {
-    top: calc(56px + 37px + 10px); /* below the section track */
-  }
-}
-.change-chip {
-  pointer-events: auto;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  max-width: 100%;
-  padding: 8px 8px 8px 14px;
-  border: 1px solid rgb(var(--accent) / 0.45);
-  border-radius: 4px;
-  background: rgb(var(--surface));
-  box-shadow:
-    0 8px 24px rgb(0 0 0 / 0.35),
-    0 0 0 1px rgb(var(--accent) / 0.08);
-  font-size: 13px;
-  line-height: 1.35;
-}
-
 /* ---- Section track (small screens): where you are on the page -------- */
 .section-track {
   display: grid;

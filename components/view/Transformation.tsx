@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { setCaster, type Caster } from "@/lib/view";
-import { ChangeNotice } from "./ChangeNotice";
 
 /**
  * Hosts the page-wide view-switch transformation (transform.ts): the fixed
@@ -41,7 +40,6 @@ export function Transformation() {
         <div className="surge-wave" />
         <canvas className="surge-sparks" />
       </div>
-      <ChangeNotice />
     </>
   );
 }

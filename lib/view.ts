@@ -46,12 +46,59 @@ export function commitView(to: View) {
   window.dispatchEvent(new CustomEvent<View>("view:change", { detail: to }));
 }
 
+/**
+ * Keeps the reader where they are while a switch changes heights: notes the
+ * section under the nav and how far through it the reader is, then on every
+ * frame (heights ease during a transformation) scrolls so that the same point
+ * of that section stays under the nav. Returns the release, which corrects
+ * once more for the final layout.
+ */
+function holdPlace() {
+  const root = document.documentElement;
+  const line = () =>
+    document.querySelector("header")?.getBoundingClientRect().bottom ?? 56;
+  const at = line() + 1;
+  const section = Array.from(
+    document.querySelectorAll<HTMLElement>("main section[id]"),
+  ).find((s) => {
+    const r = s.getBoundingClientRect();
+    return r.top <= at && r.bottom > at;
+  });
+  // At the very top (or between sections) there is nothing to hold.
+  if (!section || window.scrollY < 1) return () => {};
+  const r0 = section.getBoundingClientRect();
+  const fraction = (at - r0.top) / r0.height;
+
+  // The browser's own scroll anchoring would fight the correction.
+  const anchor = root.style.overflowAnchor;
+  root.style.overflowAnchor = "none";
+  const correct = () => {
+    const r = section.getBoundingClientRect();
+    const drift = r.top + fraction * r.height - at;
+    if (Math.abs(drift) >= 1)
+      window.scrollTo({ top: window.scrollY + drift, behavior: "instant" });
+  };
+  let raf = 0;
+  const loop = () => {
+    correct();
+    raf = requestAnimationFrame(loop);
+  };
+  raf = requestAnimationFrame(loop);
+  return () => {
+    cancelAnimationFrame(raf);
+    correct();
+    root.style.overflowAnchor = anchor;
+  };
+}
+
 /** Entry point for the switch. Ignored while a transformation is playing. */
 export async function requestView(to: View) {
   if (casting || to === currentView()) return;
 
   if (!caster) {
+    const release = holdPlace();
     commitView(to);
+    requestAnimationFrame(release);
     return;
   }
 
@@ -64,6 +111,7 @@ export async function requestView(to: View) {
   root.dataset.viewBusy = to;
   window.dispatchEvent(new CustomEvent<View>("view:busy", { detail: to }));
 
+  const release = holdPlace();
   let committed = false;
   const commit = () => {
     if (committed) return;
@@ -77,6 +125,9 @@ export async function requestView(to: View) {
     // an effect failing must never leave the page stuck between views
   } finally {
     commit();
+    // after the commit's layout has landed
+    await new Promise((r) => requestAnimationFrame(r));
+    release();
     casting = false;
     delete root.dataset.viewBusy;
     root.style.removeProperty("--switch-progress");
