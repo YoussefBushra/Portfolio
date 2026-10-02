@@ -22,7 +22,7 @@ type Timeline = ReturnType<Gsap["timeline"]>;
  * Only what's on or near the screen animates; everything else simply switches.
  */
 
-// (Work cards and the hero copy move separately, see reflowCards.)
+// (Work cards move separately, see reflowCards.)
 const FLIP_TARGETS = "[data-flip], section[id] h2";
 
 export const onScreen = (el: Element, margin = 0) => {
@@ -150,7 +150,7 @@ export function captureHeights(): Heights {
 type Box = { x: number; y: number; w: number; h: number };
 /**
  * A group of elements that re-flow as blueprint panels (marked [data-reflow]:
- * the work cards, the hero's copy), with their container. A container marked
+ * the work cards), with their container. A container marked
  * [data-reflow-fit] has its height follow the panels (the work grid).
  */
 export type CardsBefore = {
@@ -375,7 +375,7 @@ export function renderAfter(
     ),
   );
 
-  // 2 · Work cards and the hero's copy travel as blueprint panels, then their
+  // 2 · Work cards travel as blueprint panels, then their
   // content renders back in, left to right, as each lands.
   const landing = new Map<HTMLElement, number>();
   const cleanupCards = () => reflows.forEach((r) => r.cleanup());

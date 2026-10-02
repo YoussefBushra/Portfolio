@@ -244,7 +244,7 @@ html[data-view="engineer"] .portrait-eng,
   opacity: 0;
 }
 /* While a transformation plays, layout changes land at once and GSAP owns
-   the motion (cards and the hero copy re-flow as panels; blocks render inside
+   the motion (the work cards re-flow as panels; blocks render inside
    wireframes). */
 html[data-casting] .layer,
 html[data-casting] [data-flip],

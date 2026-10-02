@@ -2,28 +2,8 @@ import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
 import { Portrait } from "@/components/hero/Portrait";
-import { Engineer } from "@/components/view/Layer";
 import { profile } from "@/content/profile";
-import { Fragment } from "react";
 
-/** Engineer view: the headline's claim, one level down. */
-const STACK_LINES: [label: string, items: string[], tone: string][] = [
-  [
-    "stack",
-    ["NestJS", "TypeScript", "PostgreSQL", "RabbitMQ", "Dynamics 365 (OData)"],
-    "text-text",
-  ],
-  [
-    "focus",
-    [
-      "event-driven microservices",
-      "idempotent consumers",
-      "inbox / outbox",
-      "compensating rollback",
-    ],
-    "text-muted",
-  ],
-];
 const GITHUB = profile.socials.find((s) => s.label === "GitHub")?.href ?? "#";
 const LINKEDIN =
   profile.socials.find((s) => s.label === "LinkedIn")?.href ?? "#";
@@ -45,10 +25,7 @@ export function Hero() {
             <Portrait alt={`${profile.name}, ${profile.role}`} />
           </div>
 
-          {/* data-reflow: during a view switch this column is stood in for
-              by a blueprint panel and re-renders line by line, like the work
-              cards (components/view/pageFx.ts). */}
-          <div className="min-w-0" data-reflow>
+          <div className="min-w-0">
             {/* Hierarchy: eyebrow → name → headline (the focal point) →
                 supporting line → availability → actions. */}
             <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-muted">
@@ -64,30 +41,6 @@ export function Hero() {
             <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px]">
               {profile.tagline}
             </p>
-
-            {/* Engineer view: the same claim, one level down. */}
-            <Engineer className="pt-5" label="stack">
-              <dl className="grid max-w-2xl grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-1.5 font-mono text-[12.5px] leading-relaxed">
-                {STACK_LINES.map(([label, items, tone]) => (
-                  <Fragment key={label}>
-                    <dt className="text-faint">{label}</dt>
-                    <dd className={tone}>
-                      {/* Terms never split; lines break only after a dot. */}
-                      {items.map((item, i) => (
-                        <Fragment key={item}>
-                          <span className="whitespace-nowrap">
-                            {item}
-                            {i < items.length - 1 ? (
-                              <span className="ml-1.5 text-faint">·</span>
-                            ) : null}
-                          </span>{" "}
-                        </Fragment>
-                      ))}
-                    </dd>
-                  </Fragment>
-                ))}
-              </dl>
-            </Engineer>
 
             <div className="mt-5 inline-flex items-center gap-2 text-[13px] text-muted">
               <span
