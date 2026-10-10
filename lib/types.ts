@@ -17,12 +17,6 @@ export interface SocialLink {
   handle: string;
 }
 
-export interface Fact {
-  value: string;
-  label: string;
-  hint: string;
-}
-
 export interface Profile {
   name: string;
   role: string;
@@ -35,7 +29,6 @@ export interface Profile {
   availability: string;
   summary: string[];
   socials: SocialLink[];
-  facts: Fact[];
   /** Developer view: the same person, told for engineers. Replaces `thesis`,
    *  `tagline` and `summary` there; everything else is shared. */
   engineer: {

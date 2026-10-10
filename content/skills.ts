@@ -37,7 +37,7 @@ export const stack: StackRow[] = [
     engineer: {
       name: "Service design",
       concerns:
-        "Domain-oriented services that are deployed independently, own their data and expose explicit message contracts — request/response over a broker rather than direct HTTP calls between services.",
+        "Business-domain services built within an existing multi-tenant architecture: explicit message contracts, request/response over a broker rather than direct HTTP calls, and integration with the platform's established tenant-isolation and authorization mechanisms.",
     },
   },
   {
@@ -47,7 +47,7 @@ export const stack: StackRow[] = [
     engineer: {
       name: "Data & consistency",
       concerns:
-        "Transactional boundaries around multi-record domain operations, tenant-aware data access, schema migrations with data backfills, and Elasticsearch for geospatial search and audit history.",
+        "Transactional boundaries around multi-record domain operations, schema migrations with historical data backfills, and Elasticsearch for geospatial search and audit-history lookups.",
     },
   },
   {
@@ -64,16 +64,16 @@ export const stack: StackRow[] = [
     name: "Reliability patterns",
     practice: true,
     items: [
-      "Idempotent consumers",
+      "Idempotent processing",
+      "Compensating operations",
+      "Row-level locking",
       "Transactional inbox / outbox",
-      "Compensating transactions",
-      "Database locking",
-      "Tenant-aware data access",
+      "Audit logging",
     ],
     engineer: {
       name: "Distributed consistency",
       concerns:
-        "The patterns that keep independently deployed services consistent when messages repeat, writers compete and downstream calls fail partway.",
+        "Patterns applied in feature code — on top of the platform's shared messaging and audit libraries — so a workflow stays consistent when messages repeat, writers compete and downstream calls fail partway.",
     },
   },
   {
@@ -92,7 +92,7 @@ export const stack: StackRow[] = [
     engineer: {
       name: "Interfaces",
       concerns:
-        "Backend-first full-stack work: React and Next.js interfaces over the services, including micro-frontends embedded in a host shell.",
+        "Backend-first full-stack work: user-facing React and Next.js features over the services, built as micro-frontends embedded in a shared host shell, with forms that enforce the same business rules as the backend.",
     },
   },
   {

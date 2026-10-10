@@ -35,6 +35,11 @@ export function SelectedWork() {
             <p className="rec-only mt-4 max-w-3xl text-[15.5px] leading-[1.7] text-muted">
               {w.summary}
             </p>
+            {w.engineer.question ? (
+              <p className="dev-only mt-5 max-w-3xl text-pretty text-[17px] font-medium leading-[1.5] tracking-tight text-text">
+                {w.engineer.question}
+              </p>
+            ) : null}
             <p className="dev-only mt-4 max-w-3xl text-[15.5px] leading-[1.7] text-muted">
               {w.engineer.problem}
             </p>

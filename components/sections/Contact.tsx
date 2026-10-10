@@ -66,7 +66,7 @@ export function Contact() {
           </p>
           {/* Direct channels first — the fastest path for a recruiter. */}
           <p className="mt-6 text-[16px] leading-relaxed text-muted">
-            Open to backend and full-stack roles.
+            Open to software engineering and technical leadership roles.
           </p>
           <div className="mt-8 flex flex-wrap gap-2.5">
             {LINKEDIN ? (
