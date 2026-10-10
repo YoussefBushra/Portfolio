@@ -103,7 +103,7 @@ export function ViewSwitch() {
           aria-pressed={view === "engineer"}
           aria-disabled={busy ? true : undefined}
           onClick={() => choose("engineer")}
-          className={`${option} view-opt-engineer font-mono`}
+          className={`${option} view-opt-engineer`}
         >
           Developer
         </button>
