@@ -3,9 +3,9 @@ import type { NavNode, Profile } from "@/lib/types";
 export const profile: Profile = {
   name: "Youssef Bushra Fouad",
   role: "Backend-Focused Software Engineer",
-  thesis: "I build backend systems for logistics and finance.",
+  thesis: "I build and evolve software for complex business operations.",
   tagline:
-    "Software engineer working on production business systems, ERP integrations, CRM workflows, and backend services.",
+    "Software engineer focused on reliable systems, enterprise integrations, business workflows, and end-to-end product delivery.",
   location: "Cairo, Egypt",
   metaDescription:
     "Youssef Bushra Fouad — backend-focused software engineer building production systems for logistics and finance: Microsoft Dynamics 365 integrations, CRM workflows, invoicing and payments, and backend services with NestJS, Node.js, TypeScript, PostgreSQL, RabbitMQ, Redis and Elasticsearch.",
