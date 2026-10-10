@@ -236,6 +236,8 @@ export async function transform(to: View, commit: () => void) {
   const from: View = to === "engineer" ? "recruiter" : "engineer";
   const rgb = hudRgb(to);
   const mobile = window.innerWidth < 640;
+  /** The hero stacks the photo above the text (below `md`). */
+  const stacked = window.innerWidth < 768;
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const top =
@@ -369,8 +371,24 @@ export async function transform(to: View, commit: () => void) {
       },
       C + reach(pr.top + pr.height * PORTAL_Y),
     );
-    // …and transforms as the sweep finishes.
-    settle = finale(tl, p, s.wave, C + D * 0.6, from, to, rgb, sparks);
+    if (stacked && s.front) {
+      // With the photo above the text (phones), a second line sweeping down
+      // the photo after the first would only repeat it: the front itself is
+      // the scan beam, the old photo breaking up right under it as it
+      // crosses; the beam then climbs back up, building the new photo.
+      const at = (y: number) => C + ((y - top) / (edgeEnd - top)) * D;
+      const y0 = pr.top - pr.height * 0.06;
+      const y1 = pr.top + pr.height * 1.12;
+      const start = Math.max(at(y0), C);
+      const front = Math.max(top, y0);
+      settle = finale(tl, p, s.wave, start, from, to, rgb, sparks, {
+        from: (front - pr.top) / pr.height,
+        dur: Math.max(at(y1) - start, 0.12),
+      });
+    } else {
+      // …and transforms as the sweep finishes.
+      settle = finale(tl, p, s.wave, C + D * 0.6, from, to, rgb, sparks);
+    }
   }
 
   await finished(tl);
@@ -383,20 +401,26 @@ export async function transform(to: View, commit: () => void) {
 }
 
 /**
- * The portrait finale, added to `tl` at `at`: the portrait becomes a
- * hologram, derezzes and rematerialises as the other photo. Returns the
- * clean-up.
+ * The portrait finale, added to `tl`: the portrait becomes a hologram,
+ * derezzes and rematerialises as the other photo. The derez beam starts down
+ * at `down`; given `follow`, it starts at beam position `from` and runs down
+ * in `dur` s at a constant speed, so it can ride along with the sweep front
+ * (lock-on is then played ahead of it, as far as the timeline allows).
+ * Returns the clean-up.
  */
 function finale(
   tl: gsap.core.Timeline,
   p: PortraitRefs,
   wave: HTMLElement | null,
-  at: number,
+  down: number,
   from: View,
   to: View,
   rgb: string,
   sparks: Sparks | null,
+  follow?: { from: number; dur: number },
 ) {
+  const at = follow ? Math.max(0, down - 0.32) : down;
+  if (!follow) down = at + 0.32;
   const a = copies[from];
   const b = copies[to];
   if (!a || !b) return () => {};
@@ -458,13 +482,21 @@ function finale(
     .call(() => corners(5, 200), undefined, at + 0.27);
 
   // derez: the beam sweeps down, the old photo breaks into scanlines
-  const down = at + 0.32;
-  tl.set(s, { mode: "out", beam: -0.06 }, down)
+  const sweep = follow?.dur ?? 0.5;
+  tl.set(s, { mode: "out", beam: follow?.from ?? -0.06 }, down)
     .to(s, { beamOn: 1, duration: 0.1 }, down)
-    .to(s, { beam: 1.12, duration: 0.5, ease: "power1.inOut" }, down);
+    .to(
+      s,
+      {
+        beam: 1.12,
+        duration: sweep,
+        ease: follow ? "none" : "power1.inOut",
+      },
+      down,
+    );
 
   // materialise: the beam sweeps back up, building the new photo
-  const up = down + 0.56;
+  const up = down + sweep + 0.06;
   tl.set(s, { mode: "in" }, up).to(
     s,
     { beam: -0.12, duration: 0.6, ease: "power1.inOut" },
