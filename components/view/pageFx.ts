@@ -17,7 +17,9 @@ type Timeline = ReturnType<Gsap["timeline"]>;
  *  - work cards turn into blueprint panels that move to their new slots in
  *    clear-path phases — shrink, shift column or row, move, grow — so no
  *    two panels ever overlap; their content renders back in once they land;
- *  - section labels re-render as the front passes them.
+ *  - section labels re-render as the front passes them;
+ *  - the hero headline has no wireframe: the front itself is the seam
+ *    between the old text (below it) and the new (above it).
  *
  * Only what's on or near the screen animates; everything else simply switches.
  */
@@ -37,10 +39,14 @@ export const onScreen = (el: Element, margin = 0) => {
 const byTop = (a: Element, b: Element) =>
   a.getBoundingClientRect().top - b.getBoundingClientRect().top;
 
+/** The hero's headline is not rendered in a wireframe: the sweep front itself
+ *  wipes the old text away and reveals the new (see captureScan). */
+const SCAN = "#hero";
+
 function blocks(kind: "eng" | "rec") {
   return Array.from(
     document.querySelectorAll<HTMLElement>(`.layer-${kind} > div > [data-rc]`),
-  );
+  ).filter((el) => !el.closest(SCAN));
 }
 
 function wireframe(el: HTMLElement, tag: string, hud: View) {
@@ -137,7 +143,7 @@ export type Heights = { el: HTMLElement; from: number }[];
 export function captureHeights(): Heights {
   const els = [
     ...Array.from(document.querySelectorAll<HTMLElement>(".layer")).filter(
-      (el) => !el.closest("[data-reflow]"),
+      (el) => !el.closest(`[data-reflow], ${SCAN}`),
     ),
     ...Array.from(document.querySelectorAll<HTMLElement>(".work-grid")),
   ];
@@ -145,6 +151,113 @@ export function captureHeights(): Heights {
   const near = (el: HTMLElement) =>
     onScreen(el.offsetHeight ? el : el.parentElement!, 200);
   return els.filter(near).map((el) => ({ el, from: el.offsetHeight }));
+}
+
+export type Scan = {
+  ghost: HTMLElement;
+  host: HTMLElement;
+  restore: string;
+  h0: number;
+} | null;
+
+/**
+ * Just before the commit: a copy of the hero headline as it reads now, laid
+ * over the original, so the old text can stay on screen after the commit until
+ * the sweep front wipes it away (see scanSwap).
+ */
+export function captureScan(to: View): Scan {
+  const el = document.querySelector<HTMLElement>(
+    `${SCAN} .layer-${to === "engineer" ? "rec" : "eng"} > div > [data-rc]`,
+  );
+  const host = el?.closest(".layer")?.parentElement;
+  if (!el || !host || !onScreen(el)) return null;
+  const restore = host.style.position;
+  if (getComputedStyle(host).position === "static")
+    host.style.position = "relative";
+  const r = el.getBoundingClientRect();
+  const hr = host.getBoundingClientRect();
+  const ghost = el.cloneNode(true) as HTMLElement;
+  ghost.removeAttribute("data-rc");
+  ghost.setAttribute("aria-hidden", "true");
+  Object.assign(ghost.style, {
+    position: "absolute",
+    left: `${r.left - hr.left}px`,
+    top: `${r.top - hr.top}px`,
+    width: `${r.width}px`,
+    margin: "0",
+    pointerEvents: "none",
+  });
+  host.appendChild(ghost);
+  return { ghost, host, restore, h0: el.offsetHeight };
+}
+
+/**
+ * After the commit: the old headline (the copy) and the new one share the
+ * same top, and the sweep front is the seam between them. Above it the new
+ * text shows, below it the old one, so the copy changes exactly as the line
+ * crosses it. The space eases to the new height without the text below ever
+ * overlapping either: it grows ahead of the front, or shrinks once it passed.
+ */
+function scanSwap(
+  gsap: Gsap,
+  tl: Timeline,
+  to: View,
+  scan: NonNullable<Scan>,
+  reach: (top: number) => number,
+) {
+  const { ghost, host, restore, h0 } = scan;
+  const el = document.querySelector<HTMLElement>(
+    `${SCAN} .layer-${to === "engineer" ? "eng" : "rec"} > div > [data-rc]`,
+  );
+  const layer = el?.closest<HTMLElement>(".layer");
+  const done = () => {
+    ghost.remove();
+    host.style.position = restore;
+  };
+  if (!el || !layer) {
+    done();
+    return done;
+  }
+  const h1 = el.offsetHeight;
+  const H = Math.max(h0, h1);
+  const top = el.getBoundingClientRect().top;
+  const t0 = reach(top);
+  const span = Math.max(reach(top + H) - t0, 0.08);
+
+  const seam = { y: 0 };
+  const paint = () => {
+    ghost.style.clipPath = `inset(${seam.y}px 0 0 0)`;
+    el.style.clipPath = `inset(0 0 ${Math.max(0, h1 - seam.y)}px 0)`;
+  };
+  paint();
+  gsap.set(layer, { height: h0 });
+  tl.to(
+    seam,
+    { y: H, duration: span, ease: "none", onUpdate: paint, onComplete: done },
+    t0,
+  );
+  if (h1 > h0)
+    tl.to(
+      layer,
+      { height: h1, duration: span, ease: "power1.out", clearProps: "height" },
+      t0,
+    );
+  else
+    tl.to(
+      layer,
+      {
+        height: h1,
+        duration: 0.35,
+        ease: "power2.inOut",
+        clearProps: "height",
+      },
+      t0 + span,
+    );
+  return () => {
+    done();
+    el.style.clipPath = "";
+    gsap.set(layer, { clearProps: "height" });
+  };
 }
 
 type Box = { x: number; y: number; w: number; h: number };
@@ -387,9 +500,13 @@ export function renderAfter(
   reach: (top: number) => number,
   /** Sparks at a viewport point (the cards land in a spray of them). */
   spark?: (x: number, y: number, n: number) => void,
+  scan: Scan = null,
 ): Promise<void> {
   const tl = gsap.timeline();
   const hud = `var(--hud-${to === "engineer" ? "eng" : "rec"})`;
+
+  // 0 · The hero headline changes under the sweep front itself.
+  const cleanupScan = scan ? scanSwap(gsap, tl, to, scan, reach) : () => {};
 
   // 1 · Heights start from where they were, so nothing jumps; the layout glides
   // from the old arrangement to the new one while they ease to the new values.
@@ -558,6 +675,7 @@ export function renderAfter(
         gsap.set(el.children, { clearProps: "clipPath,opacity" }),
       );
     cleanupCards();
+    cleanupScan();
   });
 }
 
@@ -575,8 +693,8 @@ export function rehearsePage(
   const card = document.querySelector<HTMLElement>(".work-grid > article");
   const label = document.querySelector<HTMLElement>("section[id] h2");
   const block =
-    Array.from(document.querySelectorAll<HTMLElement>("[data-rc]")).find((el) =>
-      onScreen(el),
+    Array.from(document.querySelectorAll<HTMLElement>("[data-rc]")).find(
+      (el) => onScreen(el) && !el.closest(SCAN),
     ) ?? card;
   const undo: (() => void)[] = [];
   if (card) {

@@ -38,7 +38,8 @@ export function Hero() {
 
             {/* The claim and the line under it are told per view: plain
                 for recruiters, the engineering problem space for developers.
-                On a switch only these re-render. */}
+                On a switch only these change, right under the sweep front
+                (no wireframe; see captureScan in pageFx.ts). */}
             <Recruiter className="pt-4" label="headline">
               <p className="max-w-2xl text-pretty text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-text sm:text-[40px] lg:text-[46px]">
                 {profile.thesis}

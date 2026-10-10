@@ -8,6 +8,7 @@ import {
   captureCards,
   captureHeights,
   captureLayout,
+  captureScan,
   deRender,
   leavingBlocks,
   rehearsePage,
@@ -27,8 +28,9 @@ gsap.registerPlugin(Flip);
  *  commit   C     the view flips; the accent changes
  *  sweep    C→    an energy front sweeps down the screen shedding sparks;
  *                 cards re-flow and land in a spray of sparks, and sections
- *                 and new blocks render as the front passes them. The
- *                 portrait holds its old photo.
+ *                 and new blocks render as the front passes them; the hero
+ *                 headline changes right under the front. The portrait
+ *                 holds its old photo.
  *  finale   ~0.8  the portrait becomes a hologram: brackets lock on and it
  *                 takes a holographic tint; a scan beam sweeps down and the
  *                 old photo derezzes into scanlines; it sweeps back up and
@@ -311,6 +313,7 @@ export async function transform(to: View, commit: () => void) {
     const layout = captureLayout(Flip);
     const heights = captureHeights();
     const cards = captureCards();
+    const scan = captureScan(to);
     if (withFinale) p.frame.dataset.hold = from;
     commit();
     jobs.push(
@@ -324,6 +327,7 @@ export async function transform(to: View, commit: () => void) {
         D,
         reach,
         sparks ? (x, y, n) => sparks.f.burst(x, y, n, 260) : undefined,
+        scan,
       ),
     );
   }, C);
