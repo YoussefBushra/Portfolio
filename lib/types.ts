@@ -36,6 +36,13 @@ export interface Profile {
   summary: string[];
   socials: SocialLink[];
   facts: Fact[];
+  /** Developer view: the same person, told for engineers. Replaces `thesis`,
+   *  `tagline` and `summary` there; everything else is shared. */
+  engineer: {
+    thesis: string;
+    tagline: string;
+    summary: string[];
+  };
 }
 
 export interface Experience {
@@ -53,6 +60,11 @@ export interface Experience {
   stack: string[];
   metrics?: { label: string; value: string }[];
   highlights: string[];
+  /** Developer view: scope and engineering substance of the same role. */
+  engineer: {
+    summary: string;
+    highlights: string[];
+  };
 }
 
 export interface SkillGroup {

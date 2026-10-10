@@ -23,10 +23,11 @@ function Tools({ items }: { items: string[] }) {
 }
 
 /**
- * The tools, as one compact grid of groups told two ways (classes in
- * globals.css). Recruiter view: plain category names, three columns.
- * Developer view: the CV's category names, the tools in mono, a note on where
- * each was used, plus the practices (`dev-only` group), two columns.
+ * One compact grid of groups, told two ways (classes in globals.css).
+ * Recruiter view: plain category names over the tools, three columns.
+ * Developer view: each group named for the engineering concern it serves and
+ * led by what the tools were used for, the tools in mono underneath, plus the
+ * consistency patterns (a `dev-only` group); two columns.
  *
  * It is one set of groups rather than two blocks, so during a view switch
  * each group travels as a blueprint panel into its new place, like the work
@@ -43,23 +44,15 @@ export function Skills() {
             className={g.practice ? "dev-only" : undefined}
           >
             <dt className={category}>
-              {g.plain ? (
-                <>
-                  <span className="rec-only">{g.plain}</span>
-                  <span className="dev-only">{g.name}</span>
-                </>
-              ) : (
-                g.name
-              )}
+              <span className="rec-only">{g.plain ?? g.name}</span>
+              <span className="dev-only">{g.engineer.name}</span>
             </dt>
+            <dd className="dev-only mt-2 max-w-xl text-[14.5px] leading-relaxed text-text">
+              {g.engineer.concerns}
+            </dd>
             <dd className="skills-tools mt-2 leading-relaxed text-text">
               <Tools items={g.items} />
             </dd>
-            {g.note ? (
-              <dd className="dev-only mt-1.5 max-w-xl text-[13.5px] leading-relaxed text-muted">
-                {g.note}
-              </dd>
-            ) : null}
           </div>
         ))}
       </dl>

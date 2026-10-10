@@ -1,6 +1,6 @@
 import { SectionShell } from "@/components/layout/SectionShell";
-import { Engineer, withCode } from "@/components/view/Layer";
-import { CodeBlock, WorkFigureView } from "@/components/work/Figures";
+import { Engineer } from "@/components/view/Layer";
+import { WorkFigureView } from "@/components/work/Figures";
 import { work, type WorkItem } from "@/content/work";
 
 const monoLabel =
@@ -8,9 +8,11 @@ const monoLabel =
 
 /**
  * Recruiter view: a 2×2 grid of outcomes in plain language.
- * Engineer view: the same cards widen into full-width case studies, and an
- * "Under the hood" layer expands beneath each outcome — notes on one side, a
- * figure (and pseudocode) on the other. The outcome text never changes.
+ * Developer view: the same cards widen into full-width case studies. The
+ * outcome and tool line give way to the engineering problem and the technical
+ * areas it touches (`rec-only` / `dev-only`), and an "Under the hood" layer
+ * expands beneath: design decisions and failure modes, a figure where one
+ * explains the design, and the trade-off.
  */
 export function SelectedWork() {
   return (
@@ -30,11 +32,17 @@ export function SelectedWork() {
             </h3>
             <p className="mt-2 text-[13px] text-faint">{w.context}</p>
 
-            <p className="mt-4 max-w-3xl text-[15.5px] leading-[1.7] text-muted">
+            <p className="rec-only mt-4 max-w-3xl text-[15.5px] leading-[1.7] text-muted">
               {w.summary}
             </p>
+            <p className="dev-only mt-4 max-w-3xl text-[15.5px] leading-[1.7] text-muted">
+              {w.engineer.problem}
+            </p>
 
-            <p className="mt-6 text-[13px] text-faint">{w.tech.join(" · ")}</p>
+            <p className="rec-only mt-6 text-[13px] text-faint">
+              {w.tech.join(" · ")}
+            </p>
+            <TechnicalAreas item={w} />
 
             <Engineer className="pt-9" label="under-the-hood">
               <UnderTheHood item={w} />
@@ -46,8 +54,24 @@ export function SelectedWork() {
   );
 }
 
+/** Engineering concepts first, then the technologies, as one compact block. */
+function TechnicalAreas({ item }: { item: WorkItem }) {
+  const { concepts, stack } = item.engineer;
+  return (
+    <div className="dev-only mt-6">
+      <p className={monoLabel}>Technical areas</p>
+      <p className="mt-2.5 max-w-3xl text-[14px] leading-relaxed text-text">
+        {concepts.join(" · ")}
+      </p>
+      <p className="mt-1.5 font-mono text-[12px] leading-relaxed text-faint">
+        {stack.join(" · ")}
+      </p>
+    </div>
+  );
+}
+
 function UnderTheHood({ item }: { item: WorkItem }) {
-  const { points, figure, code, tradeoff, differently } = item.engineer;
+  const { points, figure, note } = item.engineer;
 
   return (
     <div>
@@ -56,42 +80,36 @@ function UnderTheHood({ item }: { item: WorkItem }) {
         Under the hood
       </p>
 
-      {/* minmax(0, …) on every track: the <pre> must scroll inside its own box,
-          never widen the column (which the layer would then clip). */}
-      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,442px)] lg:gap-14">
+      <div
+        className={`mt-6 grid grid-cols-[minmax(0,1fr)] gap-10 ${
+          figure ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,442px)] lg:gap-14" : ""
+        }`}
+      >
         <div>
-          <ul className="space-y-3.5">
+          <ul
+            className={`grid gap-x-12 gap-y-5 ${figure ? "" : "lg:grid-cols-2"}`}
+          >
             {points.map((p) => (
               <li
-                key={p}
+                key={p.lead}
                 className="relative pl-5 text-[14.5px] leading-[1.65] text-muted before:absolute before:left-0 before:top-[0.7em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-faint before:content-['']"
               >
-                {withCode(p)}
+                <span className="font-medium text-text">{p.lead}</span> {p.text}
               </li>
             ))}
           </ul>
 
-          {tradeoff ? (
-            <div className="mt-8">
-              <p className={monoLabel}>Trade-off</p>
-              <p className="mt-2.5 text-[14.5px] leading-[1.65] text-text">{tradeoff}</p>
-            </div>
-          ) : null}
-
-          {differently ? (
-            <div className="mt-8">
-              <p className={monoLabel}>What I&rsquo;d do differently</p>
-              <p className="mt-2.5 text-[14.5px] leading-[1.65] text-text">{differently}</p>
+          {note ? (
+            <div className="mt-9 max-w-3xl border-l-2 border-l-accent/60 pl-5">
+              <p className={monoLabel}>{note.label}</p>
+              <p className="mt-2.5 text-[14.5px] leading-[1.65] text-text">
+                {note.text}
+              </p>
             </div>
           ) : null}
         </div>
 
-        {figure || code ? (
-          <div className="space-y-8">
-            {figure ? <WorkFigureView figure={figure} /> : null}
-            {code ? <CodeBlock code={code} /> : null}
-          </div>
-        ) : null}
+        {figure ? <WorkFigureView figure={figure} /> : null}
       </div>
     </div>
   );

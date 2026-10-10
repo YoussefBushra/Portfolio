@@ -13,6 +13,15 @@ export const profile: Profile = {
     "I build backend services for a production multi-tenant SaaS platform. Services are decomposed by business domain, own their data, and communicate asynchronously through a message broker, behind a single API gateway that resolves authentication and authorization centrally.",
     "Most of my work sits between services: boundaries and message contracts, tenant isolation enforced at the data-access layer, idempotent consumers, and the asynchronous flows that keep independently deployed services consistent under load. I build the interfaces on top of them too, and I care about clean boundaries, measurable performance, and systems that stay legible as they grow.",
   ],
+  engineer: {
+    thesis: "Backend systems that stay correct when things fail halfway.",
+    tagline:
+      "Backend-focused full-stack engineer on a production multi-tenant logistics platform. My work sits where correctness is hard: financial integration with an external ERP, duplicate-safe message processing, and workflows that span independently deployed services.",
+    summary: [
+      "Most of what I work on lives between services. The platform is split into domain-oriented services that are deployed independently, own their data and communicate through a message broker — so the hard problems are rarely inside one service. They are in the contracts between services, in messages that arrive twice, and in workflows that have to finish correctly when one participant doesn't.",
+      "I work within an existing multi-tenant architecture and build feature services and integrations on top of it: consumers that tolerate at-least-once delivery, domain operations with explicit transactional boundaries, tenant-aware data access, and long-running work moved out of the request path. When something is slow or failing in production, I start from traces and logs rather than guesses. I build the React and Next.js interfaces too, but I approach systems backend-first: where the consistency boundary is, what happens on retry, and whether the next engineer can still follow the flow.",
+    ],
+  },
   socials: [
     {
       label: "GitHub",

@@ -2,15 +2,16 @@ import type { ReactNode } from "react";
 import { experience } from "@/content/experience";
 import type { Experience as Role } from "@/lib/types";
 import { SectionShell } from "@/components/layout/SectionShell";
+import { Engineer, Recruiter } from "@/components/view/Layer";
 
 /**
  * Measurable results shouldn't disappear into prose. These phrases get a quiet
  * weight bump — no colour, no separate counter — so a skim still catches them.
  */
-const EMPHASIS = ["10M+", "600 ms", "one-second target"];
+const EMPHASIS = ["10M+", "600 ms", "one-second target", "~600 ms"];
 const EMPHASIS_RE = new RegExp(
   `(${EMPHASIS.map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`,
-  "g"
+  "g",
 );
 
 function emphasize(text: string): ReactNode[] {
@@ -21,7 +22,7 @@ function emphasize(text: string): ReactNode[] {
       </strong>
     ) : (
       <span key={i}>{part}</span>
-    )
+    ),
   );
 }
 
@@ -48,12 +49,40 @@ function RoleEntry({ role }: { role: Role }) {
         <span className="font-normal text-faint"> · {role.location}</span>
       </p>
 
+      {/* Told per view: outcomes for recruiters; scope and engineering
+          substance for developers. */}
+      <Recruiter label="role">
+        <RoleBody summary={role.summary} highlights={role.highlights} />
+      </Recruiter>
+      <Engineer label="role">
+        <RoleBody
+          summary={role.engineer.summary}
+          highlights={role.engineer.highlights}
+        />
+      </Engineer>
+
+      <p className="mt-5 text-[12.5px] text-faint">
+        {role.stack.slice(0, 7).join(" · ")}
+      </p>
+    </article>
+  );
+}
+
+function RoleBody({
+  summary,
+  highlights,
+}: {
+  summary: string;
+  highlights: string[];
+}) {
+  return (
+    <>
       <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-muted">
-        {emphasize(role.summary)}
+        {emphasize(summary)}
       </p>
 
       <ul className="mt-6 grid max-w-4xl gap-x-12 gap-y-4 lg:grid-cols-2">
-        {role.highlights.map((h) => (
+        {highlights.map((h) => (
           <li
             key={h}
             className="relative pl-5 text-[15px] leading-[1.65] text-muted before:absolute before:left-0 before:top-[0.72em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-faint before:content-['']"
@@ -62,11 +91,7 @@ function RoleEntry({ role }: { role: Role }) {
           </li>
         ))}
       </ul>
-
-      <p className="mt-5 text-[12.5px] text-faint">
-        {role.stack.slice(0, 7).join(" · ")}
-      </p>
-    </article>
+    </>
   );
 }
 

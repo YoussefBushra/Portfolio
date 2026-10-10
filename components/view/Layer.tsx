@@ -11,7 +11,7 @@ interface LayerProps {
 }
 
 /**
- * Content shown only in engineer view. It is always in the HTML; the
+ * Content shown only in engineer (developer) view. It is always in the HTML; the
  * `html[data-view]` attribute expands or collapses it (see globals.css).
  */
 export function Engineer({
@@ -45,18 +45,5 @@ export function Recruiter({
         </div>
       </div>
     </div>
-  );
-}
-
-/** Renders `backtick` spans as inline code, for technical notes. */
-export function withCode(text: string): ReactNode[] {
-  return text.split(/(`[^`]+`)/g).map((part, i) =>
-    part.startsWith("`") && part.endsWith("`") ? (
-      <code key={i} className="font-mono text-[0.88em] text-text">
-        {part.slice(1, -1)}
-      </code>
-    ) : (
-      <span key={i}>{part}</span>
-    ),
   );
 }

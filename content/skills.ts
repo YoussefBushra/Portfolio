@@ -1,20 +1,26 @@
 /**
  * Skills: the tools, from the CV, told twice.
  *
- * Recruiter view: the tools, grouped under plain category names (`plain`);
- * groups that are practices rather than tools (`practice`) are left out.
- * Developer view: every group, with a one-line note on where each part was
- * used (a factual "where", not an opinionated "why").
+ * Recruiter view: the tools, grouped under plain category names (`plain`,
+ * else `name`); groups that are practices rather than tools (`practice`) are
+ * left out.
+ * Developer view: every group under `engineer.name`, led by what the tools
+ * were used for — the engineering concerns — with the tools themselves
+ * underneath. Every concern traces to work described on this page.
  */
 
 export interface StackRow {
   name: string;
-  /** The category name in the recruiter view, if it differs. */
+  /** The category name in the recruiter view, if it differs from `name`. */
   plain?: string;
   /** Practices rather than tools: shown in the developer view only. */
   practice?: boolean;
   items: string[];
-  note?: string;
+  engineer: {
+    name: string;
+    /** What these were used for, as engineering concerns. */
+    concerns: string;
+  };
 }
 
 export const stack: StackRow[] = [
@@ -28,48 +34,76 @@ export const stack: StackRow[] = [
       "TypeORM",
       "Mongoose",
     ],
-    note: "NestJS microservices that talk over RabbitMQ RPC rather than REST.",
+    engineer: {
+      name: "Service design",
+      concerns:
+        "Domain-oriented services that are deployed independently, own their data and expose explicit message contracts — request/response over a broker rather than direct HTTP calls between services.",
+    },
   },
   {
     name: "Data & search",
     plain: "Databases & search",
     items: ["PostgreSQL", "MongoDB", "Redis", "Elasticsearch"],
-    note: "PostgreSQL + TypeORM with migrations and data backfills; Elasticsearch for geo-search and audit history.",
+    engineer: {
+      name: "Data & consistency",
+      concerns:
+        "Transactional boundaries around multi-record domain operations, tenant-aware data access, schema migrations with data backfills, and Elasticsearch for geospatial search and audit history.",
+    },
   },
   {
     name: "Messaging & integration",
     plain: "Integrations",
     items: ["RabbitMQ", "Microsoft Dynamics 365", "REST", "GraphQL", "Swagger"],
-    note: "Dynamics 365 Finance & Operations over OData, with OAuth2 client-credentials.",
+    engineer: {
+      name: "Messaging & external systems",
+      concerns:
+        "Consumers that tolerate at-least-once delivery, and integration with an ERP that cannot join a local transaction — kept consistent through duplicate-safe mutations and compensating actions.",
+    },
   },
   {
     name: "Reliability patterns",
     practice: true,
     items: [
-      "Microservices",
-      "Transactional inbox / outbox",
       "Idempotent consumers",
-      "Compensating rollback",
+      "Transactional inbox / outbox",
+      "Compensating transactions",
       "Database locking",
-      "Multi-tenancy",
+      "Tenant-aware data access",
     ],
+    engineer: {
+      name: "Distributed consistency",
+      concerns:
+        "The patterns that keep independently deployed services consistent when messages repeat, writers compete and downstream calls fail partway.",
+    },
   },
   {
     name: "Observability",
     plain: "Monitoring",
     items: ["OpenTelemetry", "Grafana", "Kibana", "Logstash", "Filebeat"],
-    note: "Logs and traces used to investigate issues and guide performance decisions.",
+    engineer: {
+      name: "Observability",
+      concerns:
+        "Trace- and log-driven investigation of production behaviour — locating slow paths and failure sources before changing code, and judging performance work against measured targets.",
+    },
   },
   {
     name: "Frontend",
     items: ["React", "Next.js", "Tailwind CSS"],
-    note: "Next.js micro-frontends embedded in a host shell over iframe + postMessage.",
+    engineer: {
+      name: "Interfaces",
+      concerns:
+        "Backend-first full-stack work: React and Next.js interfaces over the services, including micro-frontends embedded in a host shell.",
+    },
   },
   {
     name: "Testing & delivery",
     plain: "Testing & deployment",
     items: ["Jest", "Testcontainers", "Docker", "GitHub Actions"],
-    note: "Unit and e2e tests against a real Postgres; multi-stage Docker builds; build and release pipelines.",
+    engineer: {
+      name: "Testing & delivery",
+      concerns:
+        "Integration tests against a real PostgreSQL instance rather than mocks, multi-stage container builds, and automated build and release pipelines.",
+    },
   },
 ];
 

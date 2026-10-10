@@ -2,6 +2,7 @@ import { CVButton } from "@/components/ui/CVButton";
 import { ContactLink } from "@/components/ui/ContactLink";
 import { GitHubMark, LinkedInMark } from "@/components/ui/Icons";
 import { Portrait } from "@/components/hero/Portrait";
+import { Engineer, Recruiter } from "@/components/view/Layer";
 import { profile } from "@/content/profile";
 
 const GITHUB = profile.socials.find((s) => s.label === "GitHub")?.href ?? "#";
@@ -35,12 +36,25 @@ export function Hero() {
               {profile.name}
             </h1>
 
-            <p className="mt-4 max-w-2xl text-pretty text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-text sm:text-[40px] lg:text-[46px]">
-              {profile.thesis}
-            </p>
-            <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px]">
-              {profile.tagline}
-            </p>
+            {/* The claim and the line under it are told per view: plain
+                for recruiters, the engineering problem space for developers.
+                On a switch only these re-render. */}
+            <Recruiter className="pt-4" label="headline">
+              <p className="max-w-2xl text-pretty text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-text sm:text-[40px] lg:text-[46px]">
+                {profile.thesis}
+              </p>
+              <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px]">
+                {profile.tagline}
+              </p>
+            </Recruiter>
+            <Engineer className="pt-4" label="headline">
+              <p className="max-w-2xl text-pretty text-[30px] font-semibold leading-[1.1] tracking-[-0.02em] text-text sm:text-[40px] lg:text-[46px]">
+                {profile.engineer.thesis}
+              </p>
+              <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-muted sm:text-[17px] sm:max-w-2xl">
+                {profile.engineer.tagline}
+              </p>
+            </Engineer>
 
             <div className="mt-5 inline-flex items-center gap-2 text-[13px] text-muted">
               <span
