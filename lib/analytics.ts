@@ -7,10 +7,11 @@ import type { PostHog } from "posthog-js";
  *
  * No PII is collected: the signals a browser already exposes about a visit,
  * plus the actions people take on the page. PostHog adds pageviews, sessions,
- * autocaptured clicks, funnels and retention on top; it keeps an anonymous
- * id in first-party storage and creates no person profiles (nobody is ever
- * identified). Its requests go through this site's /ingest proxy
- * (next.config.mjs), so they are first-party.
+ * autocaptured clicks and funnels on top. Analytics store nothing in the
+ * browser: PostHog runs cookieless (no cookies, no local or session storage;
+ * visitors are counted with a privacy-preserving hash on PostHog's servers)
+ * and creates no person profiles. Its requests go through this site's
+ * /ingest proxy (next.config.mjs), so they are first-party.
  */
 
 const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
@@ -70,6 +71,9 @@ export function startPostHog() {
         ui_host: POSTHOG_HOST.replace(".i.posthog.com", ".posthog.com"),
         defaults: "2026-08-30",
         person_profiles: "never",
+        // Requires "Cookieless server hash mode" to be enabled in the PostHog
+        // project's settings; otherwise PostHog drops these events.
+        cookieless_mode: "always",
       });
       // Every event says which view it happened in.
       ph.register({ view: viewLabel(document.documentElement.dataset.view) });
@@ -112,8 +116,6 @@ function attribution(): Props {
   };
 }
 
-const RETURNING_KEY = "yb.visited";
-
 /**
  * Fire a single rich "visit" event describing who is visiting — everything the
  * browser will tell us without invasive tracking.
@@ -125,17 +127,8 @@ export function trackVisit() {
   // @ts-expect-error - connection is non-standard but widely available
   const connection = nav.connection || nav.mozConnection || nav.webkitConnection;
 
-  let returning = false;
-  try {
-    returning = localStorage.getItem(RETURNING_KEY) === "1";
-    localStorage.setItem(RETURNING_KEY, "1");
-  } catch {
-    // storage may be blocked
-  }
-
   const props: Props = {
     ...attribution(),
-    returning,
     language: nav.language ?? null,
     languages: Array.isArray(nav.languages) ? nav.languages.join(",") : null,
     timezone:
