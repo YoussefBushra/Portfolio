@@ -723,7 +723,7 @@ html[data-casting] :is(main, header) * {
 }
 
 /* In engineer view the work grid becomes full-width case studies, giving the
-   technical layer room for a figure beside the notes. */
+   technical layer room for two columns of notes and a figure. */
 html[data-view="engineer"] .work-grid {
   grid-template-columns: minmax(0, 1fr);
 }

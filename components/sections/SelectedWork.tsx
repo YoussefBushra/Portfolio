@@ -85,27 +85,31 @@ function UnderTheHood({ item }: { item: WorkItem }) {
         Under the hood
       </p>
 
-      <div
-        className={`mt-6 grid grid-cols-[minmax(0,1fr)] gap-10 ${
-          figure ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,442px)] lg:gap-14" : ""
-        }`}
-      >
-        <div>
-          <ul
-            className={`grid gap-x-12 gap-y-5 ${figure ? "" : "lg:grid-cols-2"}`}
+      <ul className="mt-6 grid gap-x-12 gap-y-5 lg:grid-cols-2">
+        {points.map((p) => (
+          <li
+            key={p.lead}
+            className="relative pl-5 text-[14.5px] leading-[1.65] text-muted before:absolute before:left-0 before:top-[0.7em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-faint before:content-['']"
           >
-            {points.map((p) => (
-              <li
-                key={p.lead}
-                className="relative pl-5 text-[14.5px] leading-[1.65] text-muted before:absolute before:left-0 before:top-[0.7em] before:h-[5px] before:w-[5px] before:rounded-full before:bg-faint before:content-['']"
-              >
-                <span className="font-medium text-text">{p.lead}</span> {p.text}
-              </li>
-            ))}
-          </ul>
+            <span className="font-medium text-text">{p.lead}</span> {p.text}
+          </li>
+        ))}
+      </ul>
 
+      {/* A figure sits beside the note it illustrates (the trade-off is
+          about the boundary the diagram draws), so neither leaves a column
+          of empty space next to the points. */}
+      {figure || note ? (
+        <div
+          className={`mt-9 grid grid-cols-[minmax(0,1fr)] gap-9 ${
+            figure && note
+              ? "lg:grid-cols-[minmax(0,442px)_minmax(0,1fr)] lg:items-center lg:gap-14"
+              : ""
+          }`}
+        >
+          {figure ? <WorkFigureView figure={figure} /> : null}
           {note ? (
-            <div className="mt-9 max-w-3xl border-l-2 border-l-accent/60 pl-5">
+            <div className="max-w-3xl border-l-2 border-l-accent/60 pl-5">
               <p className={monoLabel}>{note.label}</p>
               <p className="mt-2.5 text-[14.5px] leading-[1.65] text-text">
                 {note.text}
@@ -113,9 +117,7 @@ function UnderTheHood({ item }: { item: WorkItem }) {
             </div>
           ) : null}
         </div>
-
-        {figure ? <WorkFigureView figure={figure} /> : null}
-      </div>
+      ) : null}
     </div>
   );
 }
