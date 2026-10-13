@@ -96,18 +96,17 @@ function UnderTheHood({ item }: { item: WorkItem }) {
         ))}
       </ul>
 
-      {/* A figure sits beside the note it illustrates (the trade-off is
+      {/* The figure sits to the right of the note it illustrates (the trade-off is
           about the boundary the diagram draws), so neither leaves a column
           of empty space next to the points. */}
       {figure || note ? (
         <div
           className={`mt-9 grid grid-cols-[minmax(0,1fr)] gap-9 ${
             figure && note
-              ? "lg:grid-cols-[minmax(0,442px)_minmax(0,1fr)] lg:items-center lg:gap-14"
+              ? "lg:grid-cols-[minmax(0,1fr)_minmax(0,442px)] lg:items-center lg:gap-14"
               : ""
           }`}
         >
-          {figure ? <WorkFigureView figure={figure} /> : null}
           {note ? (
             <div className="max-w-3xl border-l-2 border-l-accent/60 pl-5">
               <p className={monoLabel}>{note.label}</p>
@@ -116,6 +115,7 @@ function UnderTheHood({ item }: { item: WorkItem }) {
               </p>
             </div>
           ) : null}
+          {figure ? <WorkFigureView figure={figure} /> : null}
         </div>
       ) : null}
     </div>
